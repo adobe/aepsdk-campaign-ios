@@ -1,1 +1,1 @@
-# aepsdk-media-ios
+# aepsdk-campaign-ios
