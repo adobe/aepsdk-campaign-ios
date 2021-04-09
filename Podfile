@@ -9,7 +9,13 @@ target 'AEPCampaign' do
   pod 'AEPIdentity'
   pod 'AEPRulesEngine'
 
-target 'AEPCampaignTests' do
+target 'AEPCampaignUnitTests' do
+   pod 'AEPCore'
+   pod 'AEPServices'
+   pod 'AEPRulesEngine'
+  end
+
+target 'AEPCampaignFunctionalTests' do
    pod 'AEPCore'
    pod 'AEPServices'
    pod 'AEPRulesEngine'
