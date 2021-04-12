@@ -15,7 +15,6 @@
 		41A1BFE7B89104EC3ECB8F3D /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CADE89F479BAE4439175F04 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */; };
 		76EA7F6399078F00718AB98E /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC354DD4FFCC9D20FAC5DC98 /* Pods_AEPCampaign.framework */; };
 		793305F230B58DD15F5E9514 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B73AD24F62390229B7E6650 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */; };
-		D6E822D62624C9C20092C7DE /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E822D52624C9C20092C7DE /* CampaignState.swift */; };
 		D6E822E52624E0B90092C7DE /* CampaignConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E822E42624E0B90092C7DE /* CampaignConstants.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,7 +67,6 @@
 		9B73AD24F62390229B7E6650 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CADE89F479BAE4439175F04 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignUnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC354DD4FFCC9D20FAC5DC98 /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D6E822D52624C9C20092C7DE /* CampaignState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
 		D6E822E42624E0B90092C7DE /* CampaignConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignConstants.swift; sourceTree = "<group>"; };
 		F0255252B6B919F5C3862BF0 /* Pods-AEPCampaign-AEPCampaignTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignTests/Pods-AEPCampaign-AEPCampaignTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -147,7 +145,6 @@
 			isa = PBXGroup;
 			children = (
 				3D10A4A6261E3A970049BDA1 /* AEPCampaign.swift */,
-				D6E822D52624C9C20092C7DE /* CampaignState.swift */,
 				D6E822E42624E0B90092C7DE /* CampaignConstants.swift */,
 			);
 			path = Sources;
@@ -432,7 +429,6 @@
 			files = (
 				D6E822E52624E0B90092C7DE /* CampaignConstants.swift in Sources */,
 				3D10A4A7261E3A970049BDA1 /* AEPCampaign.swift in Sources */,
-				D6E822D62624C9C20092C7DE /* CampaignState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

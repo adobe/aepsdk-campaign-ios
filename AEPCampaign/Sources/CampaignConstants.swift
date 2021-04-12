@@ -29,9 +29,9 @@ enum CampaignConstants {
         static let SECONDS_IN_A_DAY = TimeInterval(86400) // check if still needed
         static let MILLISECONDS_IN_A_SECOND = 1000 // check if still needed
         static let SERVER_TOKEN =
-                "{%~state.com.adobe.module.configuration/campaign.server%}"
+            "{%~state.com.adobe.module.configuration/campaign.server%}"
         static let PROPERTY_TOKEN =
-                "{%~state.com.adobe.module.configuration/property.id%}"
+            "{%~state.com.adobe.module.configuration/property.id%}"
         static let IDENTITY_ECID_TOKEN = "{%~state.com.adobe.module.identity/mid%}"
         static let MESSAGE_ID_TOKEN = "messageId"
 
@@ -39,14 +39,14 @@ enum CampaignConstants {
         static let RULES_DOWNLOAD_URL = "https://%s/%s/%s/%s/rules.zip"
         static let TRACKING_URL = "https://%s/r/?id=%s,%s,%s&mcId=%s"
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%s__"
-        
+
         enum Datastore {
             static let NAME = "CampaignDataStore"
             static let REMOTE_URL_KEY = "CampaignRemoteUrl"
             static let ECID_KEY = "ExperienceCloudId"
             static let REGISTRATION_TIMESTAMP_KEY = "CampaignRegistrationTimestamp"
         }
-        
+
         enum MessagePayload {
             static let TEMPLATE_ALERT = "alert"
             static let TEMPLATE_FULLSCREEN = "fullscreen"
@@ -55,7 +55,7 @@ enum CampaignConstants {
             static let INTERACTION_URL  = "url"
             static let INTERACTION_TYPE  = "type"
         }
-        
+
         enum AppEnvironment {
             static let DEV = "dev"
             static let STAGE = "stage"
@@ -70,7 +70,7 @@ enum CampaignConstants {
             static let ASSETS_DIRECTORY = "assets"
         }
     }
-    
+
     enum Configuration {
         static let EXTENSION_NAME = "com.adobe.module.configuration"
         static let GLOBAL_CONFIG_PRIVACY = "global.privacy"
@@ -80,9 +80,9 @@ enum CampaignConstants {
         static let CAMPAIGN_MCIAS = "campaign.mcias"
         static let CAMPAIGN_TIMEOUT = "campaign.timeout"
         static let CAMPAIGN_REGISTRATION_DELAY_KEY =
-                    "campaign.registrationDelay"
+            "campaign.registrationDelay"
         static let CAMPAIGN_REGISTRATION_PAUSED_KEY =
-                    "campaign.registrationPaused"
+            "campaign.registrationPaused"
     }
     enum Identity {
         static let EXTENSION_NAME = "com.adobe.module.identity"
