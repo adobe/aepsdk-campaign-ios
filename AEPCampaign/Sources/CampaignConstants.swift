@@ -84,10 +84,12 @@ enum CampaignConstants {
         static let CAMPAIGN_REGISTRATION_PAUSED_KEY =
             "campaign.registrationPaused"
     }
+
     enum Identity {
         static let EXTENSION_NAME = "com.adobe.module.identity"
         static let EXPERIENCE_CLOUD_ID = "marketingCloudId"
     }
+
     enum Lifecycle {
         static let EXTENSION_NAME = "com.adobe.module.lifecycle"
         static let LAUNCH_EVENT = "launchevent"
