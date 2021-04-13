@@ -16,6 +16,7 @@ import AEPCore
 @objc(AEPCampaign)
 public class Campaign: NSObject, Extension {
     
+    private static let LOG_TAG = "Campaign"
     public var name = CampaignConstants.EXTENSION_NAME
     public var friendlyName = CampaignConstants.FRIENDLY_NAME
     public static var extensionVersion = CampaignConstants.EXTENSION_VERSION

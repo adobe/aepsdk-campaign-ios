@@ -15,10 +15,9 @@
     ///Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
     ///The set linkage fields are stored as base64 encoded JSON string in memory and they are sent in a custom HTTP header 'X-InApp-Auth'
     ///in all future Campaign rules download requests until `resetLinkageFields` is invoked. These in-memory variables are also
-    ///lost in the wake of an Application crash event or upon graceful Application termination or when the privacy status is updated to
-    ///OPT_OUT.
+    ///lost in the wake of an Application crash event or upon graceful Application termination or when the privacy status is updated to OPT_OUT.
     ///This method clears cached rules from previous download before triggering a rules download request to the configured Campaign server.
-     ///If the current SDK privacy status is not OPT_IN, no rules download happens.
+    ///If the current SDK privacy status is not OPT_IN, no rules download happens.
     /// - Parameters linkageFields: The Linkage fields key value pairs.
     @objc static func setLinkageFields(linkageFields: [String: String]) {
         ///TODO
