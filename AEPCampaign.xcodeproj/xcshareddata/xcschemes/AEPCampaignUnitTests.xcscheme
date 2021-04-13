@@ -11,12 +11,13 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES"
       onlyGenerateCoverageForSpecifiedTargets = "YES">
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3D10A4A2261E3A970049BDA1"
-            BuildableName = "libAEPCampaign.a"
+            BlueprintIdentifier = "3D10A5F4262581650049BDA1"
+            BuildableName = "AEPCampaign.framework"
             BlueprintName = "AEPCampaign"
             ReferencedContainer = "container:AEPCampaign.xcodeproj">
          </BuildableReference>
