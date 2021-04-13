@@ -1,6 +1,6 @@
 /*
  Copyright 2021 Adobe. All rights reserved.
- This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ This file is licensed to you under the Apache License, Version 2.0 (the "License")
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,6 +10,14 @@
  governing permissions and limitations under the License.
  */
 
-class AEPCampaign {
+#import <Foundation/Foundation.h>
 
-}
+//! Project version number for AEPCampaign.
+FOUNDATION_EXPORT double AEPCampaignVersionNumber;
+
+//! Project version string for AEPCampaign.
+FOUNDATION_EXPORT const unsigned char AEPCampaignVersionString[];
+
+// In this header, you should import all the public headers of your framework using statements like #import <AEPCampaign/PublicHeader.h>
+
+
