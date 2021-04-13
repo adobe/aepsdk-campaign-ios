@@ -11,7 +11,7 @@
  */
 
 @objc public extension Campaign {
-    
+
     ///Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
     ///The set linkage fields are stored as base64 encoded JSON string in memory and they are sent in a custom HTTP header 'X-InApp-Auth'
     ///in all future Campaign rules download requests until `resetLinkageFields` is invoked. These in-memory variables are also
@@ -22,7 +22,7 @@
     @objc static func setLinkageFields(linkageFields: [String: String]) {
         ///TODO
     }
-    
+
     ///Clears previously stored linkage fields in the mobile SDK and triggers Campaign rules download request to the configured Campaign server.
     ///This method unregisters any previously registered rules with the Event Hub and clears cached rules from previous download.
     ///If the current SDK privacy status is not `OPT_IN`, no rules download happens.
