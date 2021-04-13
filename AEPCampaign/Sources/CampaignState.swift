@@ -18,19 +18,19 @@ class CampaignState {
     private let LOG_TAG = "CampaignState"
 
     // Privacy status
-    private(set) var privacyStatus: PrivacyStatus = .unknown
+    private var privacyStatus: PrivacyStatus = .unknown
 
     // Campaign config
-    private(set) var campaignServer: String?
-    private(set) var campaignPkey: String?
-    private(set) var campaignMciasServer: String?
-    private(set) var campaignTimeout: TimeInterval?
-    private(set) var campaignPropertyId: String?
-    private(set) var campaignRegistrationDelay: TimeInterval?
-    private(set) var campaignRegistrationPaused: Bool?
+    private var campaignServer: String?
+    private var campaignPkey: String?
+    private var campaignMciasServer: String?
+    private var campaignTimeout: TimeInterval?
+    private var campaignPropertyId: String?
+    private var campaignRegistrationDelay: TimeInterval?
+    private var campaignRegistrationPaused: Bool?
 
     // Identity shared state
-    private(set) var ecid: String?
+    private var ecid: String?
 
     /// Takes the shared states map and updates the data within the Campaign State.
     /// - Parameter dataMap: The map contains the shared state data required by the Campaign Extension.
@@ -41,7 +41,7 @@ class CampaignState {
             }
             switch key {
             case CampaignConstants.Configuration.EXTENSION_NAME:
-                extractConfigurationInfo(from: sharedState)
+                extractConfigurationInfo(from: sharedState ?? [:])
             case CampaignConstants.Identity.EXTENSION_NAME:
                 extractIdentityInfo(from: sharedState)
             default:
@@ -52,11 +52,7 @@ class CampaignState {
 
     /// Extracts the configuration data from the provided shared state data.
     /// - Parameter configurationData the data map from `Configuration` shared state.
-    private func extractConfigurationInfo(from configurationData: [String: Any]?) {
-        guard let configurationData = configurationData else {
-            Log.trace(label: LOG_TAG, "\(#function) - Failed to extract configuration data (event data was nil).")
-            return
-        }
+    private func extractConfigurationInfo(from configurationData: [String: Any]) {
         self.privacyStatus = PrivacyStatus.init(rawValue: configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? PrivacyStatus.RawValue ?? PrivacyStatus.unknown.rawValue) ?? .unknown
         self.campaignServer = configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] as? String
         self.campaignPkey = configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] as? String
