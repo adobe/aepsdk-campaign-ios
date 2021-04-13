@@ -16,7 +16,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3D10A56526204EC20049BDA1"
+               BlueprintIdentifier = "3D10A6232625826D0049BDA1"
                BuildableName = "AEPCampaignFunctionalTests.xctest"
                BlueprintName = "AEPCampaignFunctionalTests"
                ReferencedContainer = "container:AEPCampaign.xcodeproj">

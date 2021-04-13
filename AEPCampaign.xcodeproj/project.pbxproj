@@ -7,215 +7,212 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3D10A4A7261E3A970049BDA1 /* AEPCampaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A4A6261E3A970049BDA1 /* AEPCampaign.swift */; };
-		3D10A55826204EAC0049BDA1 /* AEPCampaignUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A55726204EAC0049BDA1 /* AEPCampaignUnitTests.swift */; };
-		3D10A55A26204EAC0049BDA1 /* libAEPCampaign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A4A3261E3A970049BDA1 /* libAEPCampaign.a */; };
-		3D10A56926204EC20049BDA1 /* AEPCampaignFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A56826204EC20049BDA1 /* AEPCampaignFunctionalTests.swift */; };
-		3D10A56B26204EC20049BDA1 /* libAEPCampaign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A4A3261E3A970049BDA1 /* libAEPCampaign.a */; };
-		41A1BFE7B89104EC3ECB8F3D /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CADE89F479BAE4439175F04 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */; };
-		76EA7F6399078F00718AB98E /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC354DD4FFCC9D20FAC5DC98 /* Pods_AEPCampaign.framework */; };
-		793305F230B58DD15F5E9514 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B73AD24F62390229B7E6650 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */; };
-		D6E822E52624E0B90092C7DE /* CampaignConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E822E42624E0B90092C7DE /* CampaignConstants.swift */; };
-		D6E82397262604350092C7DE /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E82396262604350092C7DE /* CampaignStateTests.swift */; };
-		D6E8239F262604460092C7DE /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E8239E262604460092C7DE /* CampaignState.swift */; };
+		365BF09E72243DCF7A87B704 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7591D93F5A6B6C917325E5F5 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */; };
+		3D10A606262581650049BDA1 /* AEPCampaign.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D10A5F8262581650049BDA1 /* AEPCampaign.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3D10A6272625826D0049BDA1 /* AEPCampaignFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A6262625826D0049BDA1 /* AEPCampaignFunctionalTests.swift */; };
+		3D10A6292625826D0049BDA1 /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
+		3D10A63D262582A60049BDA1 /* AEPCampaignUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A63C262582A60049BDA1 /* AEPCampaignUnitTests.swift */; };
+		3D10A63F262582A60049BDA1 /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
+		3D10A653262583C70049BDA1 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A652262583C70049BDA1 /* Campaign.swift */; };
+		3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A6572625841C0049BDA1 /* CampaignConstants.swift */; };
+		3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */; };
+		3D10A67C26260FCC0049BDA1 /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E4A339944C71CD61160B8 /* Pods_AEPCampaign.framework */; };
+		54DF607B3D7E4289EDDD6C27 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3D10A55B26204EAC0049BDA1 /* PBXContainerItemProxy */ = {
+		3D10A62A2625826D0049BDA1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3D10A49B261E3A970049BDA1 /* Project object */;
+			containerPortal = 3D10A5EC262581650049BDA1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3D10A4A2261E3A970049BDA1;
+			remoteGlobalIDString = 3D10A5F4262581650049BDA1;
 			remoteInfo = AEPCampaign;
 		};
-		3D10A56C26204EC20049BDA1 /* PBXContainerItemProxy */ = {
+		3D10A640262582A60049BDA1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3D10A49B261E3A970049BDA1 /* Project object */;
+			containerPortal = 3D10A5EC262581650049BDA1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3D10A4A2261E3A970049BDA1;
+			remoteGlobalIDString = 3D10A5F4262581650049BDA1;
 			remoteInfo = AEPCampaign;
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		3D10A4A1261E3A970049BDA1 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		1CE02194F06E3ABD85E78DE7 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
-		39899DA5FF8DDBEE7ED3F6B3 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
-		3D10A4A3261E3A970049BDA1 /* libAEPCampaign.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAEPCampaign.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D10A4A6261E3A970049BDA1 /* AEPCampaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPCampaign.swift; sourceTree = "<group>"; };
-		3D10A55526204EAC0049BDA1 /* AEPCampaignUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPCampaignUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D10A55726204EAC0049BDA1 /* AEPCampaignUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPCampaignUnitTests.swift; sourceTree = "<group>"; };
-		3D10A56626204EC20049BDA1 /* AEPCampaignFunctionalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPCampaignFunctionalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D10A56826204EC20049BDA1 /* AEPCampaignFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPCampaignFunctionalTests.swift; sourceTree = "<group>"; };
-		3D10A56A26204EC20049BDA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = AEPCampaignFunctionalTests/Info.plist; sourceTree = "<group>"; };
-		4A1E02C43F42974BFC84078E /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
-		68BDF628B4334CD174826C9C /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
-		6B583ABB096C73966E59D96B /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
-		6CC68861782C97C080E4547A /* Pods-AEPCampaign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.release.xcconfig"; sourceTree = "<group>"; };
-		92326A4632B21BE124ED30F8 /* Pods-AEPCampaign-AEPCampaignTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignTests/Pods-AEPCampaign-AEPCampaignTests.release.xcconfig"; sourceTree = "<group>"; };
-		9A516A177C202E2E7DA4EE33 /* Pods_AEPCampaign_AEPCampaignTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9B73AD24F62390229B7E6650 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9CADE89F479BAE4439175F04 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignUnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AC354DD4FFCC9D20FAC5DC98 /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D6E822E42624E0B90092C7DE /* CampaignConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignConstants.swift; sourceTree = "<group>"; };
-		D6E82396262604350092C7DE /* CampaignStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
-		D6E8239E262604460092C7DE /* CampaignState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
-		F0255252B6B919F5C3862BF0 /* Pods-AEPCampaign-AEPCampaignTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignTests/Pods-AEPCampaign-AEPCampaignTests.debug.xcconfig"; sourceTree = "<group>"; };
+		150C854BF5853ED961FE86F8 /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
+		34D46E0BDD44BB731B5E372E /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
+		3D10A5F5262581650049BDA1 /* AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D10A5F8262581650049BDA1 /* AEPCampaign.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AEPCampaign.h; sourceTree = "<group>"; };
+		3D10A5F9262581650049BDA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D10A6242625826D0049BDA1 /* AEPCampaignFunctionalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPCampaignFunctionalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D10A6262625826D0049BDA1 /* AEPCampaignFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPCampaignFunctionalTests.swift; sourceTree = "<group>"; };
+		3D10A6282625826D0049BDA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D10A63A262582A60049BDA1 /* AEPCampaignUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPCampaignUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D10A63C262582A60049BDA1 /* AEPCampaignUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPCampaignUnitTests.swift; sourceTree = "<group>"; };
+		3D10A63E262582A60049BDA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D10A652262583C70049BDA1 /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = SOURCE_ROOT; };
+		3D10A6572625841C0049BDA1 /* CampaignConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignConstants.swift; sourceTree = "<group>"; };
+		3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Campaign+PublicAPI.swift"; sourceTree = "<group>"; };
+		4D09EDCE32512CC3F38B932E /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
+		553E4A339944C71CD61160B8 /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7591D93F5A6B6C917325E5F5 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignUnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		832CA6B995776E9E268A1372 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A3A99FAF3EF2C88ACE12F2DC /* Pods-AEPCampaign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.release.xcconfig"; sourceTree = "<group>"; };
+		BAA0DA070500C13F89C7115E /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3D10A4A0261E3A970049BDA1 /* Frameworks */ = {
+		3D10A5F2262581650049BDA1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76EA7F6399078F00718AB98E /* Pods_AEPCampaign.framework in Frameworks */,
+				3D10A67C26260FCC0049BDA1 /* Pods_AEPCampaign.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3D10A55226204EAC0049BDA1 /* Frameworks */ = {
+		3D10A6212625826D0049BDA1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D10A55A26204EAC0049BDA1 /* libAEPCampaign.a in Frameworks */,
-				41A1BFE7B89104EC3ECB8F3D /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */,
+				3D10A6292625826D0049BDA1 /* AEPCampaign.framework in Frameworks */,
+				54DF607B3D7E4289EDDD6C27 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3D10A56326204EC20049BDA1 /* Frameworks */ = {
+		3D10A637262582A60049BDA1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D10A56B26204EC20049BDA1 /* libAEPCampaign.a in Frameworks */,
-				793305F230B58DD15F5E9514 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */,
+				3D10A63F262582A60049BDA1 /* AEPCampaign.framework in Frameworks */,
+				365BF09E72243DCF7A87B704 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3D10A49A261E3A970049BDA1 = {
+		12D8E3E1F60C49269F3E7366 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3D10A4A5261E3A970049BDA1 /* AEPCampaign */,
-				3D10A4A4261E3A970049BDA1 /* Products */,
-				F192CC837E5582A8CFB5E336 /* Pods */,
-				DA56D5C3E1A2139A5815AF1C /* Frameworks */,
+				553E4A339944C71CD61160B8 /* Pods_AEPCampaign.framework */,
+				6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */,
+				7591D93F5A6B6C917325E5F5 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2AB161FD1BE5CCC7C18D7E78 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				150C854BF5853ED961FE86F8 /* Pods-AEPCampaign.debug.xcconfig */,
+				A3A99FAF3EF2C88ACE12F2DC /* Pods-AEPCampaign.release.xcconfig */,
+				832CA6B995776E9E268A1372 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */,
+				4D09EDCE32512CC3F38B932E /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */,
+				BAA0DA070500C13F89C7115E /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */,
+				34D46E0BDD44BB731B5E372E /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		3D10A5EB262581650049BDA1 = {
+			isa = PBXGroup;
+			children = (
+				3D10A5F7262581650049BDA1 /* AEPCampaign */,
+				3D10A5F6262581650049BDA1 /* Products */,
+				2AB161FD1BE5CCC7C18D7E78 /* Pods */,
+				12D8E3E1F60C49269F3E7366 /* Frameworks */,
 			);
 			sourceTree = "<group>";
-			usesTabs = 0;
 		};
-		3D10A4A4261E3A970049BDA1 /* Products */ = {
+		3D10A5F6262581650049BDA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3D10A4A3261E3A970049BDA1 /* libAEPCampaign.a */,
-				3D10A55526204EAC0049BDA1 /* AEPCampaignUnitTests.xctest */,
-				3D10A56626204EC20049BDA1 /* AEPCampaignFunctionalTests.xctest */,
+				3D10A5F5262581650049BDA1 /* AEPCampaign.framework */,
+				3D10A6242625826D0049BDA1 /* AEPCampaignFunctionalTests.xctest */,
+				3D10A63A262582A60049BDA1 /* AEPCampaignUnitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3D10A4A5261E3A970049BDA1 /* AEPCampaign */ = {
+		3D10A5F7262581650049BDA1 /* AEPCampaign */ = {
 			isa = PBXGroup;
 			children = (
-				3D10A4E4261E528C0049BDA1 /* Mocks */,
-				3D10A4B1261E3B040049BDA1 /* Sources */,
-				3D10A4AF261E3AE40049BDA1 /* Tests */,
+				3D10A61D262581EE0049BDA1 /* Mocks */,
+				3D10A61B262581AD0049BDA1 /* Sources */,
+				3D10A61C262581DA0049BDA1 /* Tests */,
 			);
 			path = AEPCampaign;
 			sourceTree = "<group>";
 		};
-		3D10A4AF261E3AE40049BDA1 /* Tests */ = {
+		3D10A61B262581AD0049BDA1 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				3D10A55626204EAC0049BDA1 /* AEPCampaignUnitTests */,
-				3D10A56726204EC20049BDA1 /* AEPCampaignFunctionalTests */,
-				3D10A56A26204EC20049BDA1 /* Info.plist */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
-		3D10A4B1261E3B040049BDA1 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				3D10A4A6261E3A970049BDA1 /* AEPCampaign.swift */,
-				D6E822E42624E0B90092C7DE /* CampaignConstants.swift */,
-				D6E8239E262604460092C7DE /* CampaignState.swift */,
+				3D10A5F8262581650049BDA1 /* AEPCampaign.h */,
+				3D10A5F9262581650049BDA1 /* Info.plist */,
+				3D10A652262583C70049BDA1 /* Campaign.swift */,
+				3D10A6572625841C0049BDA1 /* CampaignConstants.swift */,
+				3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		3D10A4E4261E528C0049BDA1 /* Mocks */ = {
+		3D10A61C262581DA0049BDA1 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				3D10A63B262582A60049BDA1 /* AEPCampaignUnitTests */,
+				3D10A6252625826D0049BDA1 /* AEPCampaignFunctionalTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		3D10A61D262581EE0049BDA1 /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Mocks;
 			sourceTree = "<group>";
 		};
-		3D10A55626204EAC0049BDA1 /* AEPCampaignUnitTests */ = {
+		3D10A6252625826D0049BDA1 /* AEPCampaignFunctionalTests */ = {
 			isa = PBXGroup;
 			children = (
-				3D10A55726204EAC0049BDA1 /* AEPCampaignUnitTests.swift */,
-				D6E82396262604350092C7DE /* CampaignStateTests.swift */,
-			);
-			path = AEPCampaignUnitTests;
-			sourceTree = "<group>";
-		};
-		3D10A56726204EC20049BDA1 /* AEPCampaignFunctionalTests */ = {
-			isa = PBXGroup;
-			children = (
-				3D10A56826204EC20049BDA1 /* AEPCampaignFunctionalTests.swift */,
+				3D10A6262625826D0049BDA1 /* AEPCampaignFunctionalTests.swift */,
+				3D10A6282625826D0049BDA1 /* Info.plist */,
 			);
 			path = AEPCampaignFunctionalTests;
 			sourceTree = "<group>";
 		};
-		DA56D5C3E1A2139A5815AF1C /* Frameworks */ = {
+		3D10A63B262582A60049BDA1 /* AEPCampaignUnitTests */ = {
 			isa = PBXGroup;
 			children = (
-				AC354DD4FFCC9D20FAC5DC98 /* Pods_AEPCampaign.framework */,
-				9A516A177C202E2E7DA4EE33 /* Pods_AEPCampaign_AEPCampaignTests.framework */,
-				9B73AD24F62390229B7E6650 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */,
-				9CADE89F479BAE4439175F04 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */,
+				3D10A63C262582A60049BDA1 /* AEPCampaignUnitTests.swift */,
+				3D10A63E262582A60049BDA1 /* Info.plist */,
 			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F192CC837E5582A8CFB5E336 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				4A1E02C43F42974BFC84078E /* Pods-AEPCampaign.debug.xcconfig */,
-				6CC68861782C97C080E4547A /* Pods-AEPCampaign.release.xcconfig */,
-				F0255252B6B919F5C3862BF0 /* Pods-AEPCampaign-AEPCampaignTests.debug.xcconfig */,
-				92326A4632B21BE124ED30F8 /* Pods-AEPCampaign-AEPCampaignTests.release.xcconfig */,
-				1CE02194F06E3ABD85E78DE7 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */,
-				39899DA5FF8DDBEE7ED3F6B3 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */,
-				68BDF628B4334CD174826C9C /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */,
-				6B583ABB096C73966E59D96B /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */,
-			);
-			path = Pods;
+			path = AEPCampaignUnitTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		3D10A5F0262581650049BDA1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D10A606262581650049BDA1 /* AEPCampaign.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		3D10A4A2261E3A970049BDA1 /* AEPCampaign */ = {
+		3D10A5F4262581650049BDA1 /* AEPCampaign */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D10A4AA261E3A970049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaign" */;
+			buildConfigurationList = 3D10A609262581650049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaign" */;
 			buildPhases = (
-				C72259B8E8DA2D0C253BD55A /* [CP] Check Pods Manifest.lock */,
-				3D10A49F261E3A970049BDA1 /* Sources */,
-				3D10A4A0261E3A970049BDA1 /* Frameworks */,
-				3D10A4A1261E3A970049BDA1 /* CopyFiles */,
+				8208F379A32DC42383BC7457 /* [CP] Check Pods Manifest.lock */,
+				3D10A5F0262581650049BDA1 /* Headers */,
+				3D10A5F1262581650049BDA1 /* Sources */,
+				3D10A5F2262581650049BDA1 /* Frameworks */,
+				3D10A5F3262581650049BDA1 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -223,70 +220,71 @@
 			);
 			name = AEPCampaign;
 			productName = AEPCampaign;
-			productReference = 3D10A4A3261E3A970049BDA1 /* libAEPCampaign.a */;
-			productType = "com.apple.product-type.library.static";
+			productReference = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */;
+			productType = "com.apple.product-type.framework";
 		};
-		3D10A55426204EAC0049BDA1 /* AEPCampaignUnitTests */ = {
+		3D10A6232625826D0049BDA1 /* AEPCampaignFunctionalTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D10A55D26204EAC0049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignUnitTests" */;
+			buildConfigurationList = 3D10A62C2625826D0049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignFunctionalTests" */;
 			buildPhases = (
-				46029E18892FE34A524F7E1C /* [CP] Check Pods Manifest.lock */,
-				3D10A55126204EAC0049BDA1 /* Sources */,
-				3D10A55226204EAC0049BDA1 /* Frameworks */,
-				3D10A55326204EAC0049BDA1 /* Resources */,
-				4D72A5E92CE6B95322E2D459 /* [CP] Embed Pods Frameworks */,
+				A2779C34D0E8CCBEE5538075 /* [CP] Check Pods Manifest.lock */,
+				3D10A6202625826D0049BDA1 /* Sources */,
+				3D10A6212625826D0049BDA1 /* Frameworks */,
+				3D10A6222625826D0049BDA1 /* Resources */,
+				3A4336AB0933108633D1F255 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				3D10A55C26204EAC0049BDA1 /* PBXTargetDependency */,
-			);
-			name = AEPCampaignUnitTests;
-			productName = AEPCampaignUnitTests;
-			productReference = 3D10A55526204EAC0049BDA1 /* AEPCampaignUnitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		3D10A56526204EC20049BDA1 /* AEPCampaignFunctionalTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3D10A56E26204EC20049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignFunctionalTests" */;
-			buildPhases = (
-				623C617EC97815E9BE8C758F /* [CP] Check Pods Manifest.lock */,
-				3D10A56226204EC20049BDA1 /* Sources */,
-				3D10A56326204EC20049BDA1 /* Frameworks */,
-				3D10A56426204EC20049BDA1 /* Resources */,
-				BC97A7B9464018414C19D6B5 /* [CP] Embed Pods Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3D10A56D26204EC20049BDA1 /* PBXTargetDependency */,
+				3D10A62B2625826D0049BDA1 /* PBXTargetDependency */,
 			);
 			name = AEPCampaignFunctionalTests;
 			productName = AEPCampaignFunctionalTests;
-			productReference = 3D10A56626204EC20049BDA1 /* AEPCampaignFunctionalTests.xctest */;
+			productReference = 3D10A6242625826D0049BDA1 /* AEPCampaignFunctionalTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3D10A639262582A60049BDA1 /* AEPCampaignUnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D10A642262582A60049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignUnitTests" */;
+			buildPhases = (
+				E5399E354E372695108B262F /* [CP] Check Pods Manifest.lock */,
+				3D10A636262582A60049BDA1 /* Sources */,
+				3D10A637262582A60049BDA1 /* Frameworks */,
+				3D10A638262582A60049BDA1 /* Resources */,
+				1AF77B918F60F828650551A2 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D10A641262582A60049BDA1 /* PBXTargetDependency */,
+			);
+			name = AEPCampaignUnitTests;
+			productName = AEPCampaignUnitTests;
+			productReference = 3D10A63A262582A60049BDA1 /* AEPCampaignUnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		3D10A49B261E3A970049BDA1 /* Project object */ = {
+		3D10A5EC262581650049BDA1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1220;
 				TargetAttributes = {
-					3D10A4A2261E3A970049BDA1 = {
+					3D10A5F4262581650049BDA1 = {
+						CreatedOnToolsVersion = 12.2;
+						LastSwiftMigration = 1220;
+					};
+					3D10A6232625826D0049BDA1 = {
 						CreatedOnToolsVersion = 12.2;
 					};
-					3D10A55426204EAC0049BDA1 = {
-						CreatedOnToolsVersion = 12.2;
-					};
-					3D10A56526204EC20049BDA1 = {
+					3D10A639262582A60049BDA1 = {
 						CreatedOnToolsVersion = 12.2;
 					};
 				};
 			};
-			buildConfigurationList = 3D10A49E261E3A970049BDA1 /* Build configuration list for PBXProject "AEPCampaign" */;
+			buildConfigurationList = 3D10A5EF262581650049BDA1 /* Build configuration list for PBXProject "AEPCampaign" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -294,27 +292,34 @@
 				en,
 				Base,
 			);
-			mainGroup = 3D10A49A261E3A970049BDA1;
-			productRefGroup = 3D10A4A4261E3A970049BDA1 /* Products */;
+			mainGroup = 3D10A5EB262581650049BDA1;
+			productRefGroup = 3D10A5F6262581650049BDA1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3D10A4A2261E3A970049BDA1 /* AEPCampaign */,
-				3D10A55426204EAC0049BDA1 /* AEPCampaignUnitTests */,
-				3D10A56526204EC20049BDA1 /* AEPCampaignFunctionalTests */,
+				3D10A5F4262581650049BDA1 /* AEPCampaign */,
+				3D10A6232625826D0049BDA1 /* AEPCampaignFunctionalTests */,
+				3D10A639262582A60049BDA1 /* AEPCampaignUnitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3D10A55326204EAC0049BDA1 /* Resources */ = {
+		3D10A5F3262581650049BDA1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3D10A56426204EC20049BDA1 /* Resources */ = {
+		3D10A6222625826D0049BDA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D10A638262582A60049BDA1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -324,29 +329,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		46029E18892FE34A524F7E1C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPCampaign-AEPCampaignUnitTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4D72A5E92CE6B95322E2D459 /* [CP] Embed Pods Frameworks */ = {
+		1AF77B918F60F828650551A2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -363,29 +346,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		623C617EC97815E9BE8C758F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPCampaign-AEPCampaignFunctionalTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BC97A7B9464018414C19D6B5 /* [CP] Embed Pods Frameworks */ = {
+		3A4336AB0933108633D1F255 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -402,7 +363,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C72259B8E8DA2D0C253BD55A /* [CP] Check Pods Manifest.lock */ = {
+		8208F379A32DC42383BC7457 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -424,53 +385,96 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		A2779C34D0E8CCBEE5538075 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AEPCampaign-AEPCampaignFunctionalTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E5399E354E372695108B262F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AEPCampaign-AEPCampaignUnitTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		3D10A49F261E3A970049BDA1 /* Sources */ = {
+		3D10A5F1262581650049BDA1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6E822E52624E0B90092C7DE /* CampaignConstants.swift in Sources */,
-				D6E8239F262604460092C7DE /* CampaignState.swift in Sources */,
-				3D10A4A7261E3A970049BDA1 /* AEPCampaign.swift in Sources */,
+				3D10A653262583C70049BDA1 /* Campaign.swift in Sources */,
+				3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */,
+				3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3D10A55126204EAC0049BDA1 /* Sources */ = {
+		3D10A6202625826D0049BDA1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D10A55826204EAC0049BDA1 /* AEPCampaignUnitTests.swift in Sources */,
-				D6E82397262604350092C7DE /* CampaignStateTests.swift in Sources */,
+				3D10A6272625826D0049BDA1 /* AEPCampaignFunctionalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3D10A56226204EC20049BDA1 /* Sources */ = {
+		3D10A636262582A60049BDA1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D10A56926204EC20049BDA1 /* AEPCampaignFunctionalTests.swift in Sources */,
+				3D10A63D262582A60049BDA1 /* AEPCampaignUnitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3D10A55C26204EAC0049BDA1 /* PBXTargetDependency */ = {
+		3D10A62B2625826D0049BDA1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3D10A4A2261E3A970049BDA1 /* AEPCampaign */;
-			targetProxy = 3D10A55B26204EAC0049BDA1 /* PBXContainerItemProxy */;
+			target = 3D10A5F4262581650049BDA1 /* AEPCampaign */;
+			targetProxy = 3D10A62A2625826D0049BDA1 /* PBXContainerItemProxy */;
 		};
-		3D10A56D26204EC20049BDA1 /* PBXTargetDependency */ = {
+		3D10A641262582A60049BDA1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3D10A4A2261E3A970049BDA1 /* AEPCampaign */;
-			targetProxy = 3D10A56C26204EC20049BDA1 /* PBXContainerItemProxy */;
+			target = 3D10A5F4262581650049BDA1 /* AEPCampaign */;
+			targetProxy = 3D10A640262582A60049BDA1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		3D10A4A8261E3A970049BDA1 /* Debug */ = {
+		3D10A607262581650049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -504,6 +508,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -528,10 +533,12 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		3D10A4A9261E3A970049BDA1 /* Release */ = {
+		3D10A608262581650049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -565,6 +572,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -583,82 +591,76 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
-		3D10A4AB261E3A970049BDA1 /* Debug */ = {
+		3D10A60A262581650049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A1E02C43F42974BFC84078E /* Pods-AEPCampaign.debug.xcconfig */;
+			baseConfigurationReference = 150C854BF5853ED961FE86F8 /* Pods-AEPCampaign.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FKGEE875K4;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		3D10A4AC261E3A970049BDA1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CC68861782C97C080E4547A /* Pods-AEPCampaign.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = FKGEE875K4;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		3D10A55E26204EAC0049BDA1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 68BDF628B4334CD174826C9C /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = FKGEE875K4;
-				INFOPLIST_FILE = AEPCampaign/Tests/Info.plist;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = AEPCampaign/Sources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPCampaignUnitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPCampaign;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		3D10A55F26204EAC0049BDA1 /* Release */ = {
+		3D10A60B262581650049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6B583ABB096C73966E59D96B /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */;
+			baseConfigurationReference = A3A99FAF3EF2C88ACE12F2DC /* Pods-AEPCampaign.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FKGEE875K4;
-				INFOPLIST_FILE = AEPCampaign/Tests/Info.plist;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = AEPCampaign/Sources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPCampaignUnitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPCampaign;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		3D10A56F26204EC20049BDA1 /* Debug */ = {
+		3D10A62D2625826D0049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1CE02194F06E3ABD85E78DE7 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */;
+			baseConfigurationReference = 832CA6B995776E9E268A1372 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FKGEE875K4;
-				INFOPLIST_FILE = AEPCampaign/Tests/Info.plist;
+				INFOPLIST_FILE = AEPCampaignFunctionalTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -671,19 +673,60 @@
 			};
 			name = Debug;
 		};
-		3D10A57026204EC20049BDA1 /* Release */ = {
+		3D10A62E2625826D0049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39899DA5FF8DDBEE7ED3F6B3 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */;
+			baseConfigurationReference = 4D09EDCE32512CC3F38B932E /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FKGEE875K4;
-				INFOPLIST_FILE = AEPCampaign/Tests/Info.plist;
+				INFOPLIST_FILE = AEPCampaignFunctionalTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPCampaignFunctionalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3D10A643262582A60049BDA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BAA0DA070500C13F89C7115E /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FKGEE875K4;
+				INFOPLIST_FILE = AEPCampaignUnitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPCampaignUnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3D10A644262582A60049BDA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34D46E0BDD44BB731B5E372E /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FKGEE875K4;
+				INFOPLIST_FILE = AEPCampaignUnitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adobe.mobile.AEPCampaignUnitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -693,43 +736,43 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3D10A49E261E3A970049BDA1 /* Build configuration list for PBXProject "AEPCampaign" */ = {
+		3D10A5EF262581650049BDA1 /* Build configuration list for PBXProject "AEPCampaign" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3D10A4A8261E3A970049BDA1 /* Debug */,
-				3D10A4A9261E3A970049BDA1 /* Release */,
+				3D10A607262581650049BDA1 /* Debug */,
+				3D10A608262581650049BDA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D10A4AA261E3A970049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaign" */ = {
+		3D10A609262581650049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaign" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3D10A4AB261E3A970049BDA1 /* Debug */,
-				3D10A4AC261E3A970049BDA1 /* Release */,
+				3D10A60A262581650049BDA1 /* Debug */,
+				3D10A60B262581650049BDA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D10A55D26204EAC0049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignUnitTests" */ = {
+		3D10A62C2625826D0049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignFunctionalTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3D10A55E26204EAC0049BDA1 /* Debug */,
-				3D10A55F26204EAC0049BDA1 /* Release */,
+				3D10A62D2625826D0049BDA1 /* Debug */,
+				3D10A62E2625826D0049BDA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D10A56E26204EC20049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignFunctionalTests" */ = {
+		3D10A642262582A60049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignUnitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3D10A56F26204EC20049BDA1 /* Debug */,
-				3D10A57026204EC20049BDA1 /* Release */,
+				3D10A643262582A60049BDA1 /* Debug */,
+				3D10A644262582A60049BDA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 3D10A49B261E3A970049BDA1 /* Project object */;
+	rootObject = 3D10A5EC262581650049BDA1 /* Project object */;
 }
