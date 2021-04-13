@@ -26,7 +26,7 @@ enum CampaignConstants {
         static let PUSH_PLATFORM = "pushPlatform"
         static let DEFAULT_REGISTRATION_DELAY = TimeInterval(60 * 60 * 24 * 7) // 7 days
         static let DEFAULT_TIMESTAMP_VALUE = -1
-        static let SECONDS_IN_A_DAY = TimeInterval(86400) // check if still needed
+        static let SECONDS_IN_A_DAY = 86400
         static let MILLISECONDS_IN_A_SECOND = 1000 // check if still needed
         static let SERVER_TOKEN =
             "{%~state.com.adobe.module.configuration/campaign.server%}"
@@ -34,7 +34,6 @@ enum CampaignConstants {
             "{%~state.com.adobe.module.configuration/property.id%}"
         static let IDENTITY_ECID_TOKEN = "{%~state.com.adobe.module.identity/mid%}"
         static let MESSAGE_ID_TOKEN = "messageId"
-
         static let PROFILE_URL = "https://%s/rest/head/mobileAppV5/%s/subscriptions/%s"
         static let RULES_DOWNLOAD_URL = "https://%s/%s/%s/%s/rules.zip"
         static let TRACKING_URL = "https://%s/r/?id=%s,%s,%s&mcId=%s"
