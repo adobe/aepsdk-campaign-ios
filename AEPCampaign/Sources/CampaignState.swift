@@ -18,19 +18,19 @@ class CampaignState {
     private let LOG_TAG = "CampaignState"
 
     // Privacy status
-    private var privacyStatus: PrivacyStatus = .unknown
+    private(set) var privacyStatus: PrivacyStatus = .unknown
 
     // Campaign config
-    private var campaignServer: String?
-    private var campaignPkey: String?
-    private var campaignMciasServer: String?
-    private var campaignTimeout: TimeInterval?
-    private var campaignPropertyId: String?
-    private var campaignRegistrationDelay: TimeInterval?
-    private var campaignRegistrationPaused: Bool?
+    private(set) var campaignServer: String?
+    private(set) var campaignPkey: String?
+    private(set) var campaignMciasServer: String?
+    private(set) var campaignTimeout: TimeInterval?
+    private(set) var campaignPropertyId: String?
+    private(set) var campaignRegistrationDelay: TimeInterval = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
+    private(set) var campaignRegistrationPaused = false
 
     // Identity shared state
-    private var ecid: String?
+    private(set) var ecid: String?
 
     /// Takes the shared states map and updates the data within the Campaign State.
     /// - Parameter dataMap: The map contains the shared state data required by the Campaign Extension.
@@ -62,7 +62,7 @@ class CampaignState {
         if let registrationDelayDays = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_DELAY_KEY] as? Int {
             self.campaignRegistrationDelay = TimeInterval(registrationDelayDays * CampaignConstants.Campaign.SECONDS_IN_A_DAY)
         }
-        self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool
+        self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
     }
 
     /// Extracts the identity data from the provided shared state data.
@@ -74,40 +74,25 @@ class CampaignState {
         }
         self.ecid = identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] as? String
     }
-
-    func getExperienceCloudId() -> String? {
-        return ecid
-    }
-
-    func getPrivacyStatus() -> PrivacyStatus {
-        return privacyStatus
-    }
-
-    func getServer() -> String? {
-        return campaignServer
-    }
-
-    func getPkey() -> String? {
-        return campaignPkey
-    }
-
-    func getMciasServer() -> String? {
-        return campaignMciasServer
-    }
-
-    func getTimeout() -> TimeInterval {
-        return campaignTimeout ?? CampaignConstants.Campaign.DEFAULT_TIMEOUT
-    }
-
-    func getPropertyId() -> String? {
-        return campaignPropertyId
-    }
-
-    func getRegistrationDelay() -> TimeInterval {
-        return campaignRegistrationDelay ?? CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
-    }
-
-    func getRegistrationPausedStatus() -> Bool {
-        return campaignRegistrationPaused ?? false
+    
+    ///Determines if this `CampaignState` is valid for sending message track request to Campaign.
+    ///- Returns true if the CampaignState is valid else return false
+    func canSendTrackInfoWithCurrentState() -> Bool {
+        guard privacyStatus == .optedIn else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. Privacy status is not OptedIn.")
+            return false
+        }
+        
+        guard let ecid = ecid, !ecid.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. ECID is invalid.")
+            return false
+        }
+        
+        guard let campaignServer = campaignServer, !campaignServer.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. Campaign server value is invalid.")
+            return false
+        }
+        
+        return true
     }
 }
