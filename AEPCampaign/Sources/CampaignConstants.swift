@@ -34,7 +34,7 @@ enum CampaignConstants {
             "{%~state.com.adobe.module.configuration/property.id%}"
         static let IDENTITY_ECID_TOKEN = "{%~state.com.adobe.module.identity/mid%}"
         static let MESSAGE_ID_TOKEN = "messageId"
-        static let PROFILE_URL = "https://%s/rest/head/mobileAppV5/%s/subscriptions/%s"
+        static let PROFILE_URL_PATH = "/rest/head/mobileAppV5/%s/subscriptions/%s"
         static let RULES_DOWNLOAD_URL = "https://%s/%s/%s/%s/rules.zip"
         static let TRACKING_URL = "https://%s/r/?id=%s,%s,%s&mcId=%s"
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%s__"
