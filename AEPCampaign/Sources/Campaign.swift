@@ -23,7 +23,7 @@ public class Campaign: NSObject, Extension {
     public static var extensionVersion = CampaignConstants.EXTENSION_VERSION
     public var metadata: [String : String]?
     public let runtime: ExtensionRuntime
-    private var campaignState: CampaignState
+    private var campaignState: CampaignState    
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
@@ -68,8 +68,7 @@ public class Campaign: NSObject, Extension {
     
     ///Handles `Generic Data` events
     private func handleGenericDataEvent(event: Event){
-        
-        
+        MessageInteractionTracker.processMessageInformation(event: event, state: campaignState, campaign: self)
     }
     
     func dispatchEvent(eventName name: String, eventType type: String, eventSource source: String, eventData data: [String: Any]?) {

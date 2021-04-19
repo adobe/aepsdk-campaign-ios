@@ -14,11 +14,17 @@
 import AEPCore
 import AEPServices
 
+///Helper class contains methods for tracking user's interaction with `Messages`
 class MessageInteractionTracker {
     
-    private let LOG_TAG = "MessageInteractionTracker"
+    private static let LOG_TAG = "MessageInteractionTracker"
     
-    func processMessageInformation(event: Event, state: CampaignState, campaign: Campaign) {
+    ///Processes `Generic Data` event to send message tracking request to the configured Campaign server. If the current Configuration properties do not allow sending track request, no request is sent.
+    /// - Parameters:
+    ///    - event: `Event`to be processed
+    ///    - state: Current `Campaign State`
+    ///    - campaign: Instance of `Campaign` type
+    static func processMessageInformation(event: Event, state: CampaignState, campaign: Campaign) {
         guard state.canSendTrackInfoWithCurrentState() else {
             Log.debug(label: LOG_TAG, "\(#function) - Campaign extension is not configured to send message track request.")
             return
@@ -57,7 +63,7 @@ class MessageInteractionTracker {
     ///    - action: String containing the action value. The `action` should be either `1 or 2`
     ///    - deliveryId: The hex encoded deliveryId.
     ///    - campaign: An instance of `Campaign`. This is used for dispatching the response event.
-    private func dispatchMessageEvent(action: String, deliveryId: String, campaign: Campaign) {
+    private static func dispatchMessageEvent(action: String, deliveryId: String, campaign: Campaign) {
         
         guard action == "2" || action == "1" else { //Dispatch only when action is open(2) or click(1)
             Log.trace(label: LOG_TAG, "\(#function) - Action received is other than viewed or clicked, so cannot dispatch Message Event.")
@@ -85,7 +91,14 @@ class MessageInteractionTracker {
                 
     }
     
-    private func buildTrackingUrl(host: String,
+    /// Builds the URL for Message tracking
+    /// - Parameters:
+    ///     - host: Campaign server
+    ///     - broadLogId: The BroadLogId for Message
+    ///     - deliveryId: The DeliveryId for Message
+    ///     - action: The action value for type of interaction(impression, click and open)
+    ///     - ecid: The experience cloud id of user
+    private static func buildTrackingUrl(host: String,
                           broadLogId: String,
                           deliveryId: String,
                           action: String,
@@ -107,4 +120,4 @@ class MessageInteractionTracker {
         return urlComponent.url
     }
 }
-//        processRequest(url, "", campaignState, event);
+
