@@ -17,12 +17,13 @@ enum CampaignConstants {
     static let FRIENDLY_NAME                            = "Campaign"
     static let EXTENSION_VERSION                        = "0.0.1"
     static let DATASTORE_NAME                           = EXTENSION_NAME
+    static let LOG_TAG                                  = FRIENDLY_NAME
 
     enum Campaign {
         static let MESSAGE_CACHE_FOLDER = "messages"
         static let IAM_CONSEQUENCE_TYPE = "iam"
         static let LINKAGE_FIELD_NETWORK_HEADER = "X-InApp-Auth"
-        static let DEFAULT_TIMEOUT = TimeInterval(5)
+        static let DEFAULT_TIMEOUT = 5
         static let PUSH_PLATFORM = "pushPlatform"
         static let DEFAULT_REGISTRATION_DELAY = TimeInterval(60 * 60 * 24 * 7) // 7 days
         static let DEFAULT_TIMESTAMP_VALUE = -1
@@ -34,7 +35,7 @@ enum CampaignConstants {
             "{%~state.com.adobe.module.configuration/property.id%}"
         static let IDENTITY_ECID_TOKEN = "{%~state.com.adobe.module.identity/mid%}"
         static let MESSAGE_ID_TOKEN = "messageId"
-        static let PROFILE_URL = "https://%s/rest/head/mobileAppV5/%s/subscriptions/%s"
+        static let PROFILE_URL_PATH = "/rest/head/mobileAppV5/%s/subscriptions/%s"
         static let RULES_DOWNLOAD_URL = "https://%s/%s/%s/%s/rules.zip"
         static let TRACKING_URL = "https://%s/r/?id=%s,%s,%s&mcId=%s"
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%s__"
