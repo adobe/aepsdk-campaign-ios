@@ -22,6 +22,7 @@ extension HitQueuing {
     ///   - timestamp: the `CampaignHit` timestamp
     ///   - privacyStatus: the current `PrivacyStatus`
     func queue(url: URL, payload: String, timestamp: TimeInterval, privacyStatus: PrivacyStatus) {
+        handlePrivacyChange(status: privacyStatus)
         guard privacyStatus != .optedOut else {
             Log.debug(label: CampaignConstants.LOG_TAG, "CampaignHitQueuing: \(#function) - Dropping Campaign hit, privacy is opted-out.")
             return
@@ -34,8 +35,5 @@ extension HitQueuing {
 
         let hit = DataEntity(data: hitData)
         queue(entity: hit)
-        if privacyStatus == .optedIn {
-            beginProcessing()
-        }
     }
 }
