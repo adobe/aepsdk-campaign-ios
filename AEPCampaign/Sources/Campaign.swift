@@ -16,18 +16,19 @@ import AEPServices
 
 @objc(AEPCampaign)
 public class Campaign: NSObject, Extension {
-    
-    private let LOG_TAG = "Campaign"
+    private static let LOG_TAG = "Campaign"
     public var name = CampaignConstants.EXTENSION_NAME
     public var friendlyName = CampaignConstants.FRIENDLY_NAME
     public static var extensionVersion = CampaignConstants.EXTENSION_VERSION
     public var metadata: [String : String]?
     public let runtime: ExtensionRuntime
-    private var campaignState: CampaignState    
+    private var state: CampaignState?
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
-        campaignState = CampaignState()
+        if let hitQueue = setupHitQueue() {
+            state = CampaignState(hitQueue: hitQueue)
+        }
         super.init()
     }
     
@@ -114,5 +115,16 @@ public class Campaign: NSObject, Extension {
     private func shouldSendRegistrationRequest() -> Bool{
         //TODO:: Implement this
     return false
+    }
+    
+    /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
+    private func setupHitQueue() -> HitQueuing? {
+        guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
+            Log.error(label: Self.LOG_TAG, "\(#function) - Failed to create DataQueue, Campaign could not be initialized")
+            return nil
+        }
+        
+        let hitProcessor = CampaignHitProcessor()
+        return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
 }

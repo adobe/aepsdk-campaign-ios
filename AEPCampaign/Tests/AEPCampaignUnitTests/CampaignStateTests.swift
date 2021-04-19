@@ -11,15 +11,24 @@
 
 import XCTest
 import Foundation
+import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 
 class CampaignStateTests: XCTestCase {
 
+    var hitProcessor: MockHitProcessor!
+    var dataQueue: MockDataQueue!
     var state: CampaignState!
 
     override func setUp() {
-        state = CampaignState()
+        dataQueue = MockDataQueue()
+        hitProcessor = MockHitProcessor()
+        state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))
+    }
+
+    func testHitQueueNotNilOnCampaignStateInit() {
+        XCTAssertNotNil(state.hitQueue)
     }
 
     func testUpdateWithConfigurationSharedState() {
@@ -28,7 +37,7 @@ class CampaignStateTests: XCTestCase {
         let server = "campaign_server"
         let pkey = "pkey"
         let mciasServer = "campaign_rules/mcias"
-        let timeout = TimeInterval(10)
+        let timeout = 10
         let propertyId = "propertyId"
         let registrationDelay = 10
         let registrationPaused = true
@@ -46,14 +55,14 @@ class CampaignStateTests: XCTestCase {
         dataMap[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
         state.update(dataMap: dataMap)
         // verify
-        XCTAssertEqual(state.getPrivacyStatus(), PrivacyStatus.optedIn)
-        XCTAssertEqual(state.getServer(), server)
-        XCTAssertEqual(state.getPkey(), pkey)
-        XCTAssertEqual(state.getMciasServer(), mciasServer)
-        XCTAssertEqual(state.getTimeout(), timeout)
-        XCTAssertEqual(state.getPropertyId(), propertyId)
-        XCTAssertEqual(state.getRegistrationDelay(), TimeInterval(864000)) // 10 days in seconds
-        XCTAssertEqual(state.getRegistrationPausedStatus(), registrationPaused)
+        XCTAssertEqual(state.privacyStatus, PrivacyStatus.optedIn)
+        XCTAssertEqual(state.campaignServer, server)
+        XCTAssertEqual(state.campaignPkey, pkey)
+        XCTAssertEqual(state.campaignMciasServer, mciasServer)
+        XCTAssertEqual(state.campaignTimeout, TimeInterval(timeout))
+        XCTAssertEqual(state.campaignPropertyId, propertyId)
+        XCTAssertEqual(state.campaignRegistrationDelay, TimeInterval(864000)) // 10 days in seconds
+        XCTAssertEqual(state.campaignRegistrationPaused, registrationPaused)
     }
 
     func testUpdateWithConfigurationSharedStateVerifyDefaultValues() {
@@ -72,14 +81,14 @@ class CampaignStateTests: XCTestCase {
         dataMap[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
         state.update(dataMap: dataMap)
         // verify
-        XCTAssertEqual(state.getPrivacyStatus(), PrivacyStatus.unknown) // default value is unknown
-        XCTAssertEqual(state.getServer(), server)
-        XCTAssertEqual(state.getPkey(), pkey)
-        XCTAssertEqual(state.getMciasServer(), mciasServer)
-        XCTAssertEqual(state.getTimeout(), TimeInterval(5)) // default value is 5 seconds
-        XCTAssertEqual(state.getPropertyId(), propertyId)
-        XCTAssertEqual(state.getRegistrationDelay(), TimeInterval(604800)) // default value is 7 days in seconds
-        XCTAssertEqual(state.getRegistrationPausedStatus(), false) // default value is false
+        XCTAssertEqual(state.privacyStatus, PrivacyStatus.unknown) // default value is unknown
+        XCTAssertEqual(state.campaignServer, server)
+        XCTAssertEqual(state.campaignPkey, pkey)
+        XCTAssertEqual(state.campaignMciasServer, mciasServer)
+        XCTAssertEqual(state.campaignTimeout, TimeInterval(5)) // default value is 5 seconds
+        XCTAssertEqual(state.campaignPropertyId, propertyId)
+        XCTAssertEqual(state.campaignRegistrationDelay, TimeInterval(604800)) // default value is 7 days in seconds
+        XCTAssertEqual(state.campaignRegistrationPaused, false) // default value is false
     }
 
     func testUpdateWithIdentitySharedState() {
@@ -92,6 +101,6 @@ class CampaignStateTests: XCTestCase {
         dataMap[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         state.update(dataMap: dataMap)
         // verify
-        XCTAssertEqual(state.getExperienceCloudId(), ecid)
+        XCTAssertEqual(state.ecid, ecid)
     }
 }

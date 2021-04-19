@@ -26,11 +26,19 @@ class CampaignState {
     private(set) var campaignMciasServer: String?
     private(set) var campaignTimeout: TimeInterval?
     private(set) var campaignPropertyId: String?
-    private(set) var campaignRegistrationDelay: TimeInterval = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
-    private(set) var campaignRegistrationPaused = false
+    private(set) var campaignRegistrationDelay: TimeInterval?
+    private(set) var campaignRegistrationPaused: Bool?
 
     // Identity shared state
     private(set) var ecid: String?
+
+    // Campaign Persistent HitQueue
+    private(set) var hitQueue: HitQueuing
+
+    /// Creates a new `CampaignState`.
+    init(hitQueue: HitQueuing) {
+        self.hitQueue = hitQueue
+    }
 
     /// Takes the shared states map and updates the data within the Campaign State.
     /// - Parameter dataMap: The map contains the shared state data required by the Campaign Extension.
@@ -57,12 +65,17 @@ class CampaignState {
         self.campaignServer = configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] as? String
         self.campaignPkey = configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] as? String
         self.campaignMciasServer = configurationData[CampaignConstants.Configuration.CAMPAIGN_MCIAS] as? String
-        self.campaignTimeout = configurationData[CampaignConstants.Configuration.CAMPAIGN_TIMEOUT] as? TimeInterval
+        self.campaignTimeout = TimeInterval(configurationData[CampaignConstants.Configuration.CAMPAIGN_TIMEOUT] as? Int ?? CampaignConstants.Campaign.DEFAULT_TIMEOUT)
         self.campaignPropertyId = configurationData[CampaignConstants.Configuration.PROPERTY_ID] as? String
         if let registrationDelayDays = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_DELAY_KEY] as? Int {
             self.campaignRegistrationDelay = TimeInterval(registrationDelayDays * CampaignConstants.Campaign.SECONDS_IN_A_DAY)
+        } else {
+            self.campaignRegistrationDelay = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
         }
         self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
+
+        // update the hitQueue with the latest privacy status
+        hitQueue.handlePrivacyChange(status: self.privacyStatus)
     }
 
     /// Extracts the identity data from the provided shared state data.
