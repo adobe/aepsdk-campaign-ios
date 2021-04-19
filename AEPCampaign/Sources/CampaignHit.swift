@@ -15,7 +15,9 @@ import Foundation
 
 /// Struct which represents an Campaign hit
 struct CampaignHit: Codable {
-    /// Payload for Campaign hit
+    /// URL for the Campaign Hit
+    let url: URL
+    /// Payload of the Campaign hit
     let payload: String
     /// Timestamp of Campaign hit
     let timestamp: TimeInterval

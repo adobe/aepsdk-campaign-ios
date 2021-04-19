@@ -34,15 +34,16 @@ class CampaignHitsDatabase {
 
     /// Creates a Campaign Hit then queues the hit in the CampaignHitsDatabase.
     /// - Parameters:
+    ///   - url: the destination url of the Campaign Hit
     ///   - payload: the Campaign Hit payload
     ///   - timestamp: the Campaign Hit timestamp
-    func queue(payload: String, timestamp: TimeInterval) {
+    func queue(url: URL, payload: String, timestamp: TimeInterval) {
         guard campaignState.getPrivacyStatus() != .optedOut else {
             Log.debug(label: self.LOG_TAG, "\(#function) - Dropping Campaign hit, privacy is opted-out.")
             return
         }
 
-        guard let hitData = try? JSONEncoder().encode(CampaignHit(payload: payload, timestamp: timestamp)) else {
+        guard let hitData = try? JSONEncoder().encode(CampaignHit(url: url, payload: payload, timestamp: timestamp)) else {
             Log.debug(label: self.LOG_TAG, "\(#function) - Dropping Campaign hit, failed to encode hit")
             return
         }

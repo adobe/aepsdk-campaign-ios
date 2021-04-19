@@ -27,14 +27,18 @@ class CampaignHitsDatabaseTests: XCTestCase {
     
     @discardableResult
     private func queueHits(numberOfHits: Int) -> [CampaignHit] {
+        guard let testUrl = URL(string: "https://acs-test.com") else {
+            XCTFail("Failed to create a test url")
+            return []
+        }
         var queuedHits: [CampaignHit] = []
         for _ in 1 ... numberOfHits {
             guard let payload = URL.buildBody(state: state, data: nil) else {
                 XCTFail("Failed to create request payload")
                 return []
             }
-            let hit = CampaignHit(payload: payload, timestamp: Date().timeIntervalSince1970)
-            hitsDatabase.queue(payload: hit.payload, timestamp: hit.timestamp)
+            let hit = CampaignHit(url: testUrl, payload: payload, timestamp: Date().timeIntervalSince1970)
+            hitsDatabase.queue(url: hit.url, payload: hit.payload, timestamp: hit.timestamp)
             queuedHits.append(hit)
         }
         return queuedHits
