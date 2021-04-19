@@ -16,13 +16,13 @@ import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 
-class CampaignHitsDatabaseTests: XCTestCase {
+class CampaignHitQueuingTests: XCTestCase {
 
-    var hitsDatabase: CampaignHitsDatabase!
     var hitProcessor: MockHitProcessor!
+    var dataQueue: MockDataQueue!
     var state: CampaignState!
     var mockDataQueueService: MockDataQueueService? {
-        return CampaignHitsDatabase.dataQueueService as? MockDataQueueService
+        return Campaign.dataQueueService as? MockDataQueueService
     }
     
     @discardableResult
@@ -38,7 +38,7 @@ class CampaignHitsDatabaseTests: XCTestCase {
                 return []
             }
             let hit = CampaignHit(url: testUrl, payload: payload, timestamp: Date().timeIntervalSince1970)
-            hitsDatabase.queue(url: hit.url, payload: hit.payload, timestamp: hit.timestamp)
+            state.hitQueue.queue(url: hit.url, payload: hit.payload, timestamp: hit.timestamp, privacyStatus: state.privacyStatus)
             queuedHits.append(hit)
         }
         return queuedHits
@@ -76,7 +76,6 @@ class CampaignHitsDatabaseTests: XCTestCase {
         var dataMap = [String: [String: Any]]()
         dataMap[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
         state.update(dataMap: dataMap)
-        hitsDatabase.updatePrivacyStatus()
     }
     
     func addStateData(customConfig: [String: Any]? = nil) {
@@ -95,11 +94,11 @@ class CampaignHitsDatabaseTests: XCTestCase {
     }
     
     override func setUp() {
-        CampaignHitsDatabase.dataQueueService = MockDataQueueService()
-        state = CampaignState()
-        addStateData()
+        Campaign.dataQueueService = MockDataQueueService()
+        dataQueue = MockDataQueue()
         hitProcessor = MockHitProcessor()
-        hitsDatabase = CampaignHitsDatabase(state: state, processor: hitProcessor)
+        state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))
+        addStateData()
     }
     
     func testQueueHit() {
@@ -120,7 +119,7 @@ class CampaignHitsDatabaseTests: XCTestCase {
         // test
         let queuedHits = queueHits(numberOfHits: 5)
         // verify
-        XCTAssertEqual(5, hitsDatabase.getQueueSize())
+        XCTAssertEqual(5, state.hitQueue.count())
         // update privacy status to opted in to begin processing of queued hits
         updatePrivacyStatus(status: .optedIn)
         Thread.sleep(forTimeInterval:0.5)
@@ -133,7 +132,7 @@ class CampaignHitsDatabaseTests: XCTestCase {
         // test
         queueHits(numberOfHits: 2)
         // verify
-        XCTAssertEqual(0, hitsDatabase.getQueueSize())
+        XCTAssertEqual(0, state.hitQueue.count())
     }
     
     func testQueueHitsWhenPrivacyUnknown() {
@@ -142,7 +141,7 @@ class CampaignHitsDatabaseTests: XCTestCase {
         // test
         queueHits(numberOfHits: 2)
         // verify
-        XCTAssertEqual(2, hitsDatabase.getQueueSize())
+        XCTAssertEqual(2, state.hitQueue.count())
         Thread.sleep(forTimeInterval:0.5)
         assertHits([], getProcessedHits())
     }
@@ -153,10 +152,10 @@ class CampaignHitsDatabaseTests: XCTestCase {
         // test
         queueHits(numberOfHits: 5)
         // verify
-        XCTAssertEqual(5, hitsDatabase.getQueueSize())
+        XCTAssertEqual(5, state.hitQueue.count())
         // update privacy status to opted out and verify the database is cleared
         updatePrivacyStatus(status: .optedOut)
         Thread.sleep(forTimeInterval:0.5)
-        XCTAssertEqual(0, hitsDatabase.getQueueSize())
+        XCTAssertEqual(0, state.hitQueue.count())
     }
 }

@@ -18,19 +18,27 @@ class CampaignState {
     private let LOG_TAG = "CampaignState"
 
     // Privacy status
-    private var privacyStatus: PrivacyStatus = .unknown
+    private(set) var privacyStatus: PrivacyStatus = .unknown
 
     // Campaign config
-    private var campaignServer: String?
-    private var campaignPkey: String?
-    private var campaignMciasServer: String?
-    private var campaignTimeout: TimeInterval?
-    private var campaignPropertyId: String?
-    private var campaignRegistrationDelay: TimeInterval?
-    private var campaignRegistrationPaused: Bool?
+    private(set) var campaignServer: String?
+    private(set) var campaignPkey: String?
+    private(set) var campaignMciasServer: String?
+    private(set) var campaignTimeout: TimeInterval?
+    private(set) var campaignPropertyId: String?
+    private(set) var campaignRegistrationDelay: TimeInterval?
+    private(set) var campaignRegistrationPaused: Bool?
 
     // Identity shared state
-    private var ecid: String?
+    private(set) var ecid: String?
+
+    // Campaign Persistent HitQueue
+    private(set) var hitQueue: HitQueuing
+
+    /// Creates a new `CampaignState`.
+    init(hitQueue: HitQueuing) {
+        self.hitQueue = hitQueue
+    }
 
     /// Takes the shared states map and updates the data within the Campaign State.
     /// - Parameter dataMap: The map contains the shared state data required by the Campaign Extension.
@@ -57,12 +65,16 @@ class CampaignState {
         self.campaignServer = configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] as? String
         self.campaignPkey = configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] as? String
         self.campaignMciasServer = configurationData[CampaignConstants.Configuration.CAMPAIGN_MCIAS] as? String
-        self.campaignTimeout = configurationData[CampaignConstants.Configuration.CAMPAIGN_TIMEOUT] as? TimeInterval
+        self.campaignTimeout = TimeInterval(configurationData[CampaignConstants.Configuration.CAMPAIGN_TIMEOUT] as? Int ?? CampaignConstants.Campaign.DEFAULT_TIMEOUT)
         self.campaignPropertyId = configurationData[CampaignConstants.Configuration.PROPERTY_ID] as? String
         if let registrationDelayDays = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_DELAY_KEY] as? Int {
             self.campaignRegistrationDelay = TimeInterval(registrationDelayDays * CampaignConstants.Campaign.SECONDS_IN_A_DAY)
+        } else {
+            self.campaignRegistrationDelay = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
         }
-        self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool
+        self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
+        // update the hitQueue with the latest privacy status
+        hitQueue.handlePrivacyChange(status: self.privacyStatus)
     }
 
     /// Extracts the identity data from the provided shared state data.
@@ -73,41 +85,5 @@ class CampaignState {
             return
         }
         self.ecid = identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] as? String
-    }
-
-    func getExperienceCloudId() -> String? {
-        return ecid
-    }
-
-    func getPrivacyStatus() -> PrivacyStatus {
-        return privacyStatus
-    }
-
-    func getServer() -> String? {
-        return campaignServer
-    }
-
-    func getPkey() -> String? {
-        return campaignPkey
-    }
-
-    func getMciasServer() -> String? {
-        return campaignMciasServer
-    }
-
-    func getTimeout() -> TimeInterval {
-        return campaignTimeout ?? CampaignConstants.Campaign.DEFAULT_TIMEOUT
-    }
-
-    func getPropertyId() -> String? {
-        return campaignPropertyId
-    }
-
-    func getRegistrationDelay() -> TimeInterval {
-        return campaignRegistrationDelay ?? CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
-    }
-
-    func getRegistrationPausedStatus() -> Bool {
-        return campaignRegistrationPaused ?? false
     }
 }

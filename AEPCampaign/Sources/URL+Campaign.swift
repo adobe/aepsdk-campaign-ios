@@ -24,7 +24,7 @@ extension URL {
     static func getCampaignProfileUrl(state: CampaignState) -> URL? {
         var components = URLComponents()
         components.scheme = "https"
-        guard let server = state.getServer(), let pkey = state.getPkey(), let ecid = state.getExperienceCloudId(), !server.isEmpty, !pkey.isEmpty, !ecid.isEmpty else {
+        guard let server = state.campaignServer, let pkey = state.campaignPkey, let ecid = state.ecid, !server.isEmpty, !pkey.isEmpty, !ecid.isEmpty else {
             Log.error(label: LOG_TAG, "The Campaign state did not contain the necessary configuration to build the profile url, returning nil.")
             return nil
         }
@@ -45,7 +45,7 @@ extension URL {
     ///   - data: additional profile data to be sent to campaign
     /// - Returns: A string containing the payload for the campaign request
     static func buildBody(state: CampaignState, data: [String: String]?) -> String? {
-        guard let ecid = state.getExperienceCloudId() else {
+        guard let ecid = state.ecid else {
             Log.error(label: Self.LOG_TAG, "The Campaign state did not contain an experience cloud id, returning nil.")
             return nil
         }

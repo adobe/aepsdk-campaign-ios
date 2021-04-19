@@ -12,20 +12,27 @@
 
 import Foundation
 import AEPCore
+import AEPServices
 
 @objc(AEPCampaign)
 public class Campaign: NSObject, Extension {
     
     private static let LOG_TAG = "Campaign"
+    
     public var name = CampaignConstants.EXTENSION_NAME
     public var friendlyName = CampaignConstants.FRIENDLY_NAME
     public static var extensionVersion = CampaignConstants.EXTENSION_VERSION
     public var metadata: [String : String]?
     public let runtime: ExtensionRuntime
+    internal var state: CampaignState?
+    internal static var dataQueueService = ServiceProvider.shared.dataQueueService
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
         super.init()
+        if let hitQueue = setupHitQueue() {
+            state = CampaignState(hitQueue: hitQueue)
+        }
     }
     
     public func onRegistered() {
@@ -66,5 +73,16 @@ public class Campaign: NSObject, Extension {
     ///Handles `Generic Data` events
     private func handleGenericDataEvent(event: Event){
         
+    }
+    
+    /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
+    private func setupHitQueue() -> HitQueuing? {
+        guard let dataQueue = Self.dataQueueService.getDataQueue(label: name) else {
+            Log.error(label: Self.LOG_TAG, "\(#function) - Failed to create DataQueue, Campaign could not be initialized")
+            return nil
+        }
+        
+        let hitProcessor = CampaignHitProcessor()
+        return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
 }
