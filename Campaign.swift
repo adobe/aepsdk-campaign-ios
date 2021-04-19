@@ -24,8 +24,7 @@ public class Campaign: NSObject, Extension {
     public static var extensionVersion = CampaignConstants.EXTENSION_VERSION
     public var metadata: [String : String]?
     public let runtime: ExtensionRuntime
-    internal var state: CampaignState?
-    internal static var dataQueueService = ServiceProvider.shared.dataQueueService
+    private var state: CampaignState?
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
@@ -77,7 +76,7 @@ public class Campaign: NSObject, Extension {
     
     /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
     private func setupHitQueue() -> HitQueuing? {
-        guard let dataQueue = Self.dataQueueService.getDataQueue(label: name) else {
+        guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
             Log.error(label: Self.LOG_TAG, "\(#function) - Failed to create DataQueue, Campaign could not be initialized")
             return nil
         }

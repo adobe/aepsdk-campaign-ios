@@ -21,9 +21,6 @@ class CampaignHitQueuingTests: XCTestCase {
     var hitProcessor: MockHitProcessor!
     var dataQueue: MockDataQueue!
     var state: CampaignState!
-    var mockDataQueueService: MockDataQueueService? {
-        return Campaign.dataQueueService as? MockDataQueueService
-    }
     
     @discardableResult
     private func queueHits(numberOfHits: Int) -> [CampaignHit] {
@@ -84,7 +81,7 @@ class CampaignHitQueuingTests: XCTestCase {
         configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = "pkey"
         configurationData[CampaignConstants.Configuration.PROPERTY_ID] = "propertyId"
         configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.unknown.rawValue
-        configurationData.merge(customConfig ?? [:], uniquingKeysWith: { _, new in new })
+        configurationData.merge(customConfig ?? [:]) { _, new in new }
         var identityData = [String: Any]()
         identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = "ecid"
         var dataMap = [String: [String: Any]]()
@@ -94,7 +91,6 @@ class CampaignHitQueuingTests: XCTestCase {
     }
     
     override func setUp() {
-        Campaign.dataQueueService = MockDataQueueService()
         dataQueue = MockDataQueue()
         hitProcessor = MockHitProcessor()
         state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))

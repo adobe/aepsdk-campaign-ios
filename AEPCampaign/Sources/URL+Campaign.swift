@@ -22,13 +22,13 @@ extension URL {
     ///   - state: the Campaign state
     /// - Returns: A network request configured to send the Campaign profile request, nil if failed
     static func getCampaignProfileUrl(state: CampaignState) -> URL? {
-        var components = URLComponents()
-        components.scheme = "https"
         guard let server = state.campaignServer, let pkey = state.campaignPkey, let ecid = state.ecid, !server.isEmpty, !pkey.isEmpty, !ecid.isEmpty else {
             Log.error(label: LOG_TAG, "The Campaign state did not contain the necessary configuration to build the profile url, returning nil.")
             return nil
         }
         // profile url: https://%s/rest/head/mobileAppV5/%s/subscriptions/%s
+        var components = URLComponents()
+        components.scheme = "https"
         components.host = server
         components.path = String(format: CampaignConstants.Campaign.PROFILE_URL_PATH, pkey, ecid)
 
@@ -51,7 +51,7 @@ extension URL {
         }
 
         var profileData = [String: String]()
-        profileData.merge(data ?? [:], uniquingKeysWith: { _, new in new })
+        profileData.merge(data ?? [:]) { _, new in new }
         profileData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
         profileData[CampaignConstants.Campaign.PUSH_PLATFORM] = "apns"
 
