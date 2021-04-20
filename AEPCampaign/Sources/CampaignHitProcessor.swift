@@ -13,15 +13,82 @@
 import AEPServices
 import Foundation
 
-// TODO: stub
 class CampaignHitProcessor: HitProcessing {
     private let LOG_TAG = "CampaignHitProcessor"
 
+    private let timeout: TimeInterval
+    private let dispatchQueue: DispatchQueue
+    private let responseHandler: (CampaignHit) -> Void
+    private var networkService: Networking {
+        return ServiceProvider.shared.networkService
+    }
+
+    /// Creates a new `CampaignHitProcessor` where the `responseHandler` will be invoked after the successful sending of a hit
+    /// - Parameters:
+    ///   - responseHandler: a function to be invoked with the successfully sent `CampaignHit`
+    ///   - timeout: the configured Campaign request timeout
+    init(responseHandler: @escaping (CampaignHit) -> Void, timeout: TimeInterval) {
+        self.dispatchQueue = DispatchQueue(label: CampaignConstants.FRIENDLY_NAME)
+        self.responseHandler = responseHandler
+        self.timeout = timeout
+    }
+
+    // MARK: HitProcessing
     func retryInterval(for entity: DataEntity) -> TimeInterval {
         return TimeInterval(30)
     }
 
     func processHit(entity: DataEntity, completion: @escaping (Bool) -> Void) {
+        guard let data = entity.data, let campaignHit = try? JSONDecoder().decode(CampaignHit.self, from: data) else {
+            // Failed to convert data to hit, unrecoverable error, move to next hit
+            completion(true)
+            return
+        }
 
+        self.dispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            let headers = [NetworkServiceConstants.Headers.CONTENT_TYPE: NetworkServiceConstants.HeaderValues.CONTENT_TYPE_URL_ENCODED]
+            let networkRequest = NetworkRequest(url: campaignHit.url,
+                                                httpMethod: campaignHit.getHttpCommand(),
+                                                connectPayload: campaignHit.payload,
+                                                httpHeaders: headers,
+                                                connectTimeout: self.timeout,
+                                                readTimeout: self.timeout)
+
+            self.networkService.connectAsync(networkRequest: networkRequest) { [weak self] connection in
+                self?.handleNetworkResponse(hit: campaignHit,
+                                            connection: connection,
+                                            completion: completion
+                )
+            }
+        }
+    }
+
+    // MARK: Helpers
+
+    /// Handles the network response after a hit has been sent to the server
+    /// - Parameters:
+    ///   - hit: the `CampaignHit`
+    ///   - connection: the connection returned after we make the network request
+    ///   - completion: a completion block to invoke after we have handled the network response with true for success and false for failure (retry)
+    private func handleNetworkResponse(hit: CampaignHit, connection: HttpConnection, completion: @escaping (Bool) -> Void) {
+        if connection.responseCode == 200 {
+            // Hit sent successfully
+            Log.debug(label: LOG_TAG, "\(#function) - Campaign hit with url \(hit.url.absoluteString) and payload \(hit.payload) sent successfully")
+            responseHandler(hit)
+            completion(true)
+        } else if NetworkServiceConstants.RECOVERABLE_ERROR_CODES.contains(connection.responseCode ?? -1) {
+            // retry this hit later
+            Log.warning(label: LOG_TAG, "\(#function) - Retrying Campaign hit, request with url \(hit.url.absoluteString) failed with error \(connection.error?.localizedDescription ?? "") and recoverable status code \(connection.responseCode ?? -1)")
+            completion(false)
+        } else if connection.responseCode == nil {
+            // retry this hit later if connection response code is nil (no network connectivity)
+            Log.warning(label: LOG_TAG, "\(#function) - Retrying Campaign hit, there is currently no network connectivity")
+            completion(false)
+        } else {
+            // unrecoverable error. delete the hit from the database and continue
+            Log.warning(label: LOG_TAG, "\(#function) - Dropping Campaign hit, request with url \(hit.url.absoluteString) failed with error \(connection.error?.localizedDescription ?? "") and unrecoverable status code \(connection.responseCode ?? -1)")
+            completion(true)
+        }
     }
 }

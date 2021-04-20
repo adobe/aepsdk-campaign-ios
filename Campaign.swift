@@ -56,7 +56,9 @@ public class Campaign: NSObject, Extension {
     
     ///Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event){
-        
+        if shouldSendRegistrationRequest(timestamp: event.timestamp.timeIntervalSince1970) {
+            // send profile request
+        }
     }
     
     ///Handles events of type `Configuration`
@@ -80,8 +82,46 @@ public class Campaign: NSObject, Extension {
             Log.error(label: Self.LOG_TAG, "\(#function) - Failed to create DataQueue, Campaign could not be initialized")
             return nil
         }
-        
-        let hitProcessor = CampaignHitProcessor()
+        guard let state = self.state else {
+            Log.error(label: Self.LOG_TAG, "\(#function) - Failed to create DataQueue, the Campaign State is nil")
+            return nil
+        }
+        let hitProcessor = CampaignHitProcessor(responseHandler: handleSuccessfulNetworkRequest(hit:), timeout: state.campaignTimeout)
         return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
+    }
+    
+    /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
+    /// - Parameter hit: The `CampaignHit` which was successfully sent
+    private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
+        state?.updateDatastoreWithSuccessfulRequestInfo(hit: hit)
+    }
+    
+    /// Determines if a profile request should be sent to Campaign.
+    /// - Parameter timestamp: The Lifecycle Event timestamp
+    /// - Returns: A `Bool` containing true if the registration request should be sent, false otherwise.
+    private func shouldSendRegistrationRequest(timestamp: TimeInterval) -> Bool {
+        // quick out if registration requests should be ignored
+        if let registrationPaused = state?.campaignRegistrationPaused, registrationPaused == true {
+            Log.debug(label: Self.LOG_TAG, "\(#function) - Registration requests are paused.")
+            return false
+        }
+
+        guard let retrievedEcid = state?.dataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY), let retrievedTimestamp = state?.dataStore.getDouble(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) else {
+            Log.debug(label: Self.LOG_TAG, "\(#function) - There is no experience cloud id or registration timestamp currently stored in the datastore. The registration request will be sent.")
+            return true
+        }
+              
+        if let currentEcid = state?.ecid, currentEcid == retrievedEcid {
+            Log.debug(label: Self.LOG_TAG, "\(#function) - The current experience cloud id is unchanged. The registration request will not be sent.")
+            return false
+        }
+        
+        if let registrationDelay = state?.campaignRegistrationDelay, timestamp - retrievedTimestamp < registrationDelay {
+            Log.debug(label: Self.LOG_TAG, "\(#function) - The registration delay has not elapsed. The registration request will not be sent.")
+            return false
+        }
+        
+        Log.debug(label: Self.LOG_TAG, "\(#function) - The registration request will be sent because the registration delay has elapsed or the ecid has changed since the last successful registration request.")
+        return true
     }
 }

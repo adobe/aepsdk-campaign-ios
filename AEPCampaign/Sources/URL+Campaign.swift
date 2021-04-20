@@ -39,6 +39,28 @@ extension URL {
         return url
     }
 
+    /// Builds the `URL` responsible for sending  a Campaign rules download request to MCIAS
+    /// - Parameters:
+    ///   - state: the Campaign state
+    /// - Returns: A network request configured to send the Campaign rules download request, nil if failed
+    static func getRulesDownloadUrl(state: CampaignState) -> URL? {
+        guard let mciasServer = state.campaignMciasServer, let campaignServer = state.campaignServer, let propertyId = state.campaignPropertyId, let ecid = state.ecid, !mciasServer.isEmpty, !campaignServer.isEmpty, !propertyId.isEmpty, !ecid.isEmpty else {
+            Log.error(label: LOG_TAG, "The Campaign state did not contain the necessary configuration to build the rules download url, returning nil.")
+            return nil
+        }
+        // rules url: https://mciasServer/campaignServer/propertyId/ecid/rules.zip
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = mciasServer
+        components.path = String(format: CampaignConstants.Campaign.RULES_DOWNLOAD_PATH, campaignServer, propertyId, ecid)
+
+        guard let url = components.url else {
+            Log.error(label: LOG_TAG, "Building Campaign rules download URL failed, returning nil.")
+            return nil
+        }
+        return url
+    }
+
     /// Creates a payload for a Campaign profile request
     /// - Parameters:
     ///   - state: the Campaign state

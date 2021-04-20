@@ -16,6 +16,7 @@ import AEPServices
 
 class CampaignState {
     private let LOG_TAG = "CampaignState"
+    private(set) var dataStore: NamedCollectionDataStore
 
     // Privacy status
     private(set) var privacyStatus: PrivacyStatus = .unknown
@@ -24,10 +25,10 @@ class CampaignState {
     private(set) var campaignServer: String?
     private(set) var campaignPkey: String?
     private(set) var campaignMciasServer: String?
-    private(set) var campaignTimeout: TimeInterval?
+    private(set) var campaignTimeout: TimeInterval
     private(set) var campaignPropertyId: String?
-    private(set) var campaignRegistrationDelay: TimeInterval?
-    private(set) var campaignRegistrationPaused: Bool?
+    private(set) var campaignRegistrationDelay: TimeInterval
+    private(set) var campaignRegistrationPaused: Bool
 
     // Identity shared state
     private(set) var ecid: String?
@@ -38,6 +39,11 @@ class CampaignState {
     /// Creates a new `CampaignState`.
     init(hitQueue: HitQueuing) {
         self.hitQueue = hitQueue
+        self.dataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
+        // initialize defaults
+        self.campaignTimeout = TimeInterval(CampaignConstants.Campaign.DEFAULT_TIMEOUT)
+        self.campaignRegistrationDelay = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
+        self.campaignRegistrationPaused = false
     }
 
     /// Takes the shared states map and updates the data within the Campaign State.
@@ -85,5 +91,19 @@ class CampaignState {
             return
         }
         self.ecid = identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] as? String
+    }
+
+    /// Invoked by the Campaign extension each time we successfully send a Campaign network request.
+    /// If the request was a Campaign profile request, the current timestamp and ecid will be stored in the Campaign Datastore.
+    /// - Parameters:
+    ///   - hit: The `CampaignHit` which was successfully sent
+    func updateDatastoreWithSuccessfulRequestInfo(hit: CampaignHit) {
+        let timestamp = Date().timeIntervalSince1970
+        Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(timestamp) in Campaign Datastore.")
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: timestamp)
+        if let ecid = self.ecid, !ecid.isEmpty {
+            Log.trace(label: LOG_TAG, "\(#function) - Persisting ECID \(ecid) in Campaign Datastore.")
+            dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+        }
     }
 }
