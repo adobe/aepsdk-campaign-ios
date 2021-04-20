@@ -35,5 +35,6 @@ extension HitQueuing {
 
         let hit = DataEntity(data: hitData)
         queue(entity: hit)
+        Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Campaign hit with URL '\(url.absoluteString)' and body '\(payload)' is queued.")
     }
 }

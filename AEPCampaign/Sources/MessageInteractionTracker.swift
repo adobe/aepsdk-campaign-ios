@@ -52,7 +52,7 @@ class MessageInteractionTracker {
         
         dispatchMessageEvent(action: action, deliveryId: deliveryId, campaign: campaign)
         
-        guard let url = buildTrackingUrl(host: state.campaignServer ?? "", broadLogId: broadlogId, deliveryId: deliveryId, action: action, ecid: state.ecid ?? "") else {
+        guard let url = URL.buildTrackingUrl(host: state.campaignServer ?? "", broadLogId: broadlogId, deliveryId: deliveryId, action: action, ecid: state.ecid ?? "") else {
             return
         }
         campaign.processRequest(url: url, payload: "", event: event)
@@ -89,35 +89,6 @@ class MessageInteractionTracker {
             
         campaign.dispatchEvent(eventName: "DataForMessageRequest", eventType: EventType.campaign, eventSource: EventSource.responseContent, eventData: contextData)
                 
-    }
-    
-    /// Builds the URL for Message tracking
-    /// - Parameters:
-    ///     - host: Campaign server
-    ///     - broadLogId: The BroadLogId for Message
-    ///     - deliveryId: The DeliveryId for Message
-    ///     - action: The action value for type of interaction(impression, click and open)
-    ///     - ecid: The experience cloud id of user
-    private static func buildTrackingUrl(host: String,
-                          broadLogId: String,
-                          deliveryId: String,
-                          action: String,
-                          ecid: String) -> URL? {
-        
-        guard !host.isEmpty, !broadLogId.isEmpty, !deliveryId.isEmpty, !action.isEmpty, !ecid.isEmpty else {
-            return nil
-        }
-        
-        var urlComponent = URLComponents()
-        urlComponent.scheme = "https"
-        urlComponent.host = host
-        urlComponent.path = "r"
-        urlComponent.queryItems = [
-            URLQueryItem(name: "id", value: "\(broadLogId),\(deliveryId),\(action)"),
-            URLQueryItem(name: "mcId", value: ecid)
-        ]
-        
-        return urlComponent.url
-    }
+    }        
 }
 
