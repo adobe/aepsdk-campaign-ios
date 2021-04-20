@@ -53,6 +53,7 @@ class MessageInteractionTracker {
         dispatchMessageEvent(action: action, deliveryId: deliveryId, campaign: campaign)
         
         guard let url = URL.buildTrackingUrl(host: state.campaignServer ?? "", broadLogId: broadlogId, deliveryId: deliveryId, action: action, ecid: state.ecid ?? "") else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to track Message. Error in creating tracking url.")
             return
         }
         campaign.processRequest(url: url, payload: "", event: event)

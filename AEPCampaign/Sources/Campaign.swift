@@ -22,7 +22,7 @@ public class Campaign: NSObject, Extension {
     public static var extensionVersion = CampaignConstants.EXTENSION_VERSION
     public var metadata: [String : String]?
     public let runtime: ExtensionRuntime
-    private var state: CampaignState?
+    var state: CampaignState?
     private let nameCollectionDataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
     
     public required init?(runtime: ExtensionRuntime) {
@@ -69,7 +69,7 @@ public class Campaign: NSObject, Extension {
     }
     
     ///Handles `Generic Data` events
-    private func handleGenericDataEvent(event: Event){
+    private func handleGenericDataEvent(event: Event) {
         guard let state = state else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to handle event '\(event.id)'. Campaign State is nil.")
             return
@@ -78,12 +78,23 @@ public class Campaign: NSObject, Extension {
         MessageInteractionTracker.processMessageInformation(event: event, state: state, campaign: self)
     }
     
+    ///Dispatches an event with provided `Name`, `Type`, `Source` and `Data`.
+    /// - Parameters:
+    ///     - eventName: Name of event
+    ///     - eventType: `EventType` for event
+    ///     - eventSource: `EventSource` for event
+    ///     - eventData: `EventData` for event
     func dispatchEvent(eventName name: String, eventType type: String, eventSource source: String, eventData data: [String: Any]?) {
         
         let event = Event(name: name, type: type, source: source, data: data)
         dispatch(event: event)
     }
     
+    ///Process the network requests
+    /// - Parameters:
+    ///     - url: The request URL
+    ///     - payload: The request payload
+    ///     - event:
     func processRequest(url: URL, payload: String, event: Event) {
         
         guard let state = state else {
@@ -102,6 +113,7 @@ public class Campaign: NSObject, Extension {
         state.hitQueue.queue(url: url, payload: payload, timestamp: event.timestamp.timeIntervalSince1970, privacyStatus: state.privacyStatus)
     }
     
+    ///Determines if the registration request should send to Campaign. Returns true, if the ecid has changed or number of days passed since the last registration is greater than registrationDelay in obtained in Configuration shared state.
     private func shouldSendRegistrationRequest(eventTimeStamp: TimeInterval) -> Bool {
         guard let state = state, let ecid = state.ecid, let registrationDelay = state.campaignRegistrationDelay else {
             Log.debug(label: LOG_TAG, "\(#function) - Returning false. Required filled in Campaign State are missing.")
