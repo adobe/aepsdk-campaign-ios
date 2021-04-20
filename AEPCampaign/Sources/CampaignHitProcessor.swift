@@ -25,9 +25,9 @@ class CampaignHitProcessor: HitProcessing {
 
     /// Creates a new `CampaignHitProcessor` where the `responseHandler` will be invoked after the successful sending of a hit
     /// - Parameters:
-    ///   - responseHandler: a function to be invoked with the successfully sent `CampaignHit`
     ///   - timeout: the configured Campaign request timeout
-    init(responseHandler: @escaping (CampaignHit) -> Void, timeout: TimeInterval) {
+    ///   - responseHandler: a function to be invoked with the successfully sent `CampaignHit`
+    init(timeout: TimeInterval, responseHandler: @escaping (CampaignHit) -> Void) {
         self.dispatchQueue = DispatchQueue(label: CampaignConstants.FRIENDLY_NAME)
         self.responseHandler = responseHandler
         self.timeout = timeout

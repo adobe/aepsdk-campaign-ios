@@ -17,10 +17,10 @@ extension URL {
 
     private static let LOG_TAG = "URL+Campaign"
 
-    /// Builds the `URL` responsible for sending a Campaign profile request
+    /// Builds the `URL` responsible for sending a Campaign registration request
     /// - Parameters:
     ///   - state: the Campaign state
-    /// - Returns: A network request configured to send the Campaign profile request, nil if failed
+    /// - Returns: A `URL` destination to send the Campaign registration request, nil if failed
     static func getCampaignProfileUrl(state: CampaignState) -> URL? {
         guard let server = state.campaignServer, let pkey = state.campaignPkey, let ecid = state.ecid, !server.isEmpty, !pkey.isEmpty, !ecid.isEmpty else {
             Log.error(label: LOG_TAG, "The Campaign state did not contain the necessary configuration to build the profile url, returning nil.")
@@ -39,10 +39,10 @@ extension URL {
         return url
     }
 
-    /// Builds the `URL` responsible for sending  a Campaign rules download request to MCIAS
+    /// Builds the `URL` responsible for sending a Campaign rules download request to MCIAS
     /// - Parameters:
     ///   - state: the Campaign state
-    /// - Returns: A network request configured to send the Campaign rules download request, nil if failed
+    /// - Returns: A`URL` destination to send the Campaign rules download request, nil if failed
     static func getRulesDownloadUrl(state: CampaignState) -> URL? {
         guard let mciasServer = state.campaignMciasServer, let campaignServer = state.campaignServer, let propertyId = state.campaignPropertyId, let ecid = state.ecid, !mciasServer.isEmpty, !campaignServer.isEmpty, !propertyId.isEmpty, !ecid.isEmpty else {
             Log.error(label: LOG_TAG, "The Campaign state did not contain the necessary configuration to build the rules download url, returning nil.")
@@ -61,11 +61,11 @@ extension URL {
         return url
     }
 
-    /// Creates a payload for a Campaign profile request
+    /// Creates a payload for a Campaign registration request
     /// - Parameters:
     ///   - state: the Campaign state
-    ///   - data: additional profile data to be sent to campaign
-    /// - Returns: A string containing the payload for the campaign request
+    ///   - data: additional profile data to be sent to Campaign
+    /// - Returns: A string containing the payload for the Campaign request
     static func buildBody(state: CampaignState, data: [String: String]?) -> String? {
         guard let ecid = state.ecid else {
             Log.error(label: Self.LOG_TAG, "The Campaign state did not contain an experience cloud id, returning nil.")

@@ -92,18 +92,44 @@ class CampaignState {
         }
         self.ecid = identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] as? String
     }
+    
+    private func canRegisterWithCurrentState() -> Bool {
+        if let ecid = ecid, let campaignServer = campaignServer, let campaignPkey = campaignPkey, !ecid.isEmpty, !campaignServer.isEmpty, !campaignPkey.isEmpty, privacyStatus == PrivacyStatus.optedIn {
+            return true
+        }
+        return false
+    }
 
     /// Invoked by the Campaign extension each time we successfully send a Campaign network request.
-    /// If the request was a Campaign profile request, the current timestamp and ecid will be stored in the Campaign Datastore.
+    /// If the request was a Campaign registration request, the current timestamp and ecid will be stored in the Campaign Datastore.
     /// - Parameters:
     ///   - hit: The `CampaignHit` which was successfully sent
-    func updateDatastoreWithSuccessfulRequestInfo(hit: CampaignHit) {
-        let timestamp = Date().timeIntervalSince1970
-        Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(timestamp) in Campaign Datastore.")
-        dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: timestamp)
+    func updateDatastoreWithSuccessfulRegistrationInfo(hit: CampaignHit) {
+        Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(hit.timestamp) in Campaign Datastore.")
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: hit.timestamp)
         if let ecid = self.ecid, !ecid.isEmpty {
             Log.trace(label: LOG_TAG, "\(#function) - Persisting ECID \(ecid) in Campaign Datastore.")
             dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
         }
+    }
+    
+    /// Invoked by the Campaign extension to queue a Campaign registration request.
+    /// - Parameters:
+    ///   - event: The `Event` to be processed
+    func queueRegistrationRequest(event: Event) {
+        if !canRegisterWithCurrentState() {
+            Log.error(label: LOG_TAG, "\(#function) - Registration request cannot be sent, the Campaign extension is not configured.")
+            return
+        }
+        guard let url = URL.getCampaignProfileUrl(state: self) else {
+            Log.error(label: LOG_TAG, "\(#function) - Failed to build the registration request URL, the request will not be sent.")
+            return
+        }
+        guard let body = URL.buildBody(state: self, data: nil) else {
+            Log.error(label: LOG_TAG, "\(#function) - Failed to build the registration request body, the request will not be sent.")
+            return
+        }
+        let timestamp = Date().timeIntervalSince1970
+        hitQueue.queue(url: url, payload: body, timestamp: timestamp, privacyStatus: privacyStatus)
     }
 }

@@ -26,6 +26,11 @@ public class Campaign: NSObject, Extension {
     public let runtime: ExtensionRuntime
     private var state: CampaignState?
     
+    private let dependencies: [String] = [
+        CampaignConstants.Configuration.EXTENSION_NAME,
+        CampaignConstants.Identity.EXTENSION_NAME
+    ]
+    
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
         super.init()
@@ -57,13 +62,21 @@ public class Campaign: NSObject, Extension {
     ///Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event){
         if shouldSendRegistrationRequest(timestamp: event.timestamp.timeIntervalSince1970) {
-            // send profile request
+            state?.queueRegistrationRequest(event: event)
         }
     }
     
     ///Handles events of type `Configuration`
     private func handleConfigurationEvents(event: Event){
-        
+        var sharedStates = [String: [String: Any]?]()
+        for extensionName in dependencies {
+            sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
+        }
+        state?.update(dataMap: sharedStates)
+
+        if state?.privacyStatus == .optedOut {
+            // handle opt out
+        }
     }
     
     ///Handles `Hub Shared state` events
@@ -86,26 +99,28 @@ public class Campaign: NSObject, Extension {
             Log.error(label: Self.LOG_TAG, "\(#function) - Failed to create DataQueue, the Campaign State is nil")
             return nil
         }
-        let hitProcessor = CampaignHitProcessor(responseHandler: handleSuccessfulNetworkRequest(hit:), timeout: state.campaignTimeout)
+        let hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout, responseHandler: handleSuccessfulNetworkRequest(hit:))
         return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
     
     /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
     /// - Parameter hit: The `CampaignHit` which was successfully sent
     private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
-        state?.updateDatastoreWithSuccessfulRequestInfo(hit: hit)
+        state?.updateDatastoreWithSuccessfulRegistrationInfo(hit: hit)
     }
     
-    /// Determines if a profile request should be sent to Campaign.
+    /// Determines if a registration request should be sent to Campaign.
     /// - Parameter timestamp: The Lifecycle Event timestamp
     /// - Returns: A `Bool` containing true if the registration request should be sent, false otherwise.
     private func shouldSendRegistrationRequest(timestamp: TimeInterval) -> Bool {
-        // quick out if registration requests should be ignored
+        // quick out if registration requests are paused
         if let registrationPaused = state?.campaignRegistrationPaused, registrationPaused == true {
             Log.debug(label: Self.LOG_TAG, "\(#function) - Registration requests are paused.")
             return false
         }
 
+        // if there is no ecid or timestamp in the datastore then a successful registration has not
+        // yet occurred.
         guard let retrievedEcid = state?.dataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY), let retrievedTimestamp = state?.dataStore.getDouble(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) else {
             Log.debug(label: Self.LOG_TAG, "\(#function) - There is no experience cloud id or registration timestamp currently stored in the datastore. The registration request will be sent.")
             return true
