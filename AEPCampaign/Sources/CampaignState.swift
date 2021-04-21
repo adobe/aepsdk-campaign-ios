@@ -35,6 +35,8 @@ class CampaignState {
     // Campaign Persistent HitQueue
     private(set) var hitQueue: HitQueuing
 
+    private(set) var namedCollectionDataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
+
     /// Creates a new `CampaignState`.
     init(hitQueue: HitQueuing) {
         self.hitQueue = hitQueue
@@ -73,6 +75,7 @@ class CampaignState {
             self.campaignRegistrationDelay = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
         }
         self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
+
         // update the hitQueue with the latest privacy status
         hitQueue.handlePrivacyChange(status: self.privacyStatus)
     }
@@ -85,5 +88,72 @@ class CampaignState {
             return
         }
         self.ecid = identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] as? String
+    }
+
+    ///Determines if this `CampaignState` is valid for sending message track request to Campaign.
+    ///- Returns true if the CampaignState is valid else return false
+    func canSendTrackInfoWithCurrentState() -> Bool {
+        guard privacyStatus == .optedIn else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. Privacy status is not OptedIn.")
+            return false
+        }
+
+        guard let ecid = ecid, !ecid.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. ECID is invalid.")
+            return false
+        }
+
+        guard let campaignServer = campaignServer, !campaignServer.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. Campaign server value is invalid.")
+            return false
+        }
+
+        return true
+    }
+
+    ///Determines if the registration request should send to Campaign. Returns true, if the ecid has changed or number of days passed since the last registration is greater than registrationDelay in obtained in Configuration shared state.
+    func shouldSendRegistrationRequest(eventTimeStamp: TimeInterval) -> Bool {
+        guard let ecid = ecid, let registrationDelay = campaignRegistrationDelay else {
+            Log.debug(label: LOG_TAG, "\(#function) - Returning false. Required Campaign Configuration is not present.")
+            return false
+        }
+
+        guard !(campaignRegistrationPaused ?? false) else {
+            Log.debug(label: LOG_TAG, "\(#function) - Returning false, Registration requests are paused.")
+            return false
+        }
+
+        if namedCollectionDataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY, fallback: "") != ecid {
+            Log.debug(label: LOG_TAG, "\(#function) - The current ecid '\(ecid)' is new, sending the registration request.")
+            namedCollectionDataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+            return true
+        }
+
+        let retrievedTimeStamp = namedCollectionDataStore.getLong(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? Int64(CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE)
+
+        if eventTimeStamp - TimeInterval(retrievedTimeStamp) >= registrationDelay {
+            Log.debug(label: LOG_TAG, "\(#function) - Registration delay of '\(registrationDelay)' seconds has elapsed. Sending the Campaign registration request.")
+            return true
+        }
+
+        Log.debug(label: LOG_TAG, "\(#function) - The registration request will not be sent because the registration delay of \(registrationDelay) seconds has not elapsed.")
+        return false
+    }
+
+    ///Process the network requests
+    /// - Parameters:
+    ///    - url: The request URL
+    ///    - payload: The request payload
+    ///    - event:The `Event` that triggered the network request
+    func processRequest(url: URL, payload: String, event: Event) {
+        // check if this request is a registration request by checking for the presence of a payload and if it is a registration request, determine if it should be sent.
+        if !payload.isEmpty { //Registration request
+            guard shouldSendRegistrationRequest(eventTimeStamp: event.timestamp.timeIntervalSince1970) else {
+                Log.warning(label: LOG_TAG, "\(#function) - Unable to process request.")
+                return
+            }
+        }
+
+        hitQueue.queue(url: url, payload: payload, timestamp: event.timestamp.timeIntervalSince1970, privacyStatus: privacyStatus)
     }
 }
