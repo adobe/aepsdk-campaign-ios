@@ -24,7 +24,7 @@ class MessageInteractionTracker {
     ///    - event: `Event`to be processed
     ///    - state: Current `Campaign State`
     ///    - campaign: Instance of `Campaign` type
-    static func processMessageInformation(event: Event, state: CampaignState, campaign: Campaign) {
+    static func processMessageInformation(event: Event, state: CampaignState, eventDispatcher: Campaign.EventDispatcher) {
         guard state.canSendTrackInfoWithCurrentState() else {
             Log.debug(label: LOG_TAG, "\(#function) - Campaign extension is not configured to send message track request.")
             return
@@ -50,21 +50,17 @@ class MessageInteractionTracker {
             return
         }
         
-        dispatchMessageEvent(action: action, deliveryId: deliveryId, campaign: campaign)
+        dispatchMessageEvent(action: action, deliveryId: deliveryId, eventDispatcher: eventDispatcher)
         
         guard let url = URL.buildTrackingUrl(host: state.campaignServer ?? "", broadLogId: broadlogId, deliveryId: deliveryId, action: action, ecid: state.ecid ?? "") else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to track Message. Error in creating tracking url.")
             return
         }
-        campaign.processRequest(url: url, payload: "", event: event)
+        state.processRequest(url: url, payload: "", event: event)
     }
     
-    ///Dispatches an event with message `id` and action `click`. This is to mark that a notification is interacted by user.
-    /// - Parameters:
-    ///    - action: String containing the action value. The `action` should be either `1 or 2`
-    ///    - deliveryId: The hex encoded deliveryId.
-    ///    - campaign: An instance of `Campaign`. This is used for dispatching the response event.
-    private static func dispatchMessageEvent(action: String, deliveryId: String, campaign: Campaign) {
+    ///Dispatches an event with action `click` and message `deliveryId`. This is to mark that a notification is interacted by user.    
+    private static func dispatchMessageEvent(action: String, deliveryId: String, eventDispatcher: Campaign.EventDispatcher) {
         
         guard action == "2" || action == "1" else { //Dispatch only when action is open(2) or click(1)
             Log.trace(label: LOG_TAG, "\(#function) - Action received is other than viewed or clicked, so cannot dispatch Message Event.")
@@ -75,7 +71,6 @@ class MessageInteractionTracker {
             Log.trace(label: LOG_TAG, "\(#function) - Unable to convert hex deliveryId value to decimal format, so cannot dispatch Message Event.")
             return
         }
-        
         let actionKey: String
         if action == "1" {
             actionKey = CampaignConstants.EventDataKeys.MESSAGE_VIEWED
@@ -87,9 +82,7 @@ class MessageInteractionTracker {
             CampaignConstants.EventDataKeys.MESSAGE_ID: "\(decimalDeliveryId)",
             actionKey: "1"
         ]
-            
-        campaign.dispatchEvent(eventName: "DataForMessageRequest", eventType: EventType.campaign, eventSource: EventSource.responseContent, eventData: contextData)
-                
+        eventDispatcher("DataForMessageRequest", EventType.campaign,  EventSource.responseContent, contextData)
     }        
 }
 

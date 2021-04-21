@@ -23,7 +23,8 @@ public class Campaign: NSObject, Extension {
     public var metadata: [String : String]?
     public let runtime: ExtensionRuntime
     var state: CampaignState?
-    private let nameCollectionDataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
+    //Takes eventName, eventType, eventSource and ContextData as input
+    typealias EventDispatcher = (String, String, String, [String:Any]?) -> Void
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
@@ -44,8 +45,10 @@ public class Campaign: NSObject, Extension {
     public func onUnregistered() {}
     
     public func readyForEvent(_ event: Event) -> Bool {
-        let configSharedStateStatus = getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status ?? .none
-        return configSharedStateStatus == .set
+        guard getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set, getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set  else {
+            return false
+        }
+        return true
     }
     
     ///Handles events of type `Campaign`
@@ -75,73 +78,21 @@ public class Campaign: NSObject, Extension {
             return
         }
         
-        MessageInteractionTracker.processMessageInformation(event: event, state: state, campaign: self)
+        MessageInteractionTracker.processMessageInformation(event: event, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
     }
     
     ///Dispatches an event with provided `Name`, `Type`, `Source` and `Data`.
     /// - Parameters:
-    ///     - eventName: Name of event
-    ///     - eventType: `EventType` for event
-    ///     - eventSource: `EventSource` for event
-    ///     - eventData: `EventData` for event
+    ///    - eventName: Name of event
+    ///    - eventType: `EventType` for event
+    ///    - eventSource: `EventSource` for event
+    ///    - eventData: `EventData` for event
     func dispatchEvent(eventName name: String, eventType type: String, eventSource source: String, eventData data: [String: Any]?) {
         
         let event = Event(name: name, type: type, source: source, data: data)
         dispatch(event: event)
     }
-    
-    ///Process the network requests
-    /// - Parameters:
-    ///     - url: The request URL
-    ///     - payload: The request payload
-    ///     - event:
-    func processRequest(url: URL, payload: String, event: Event) {
-        
-        guard let state = state else {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
-            return
-        }
-        
-        // check if this request is a registration request by checking for the presence of a payload and if it is a registration request, determine if it should be sent.
-        if !payload.isEmpty { //Registration request
-            guard shouldSendRegistrationRequest(eventTimeStamp: event.timestamp.timeIntervalSince1970) else {
-                Log.warning(label: LOG_TAG, "\(#function) - Unable to process request.")
-                return
-            }
-        }
-        
-        state.hitQueue.queue(url: url, payload: payload, timestamp: event.timestamp.timeIntervalSince1970, privacyStatus: state.privacyStatus)
-    }
-    
-    ///Determines if the registration request should send to Campaign. Returns true, if the ecid has changed or number of days passed since the last registration is greater than registrationDelay in obtained in Configuration shared state.
-    private func shouldSendRegistrationRequest(eventTimeStamp: TimeInterval) -> Bool {
-        guard let state = state, let ecid = state.ecid, let registrationDelay = state.campaignRegistrationDelay else {
-            Log.debug(label: LOG_TAG, "\(#function) - Returning false. Required filled in Campaign State are missing.")
-            return false
-        }
-        
-        guard !(state.campaignRegistrationPaused ?? false) else {
-            Log.debug(label: LOG_TAG, "\(#function) - Returning false, Registration requests are paused.")
-            return false
-        }
-        
-        if nameCollectionDataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY, fallback: "") != ecid {
-            Log.debug(label: LOG_TAG, "\(#function) - The current ecid '\(ecid)' is new, sending the registration request.")
-            nameCollectionDataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
-            return true
-        }
-        
-        let retrievedTimeStamp = nameCollectionDataStore.getLong(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? Int64(CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE)
-        
-        if eventTimeStamp - TimeInterval(retrievedTimeStamp) >= registrationDelay {
-            Log.debug(label: LOG_TAG, "\(#function) - Registration delay of '\(registrationDelay)' seconds has elapsed. Sending the Campaign registration request.")
-            return true
-        }
-        
-        Log.debug(label: LOG_TAG, "\(#function) - The registration request will not be sent because the registration delay of \(registrationDelay) seconds has not elapsed.")
-        return false
-    }
-    
+            
     /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
     private func setupHitQueue() -> HitQueuing? {
         guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {

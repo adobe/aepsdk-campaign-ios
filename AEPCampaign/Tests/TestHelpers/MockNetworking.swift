@@ -13,7 +13,7 @@ import Foundation
 @testable import AEPServices
 
 class MockNetworking : Networking {
-    
+
     var cachedNetworkRequests: [NetworkRequest] = []
     func connectAsync(networkRequest: NetworkRequest, completionHandler: ((HttpConnection) -> Void)?) {
         cachedNetworkRequests.append(networkRequest)

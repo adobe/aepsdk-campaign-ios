@@ -16,7 +16,7 @@ import Foundation
 
 
 class TestableExtensionRuntime: ExtensionRuntime {
-    
+
     public var listeners: [String: EventListener] = [:]
     public var dispatchedEvents: [Event] = []
     public var createdSharedStates: [[String: Any]?] = []

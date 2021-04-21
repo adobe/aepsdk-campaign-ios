@@ -48,7 +48,7 @@ class CampaignTests: XCTestCase {
         //Setup
         var sharedStates = [String:[String: Any]]()
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-                        CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
                      
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
@@ -86,7 +86,7 @@ class CampaignTests: XCTestCase {
         //Setup
         var sharedStates = [String:[String: Any]]()
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-                        CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
                      
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
@@ -119,7 +119,7 @@ class CampaignTests: XCTestCase {
         //Setup
         var sharedStates = [String:[String: Any]]()
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-                        CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
                      
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
@@ -152,7 +152,7 @@ class CampaignTests: XCTestCase {
         //Setup
         var sharedStates = [String:[String: Any]]()
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-                        CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
                      
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
@@ -185,7 +185,7 @@ class CampaignTests: XCTestCase {
         //Setup
         var sharedStates = [String:[String: Any]]()
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-                        CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
                      
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue
@@ -251,7 +251,7 @@ class CampaignTests: XCTestCase {
         //Setup
         var sharedStates = [String:[String: Any]]()
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-                        CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
                      
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
@@ -274,7 +274,7 @@ class CampaignTests: XCTestCase {
         //Assertion
         
         Thread.sleep(forTimeInterval: 1)
-        XCTAssert(mockHitProcessor.processedEntities.count == 0)                
+        XCTAssert(mockHitProcessor.processedEntities.count == 0)
     }
     
     func testGenericDataOSEventNoNetworkRequestWhenCampaignStateIsNil() {
