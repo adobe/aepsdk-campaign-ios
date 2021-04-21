@@ -25,7 +25,7 @@ class CampaignHitProcessorTests: XCTestCase {
     var mockNetworkService: MockNetworking? {
         return ServiceProvider.shared.networkService as? MockNetworking
     }
-    
+
     func addStateData(customConfig: [String: Any]? = nil) {
         var configurationData = [String: Any]()
         configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = "campaign-server"
@@ -41,27 +41,51 @@ class CampaignHitProcessorTests: XCTestCase {
         dataMap[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         state.update(dataMap: dataMap)
     }
-    
+
     override func setUp() {
         ServiceProvider.shared.networkService = MockNetworking()
-        state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))
-        addStateData()
         dataQueue = MockDataQueue()
-        hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout, responseHandler: { [weak self] data in
+        hitProcessor = CampaignHitProcessor(timeout: TimeInterval(5), responseHandler: { [weak self] data in
             self?.responseCallbackArgs.append(data)
         })
+        state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))
+        addStateData()
     }
-    
+
+    /// Tests that when a `DataEntity` with bad data is passed, that it is not retried and is removed from the queue
+    func testProcessBadHit() {
+        // setup
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: nil) // entity data does not contain a `CampaignHit`
+        // test
+        hitProcessor.processHit(entity: entity) { success in
+            XCTAssertTrue(success)
+            expectation.fulfill()
+        }
+
+        // verify
+        wait(for: [expectation], timeout: 0.5)
+        XCTAssertTrue(responseCallbackArgs.isEmpty) // response handler should not have been invoked
+        XCTAssertFalse(mockNetworkService?.connectAsyncCalled ?? true) // no network request should have been made
+    }
+
+    /// Tests that when a good hit is processed that a network request is made and the request returns 200
     func testProcessHitSuccessful() {
         // setup
         let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
-        let expectedUrl = URL.getCampaignProfileUrl(state: state)
-        let expectedBody = URL.buildBody(state: state, data: nil)
-        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl!, statusCode: 200, httpVersion: nil, headerFields: nil), error: nil)
+        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+            XCTFail("Failed to build the request url")
+            return
+        }
+        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+            XCTFail("Failed to build the request body")
+            return
+        }
+        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: 200, httpVersion: nil, headerFields: nil), error: nil)
 
         let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
 
-        let entity = DataEntity(uniqueIdentifier: UUID().uuidString, timestamp: Date(), data: try! JSONEncoder().encode(hit))
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
 
         // test
         hitProcessor.processHit(entity: entity) { success in
@@ -71,10 +95,105 @@ class CampaignHitProcessorTests: XCTestCase {
 
         // verify
         wait(for: [expectation], timeout: 1)
-
         XCTAssertFalse(responseCallbackArgs.isEmpty) // response handler should have been invoked
         XCTAssertTrue(mockNetworkService?.connectAsyncCalled ?? false) // network request should have been made
         let actualUrlString = mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url.absoluteString ?? ""
-        let expectedUrlString = expectedUrl?.absoluteString ?? ""
+        let expectedUrlString = expectedUrl.absoluteString
+        XCTAssertEqual(actualUrlString, expectedUrlString) // network request should be made with the url in the hit
+        let actualBody = mockNetworkService?.connectAsyncCalledWithNetworkRequest?.connectPayload
+        XCTAssertEqual(expectedBody, actualBody)
+    }
+
+    /// Tests that when the network request fails but has a recoverable error that we will retry the hit and do not invoke the response handler for that hit
+    func testProcessHitRecoverableNetworkError() {
+        // setup
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should be retried")
+        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+            XCTFail("Failed to build the request url")
+            return
+        }
+        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+            XCTFail("Failed to build the request body")
+            return
+        }
+        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
+
+        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: NetworkServiceConstants.RECOVERABLE_ERROR_CODES.first!, httpVersion: nil, headerFields: nil), error: nil)
+
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+
+        // test
+        hitProcessor.processHit(entity: entity) { success in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+
+        // verify
+        wait(for: [expectation], timeout: 0.5)
+        XCTAssertTrue(responseCallbackArgs.isEmpty) // response handler should have not been invoked
+        XCTAssertTrue(mockNetworkService?.connectAsyncCalled ?? false) // network request should have been made
+        XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
+    }
+
+    /// Tests that when there is no network connectivity that we will retry the hit and do not invoke the response handler for that hit
+    func testProcessHitRetryIfNoNetworkConnectivity() {
+        // setup
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should be retried")
+        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+            XCTFail("Failed to build the request url")
+            return
+        }
+        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+            XCTFail("Failed to build the request body")
+            return
+        }
+        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
+
+        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: nil, error: URLError(URLError.notConnectedToInternet))
+
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+
+        // test
+        hitProcessor.processHit(entity: entity) { success in
+            XCTAssertFalse(success)
+            expectation.fulfill()
+        }
+
+        // verify
+        wait(for: [expectation], timeout: 0.5)
+        XCTAssertTrue(responseCallbackArgs.isEmpty) // response handler should have not been invoked
+        XCTAssertTrue(mockNetworkService?.connectAsyncCalled ?? false) // network request should have been made
+        XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
+    }
+
+    /// Tests that when the network request fails and does not have a recoverable response code that we invoke the response handler and do not retry the hit
+    func testProcessHitUnrecoverableNetworkError() {
+        // setup
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
+        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+            XCTFail("Failed to build the request url")
+            return
+        }
+        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+            XCTFail("Failed to build the request body")
+            return
+        }
+        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
+
+        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: -1, httpVersion: nil, headerFields: nil), error: nil)
+
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+
+        // test
+        hitProcessor.processHit(entity: entity) { success in
+            XCTAssertTrue(success)
+            expectation.fulfill()
+        }
+
+        // verify
+        wait(for: [expectation], timeout: 0.5)
+        XCTAssertTrue(responseCallbackArgs.isEmpty) // response handler should have not been invoked
+        XCTAssertTrue(mockNetworkService?.connectAsyncCalled ?? false) // network request should have been made
+        XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
     }
 }
