@@ -166,7 +166,7 @@ class CampaignHitProcessorTests: XCTestCase {
         XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
     }
 
-    /// Tests that when the network request fails and does not have a recoverable response code that we invoke the response handler and do not retry the hit
+    /// Tests that when the network request fails and does not have a recoverable response code that we do not invoke the response handler and do not retry the hit
     func testProcessHitUnrecoverableNetworkError() {
         // setup
         let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
