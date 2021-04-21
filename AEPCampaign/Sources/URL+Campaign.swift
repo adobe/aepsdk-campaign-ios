@@ -87,4 +87,34 @@ extension URL {
         Log.error(label: Self.LOG_TAG, "Failed to create a json string payload, returning nil.")
         return nil
     }
+
+    /// Builds the URL for Message tracking
+    /// - Parameters:
+    ///    - host: Campaign server
+    ///    - broadLogId: The BroadLogId for Message
+    ///    - deliveryId: The DeliveryId for Message
+    ///    - action: The action value for type of interaction(impression, click and open)
+    ///    - ecid: The experience cloud id of user
+    static func buildTrackingUrl(
+        host: String,
+        broadLogId: String,
+        deliveryId: String,
+        action: String,
+        ecid: String) -> URL? {
+
+        guard !host.isEmpty, !broadLogId.isEmpty, !deliveryId.isEmpty, !action.isEmpty, !ecid.isEmpty else {
+            return nil
+        }
+
+        var urlComponent = URLComponents()
+        urlComponent.scheme = "https"
+        urlComponent.host = host
+        urlComponent.path = "/r"
+        urlComponent.queryItems = [
+            URLQueryItem(name: "id", value: "\(broadLogId),\(deliveryId),\(action)"),
+            URLQueryItem(name: "mcId", value: ecid)
+        ]
+
+        return urlComponent.url
+    }
 }

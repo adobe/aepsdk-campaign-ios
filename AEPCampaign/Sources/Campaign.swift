@@ -28,6 +28,9 @@ public class Campaign: NSObject, Extension {
         CampaignConstants.Configuration.EXTENSION_NAME,
         CampaignConstants.Identity.EXTENSION_NAME
     ]
+
+    // Takes eventName, eventType, eventSource and ContextData as input
+    typealias EventDispatcher = (String, String, String, [String:Any]?) -> Void
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
@@ -48,8 +51,10 @@ public class Campaign: NSObject, Extension {
     public func onUnregistered() {}
     
     public func readyForEvent(_ event: Event) -> Bool {
-        let configSharedStateStatus = getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status ?? .none
-        return configSharedStateStatus == .set
+        guard getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set, getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set  else {
+            return false
+        }
+        return true
     }
     
     ///Handles events of type `Campaign`
@@ -86,15 +91,32 @@ public class Campaign: NSObject, Extension {
     
     ///Handles `Generic Data` events
     private func handleGenericDataEvent(event: Event) {
+        guard let state = state else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to handle event '\(event.id)'. Campaign State is nil.")
+            return
+        }
         
+        MessageInteractionTracker.processMessageInformation(event: event, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
     }
     
+    ///Dispatches an event with provided `Name`, `Type`, `Source` and `Data`.
+    /// - Parameters:
+    ///    - eventName: Name of event
+    ///    - eventType: `EventType` for event
+    ///    - eventSource: `EventSource` for event
+    ///    - eventData: `EventData` for event
+    func dispatchEvent(eventName name: String, eventType type: String, eventSource source: String, eventData data: [String: Any]?) {
+        
+        let event = Event(name: name, type: type, source: source, data: data)
+        dispatch(event: event)
+    }
+
     /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
     /// - Parameter hit: The `CampaignHit` which was successfully sent
     private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
         state?.updateDatastoreWithSuccessfulRegistrationInfo(hit: hit)
     }
-    
+            
     /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
     private func setupHitQueue() -> HitQueuing? {
         guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
