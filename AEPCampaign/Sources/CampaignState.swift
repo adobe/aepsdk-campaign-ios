@@ -182,5 +182,6 @@ class CampaignState {
         if let ecid = self.ecid, !ecid.isEmpty {
             Log.trace(label: LOG_TAG, "\(#function) - Persisting ECID \(ecid) in Campaign Datastore.")
             dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+        }
     }
 }

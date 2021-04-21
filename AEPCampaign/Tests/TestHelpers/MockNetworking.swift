@@ -35,6 +35,6 @@ class MockNetworking: Networking {
         connectAsyncCalled = false
         connectAsyncCalledWithNetworkRequest = nil
         connectAsyncCalledWithCompletionHandler = nil
-        calledNetworkRequests = []
+        cachedNetworkRequests = []
     }
 }

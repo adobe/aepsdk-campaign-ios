@@ -20,7 +20,6 @@
 		3D46568B262A1DBE00BFC421 /* MessageInteractionTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */; };
 		3D465693262F4C9800BFC421 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */; };
 		3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4656A8262F510D00BFC421 /* CampaignTests.swift */; };
-		3D4656B3262F536A00BFC421 /* MockNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4656B2262F536A00BFC421 /* MockNetworking.swift */; };
 		54DF607B3D7E4289EDDD6C27 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
@@ -74,7 +73,6 @@
 		3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInteractionTracker.swift; sourceTree = "<group>"; };
 		3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
 		3D4656A8262F510D00BFC421 /* CampaignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignTests.swift; sourceTree = "<group>"; };
-		3D4656B2262F536A00BFC421 /* MockNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworking.swift; sourceTree = "<group>"; };
 		4D09EDCE32512CC3F38B932E /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
 		553E4A339944C71CD61160B8 /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -521,7 +519,6 @@
 				D6577DEF2628DAC7008F0528 /* MockDataQueuing.swift in Sources */,
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
 				D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */,
-				3D4656B3262F536A00BFC421 /* MockNetworking.swift in Sources */,
 				3D10A63D262582A60049BDA1 /* AEPCampaignUnitTests.swift in Sources */,
 				D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */,
 			);
