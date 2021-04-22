@@ -103,22 +103,22 @@ class CampaignState {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Privacy status is Opted Out.")
             return false
         }
-        
+
         guard let ecid = ecid, !ecid.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. ECID is invalid.")
             return false
         }
-        
+
         guard let campaignServer = campaignServer, !campaignServer.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Campaign server value is invalid.")
             return false
         }
-        
+
         guard let campaignPkey = campaignPkey, !campaignPkey.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Campaign Pkey value is invalid.")
             return false
         }
-        
+
         return true
     }
 
