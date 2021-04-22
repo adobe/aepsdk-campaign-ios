@@ -192,13 +192,10 @@ class CampaignState {
     /// Invoked by the Campaign extension each time we successfully send a Campaign network request.
     /// If the request was a Campaign registration request, the current timestamp and ecid will be stored in the Campaign Datastore.
     /// - Parameters:
-    ///   - hit: The `CampaignHit` which was successfully sent
-    func updateDatastoreWithSuccessfulRegistrationInfo(hit: CampaignHit) {
-        Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(hit.timestamp) in Campaign Datastore.")
-        dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: hit.timestamp)
-        if let ecid = self.ecid, !ecid.isEmpty {
-            Log.trace(label: LOG_TAG, "\(#function) - Persisting ECID \(ecid) in Campaign Datastore.")
-            dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
-        }
+    ///   - timestamp: The timestamp of the `CampaignHit` which was successfully sent
+    func updateDatastoreWithSuccessfulRegistrationInfo(timestamp: TimeInterval) {
+        Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(timestamp) in Campaign Datastore.")
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: timestamp)
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
     }
 }

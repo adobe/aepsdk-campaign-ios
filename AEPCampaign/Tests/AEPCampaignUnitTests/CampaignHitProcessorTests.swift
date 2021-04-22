@@ -20,26 +20,9 @@ class CampaignHitProcessorTests: XCTestCase {
 
     var hitProcessor: CampaignHitProcessor!
     var dataQueue: MockDataQueue!
-    var state: CampaignState!
     var responseCallbackArgs = [CampaignHit]()
     var mockNetworkService: MockNetworking? {
         return ServiceProvider.shared.networkService as? MockNetworking
-    }
-
-    func addStateData(customConfig: [String: Any]? = nil) {
-        var configurationData = [String: Any]()
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = "campaign-server"
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = "pkey"
-        configurationData[CampaignConstants.Configuration.PROPERTY_ID] = "propertyId"
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_TIMEOUT] = 5
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
-        configurationData.merge(customConfig ?? [:]) { _, new in new }
-        var identityData = [String: Any]()
-        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = "ecid"
-        var dataMap = [String: [String: Any]]()
-        dataMap[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
-        dataMap[CampaignConstants.Identity.EXTENSION_NAME] = identityData
-        state.update(dataMap: dataMap)
     }
 
     override func setUp() {
@@ -48,8 +31,6 @@ class CampaignHitProcessorTests: XCTestCase {
         hitProcessor = CampaignHitProcessor(timeout: TimeInterval(5), responseHandler: { [weak self] data in
             self?.responseCallbackArgs.append(data)
         })
-        state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))
-        addStateData()
     }
 
     /// Tests that when a `DataEntity` with bad data is passed, that it is not retried and is removed from the queue
@@ -72,19 +53,21 @@ class CampaignHitProcessorTests: XCTestCase {
     /// Tests that when a good hit is processed that a network request is made and the request returns 200
     func testProcessHitSuccessful() {
         // setup
+        let server = "campaign-server"
+        let pkey = "pkey"
+        let ecid = "ecid"
         let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
-        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+        guard let expectedUrl = URL.getCampaignProfileUrl(campaignServer: server, pkey: pkey, ecid: ecid) else {
             XCTFail("Failed to build the request url")
             return
         }
-        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+        guard let expectedBody = URL.buildBody(ecid: ecid, data: nil) else {
             XCTFail("Failed to build the request body")
             return
         }
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: 200, httpVersion: nil, headerFields: nil), error: nil)
 
         let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-
         let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
 
         // test
@@ -107,19 +90,21 @@ class CampaignHitProcessorTests: XCTestCase {
     /// Tests that when the network request fails but has a recoverable error that we will retry the hit and do not invoke the response handler for that hit
     func testProcessHitRecoverableNetworkError() {
         // setup
-        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should be retried")
-        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+        let server = "campaign-server"
+        let pkey = "pkey"
+        let ecid = "ecid"
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
+        guard let expectedUrl = URL.getCampaignProfileUrl(campaignServer: server, pkey: pkey, ecid: ecid) else {
             XCTFail("Failed to build the request url")
             return
         }
-        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+        guard let expectedBody = URL.buildBody(ecid: ecid, data: nil) else {
             XCTFail("Failed to build the request body")
             return
         }
-        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: NetworkServiceConstants.RECOVERABLE_ERROR_CODES.first!, httpVersion: nil, headerFields: nil), error: nil)
 
+        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
         let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
 
         // test
@@ -138,19 +123,21 @@ class CampaignHitProcessorTests: XCTestCase {
     /// Tests that when there is no network connectivity that we will retry the hit and do not invoke the response handler for that hit
     func testProcessHitRetryIfNoNetworkConnectivity() {
         // setup
-        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should be retried")
-        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+        let server = "campaign-server"
+        let pkey = "pkey"
+        let ecid = "ecid"
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
+        guard let expectedUrl = URL.getCampaignProfileUrl(campaignServer: server, pkey: pkey, ecid: ecid) else {
             XCTFail("Failed to build the request url")
             return
         }
-        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+        guard let expectedBody = URL.buildBody(ecid: ecid, data: nil) else {
             XCTFail("Failed to build the request body")
             return
         }
-        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: nil, error: URLError(URLError.notConnectedToInternet))
 
+        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
         let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
 
         // test
@@ -168,20 +155,21 @@ class CampaignHitProcessorTests: XCTestCase {
 
     /// Tests that when the network request fails and does not have a recoverable response code that we do not invoke the response handler and do not retry the hit
     func testProcessHitUnrecoverableNetworkError() {
-        // setup
+        let server = "campaign-server"
+        let pkey = "pkey"
+        let ecid = "ecid"
         let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
-        guard let expectedUrl = URL.getCampaignProfileUrl(state: state) else {
+        guard let expectedUrl = URL.getCampaignProfileUrl(campaignServer: server, pkey: pkey, ecid: ecid) else {
             XCTFail("Failed to build the request url")
             return
         }
-        guard let expectedBody = URL.buildBody(state: state, data: nil) else {
+        guard let expectedBody = URL.buildBody(ecid: ecid, data: nil) else {
             XCTFail("Failed to build the request body")
             return
         }
-        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: -1, httpVersion: nil, headerFields: nil), error: nil)
 
+        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
         let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
 
         // test

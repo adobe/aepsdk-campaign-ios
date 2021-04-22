@@ -19,18 +19,16 @@ class CampaignHitProcessor: HitProcessing {
     private let timeout: TimeInterval
     private let dispatchQueue: DispatchQueue
     private let responseHandler: (CampaignHit) -> Void
-    private var networkService: Networking {
-        return ServiceProvider.shared.networkService
-    }
+    private let headers = [NetworkServiceConstants.Headers.CONTENT_TYPE: NetworkServiceConstants.HeaderValues.CONTENT_TYPE_URL_ENCODED]
 
     /// Creates a new `CampaignHitProcessor` where the `responseHandler` will be invoked after the successful sending of a hit
     /// - Parameters:
     ///   - timeout: the configured Campaign request timeout
     ///   - responseHandler: a function to be invoked with the successfully sent `CampaignHit`
-    init(timeout: TimeInterval, responseHandler: @escaping (CampaignHit) -> Void) {
+    init(timeout: TimeInterval?, responseHandler: @escaping (CampaignHit) -> Void) {
         self.dispatchQueue = DispatchQueue(label: CampaignConstants.FRIENDLY_NAME)
         self.responseHandler = responseHandler
-        self.timeout = timeout
+        self.timeout = timeout ?? TimeInterval(CampaignConstants.Campaign.DEFAULT_TIMEOUT)
     }
 
     // MARK: HitProcessing
@@ -47,15 +45,14 @@ class CampaignHitProcessor: HitProcessing {
 
         self.dispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            let headers = [NetworkServiceConstants.Headers.CONTENT_TYPE: NetworkServiceConstants.HeaderValues.CONTENT_TYPE_URL_ENCODED]
             let networkRequest = NetworkRequest(url: campaignHit.url,
                                                 httpMethod: campaignHit.getHttpCommand(),
                                                 connectPayload: campaignHit.payload,
-                                                httpHeaders: headers,
+                                                httpHeaders: self.headers,
                                                 connectTimeout: self.timeout,
                                                 readTimeout: self.timeout)
 
-            self.networkService.connectAsync(networkRequest: networkRequest) { [weak self] connection in
+            ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) { [weak self] connection in
                 self?.handleNetworkResponse(hit: campaignHit,
                                             connection: connection,
                                             completion: completion

@@ -114,22 +114,22 @@ public class Campaign: NSObject, Extension {
     /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
     /// - Parameter hit: The `CampaignHit` which was successfully sent
     private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
-        state?.updateDatastoreWithSuccessfulRegistrationInfo(hit: hit)
+        state?.updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
     }
             
     /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
     private func setupHitQueue() -> HitQueuing? {
         guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
-            Log.error(label: LOG_TAG, "\(#function) - Failed to create DataQueue, Campaign could not be initialized")
+            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, Campaign could not be initialized")
             return nil
         }
         
         guard let state = self.state else {
-            Log.error(label: LOG_TAG, "\(#function) - Failed to create DataQueue, the Campaign State is nil")
+            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, the Campaign State is nil")
             return nil
         }
         
-        let hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout ?? TimeInterval(CampaignConstants.Campaign.DEFAULT_TIMEOUT), responseHandler: handleSuccessfulNetworkRequest(hit:))
+        let hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout, responseHandler: handleSuccessfulNetworkRequest(hit:))
         return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
 }

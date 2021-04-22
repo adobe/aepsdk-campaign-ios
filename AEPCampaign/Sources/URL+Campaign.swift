@@ -19,33 +19,32 @@ extension URL {
 
     /// Builds the `URL` responsible for sending a Campaign registration request
     /// - Parameters:
-    ///   - state: the Campaign state
+    ///    - campaignServer: Campaign server
+    ///    - pkey: Campaign pkey
+    ///    - ecid: The experience cloud id of user
     /// - Returns: A `URL` destination to send the Campaign registration request, nil if failed
-    static func getCampaignProfileUrl(state: CampaignState) -> URL? {
-        guard let server = state.campaignServer, let pkey = state.campaignPkey, let ecid = state.ecid, !server.isEmpty, !pkey.isEmpty, !ecid.isEmpty else {
-            Log.error(label: LOG_TAG, "The Campaign state did not contain the necessary configuration to build the profile url, returning nil.")
+    static func getCampaignProfileUrl(campaignServer: String, pkey: String, ecid: String) -> URL? {
+        guard !campaignServer.isEmpty, !pkey.isEmpty, !ecid.isEmpty else {
             return nil
         }
-        // profile url: https://%s/rest/head/mobileAppV5/%s/subscriptions/%s
+        // profile url: https://campaignServer/rest/head/mobileAppV5/pkey/subscriptions/ecid
         var components = URLComponents()
         components.scheme = "https"
-        components.host = server
+        components.host = campaignServer
         components.path = String(format: CampaignConstants.Campaign.PROFILE_URL_PATH, pkey, ecid)
 
-        guard let url = components.url else {
-            Log.error(label: LOG_TAG, "Building Campaign profile URL failed, returning nil.")
-            return nil
-        }
-        return url
+        return components.url
     }
 
     /// Builds the `URL` responsible for sending a Campaign rules download request to MCIAS
     /// - Parameters:
-    ///   - state: the Campaign state
+    ///    - mciasServer: Campaign Mcias server
+    ///    - campaignServer: Campaign server
+    ///    - propertyId: Campaign property id
+    ///    - ecid: The experience cloud id of user
     /// - Returns: A`URL` destination to send the Campaign rules download request, nil if failed
-    static func getRulesDownloadUrl(state: CampaignState) -> URL? {
-        guard let mciasServer = state.campaignMciasServer, let campaignServer = state.campaignServer, let propertyId = state.campaignPropertyId, let ecid = state.ecid, !mciasServer.isEmpty, !campaignServer.isEmpty, !propertyId.isEmpty, !ecid.isEmpty else {
-            Log.error(label: LOG_TAG, "The Campaign state did not contain the necessary configuration to build the rules download url, returning nil.")
+    static func getRulesDownloadUrl(mciasServer: String, campaignServer: String, propertyId: String, ecid: String) -> URL? {
+        guard !campaignServer.isEmpty, !mciasServer.isEmpty, !propertyId.isEmpty, !ecid.isEmpty else {
             return nil
         }
         // rules url: https://mciasServer/campaignServer/propertyId/ecid/rules.zip
@@ -54,21 +53,16 @@ extension URL {
         components.host = mciasServer
         components.path = String(format: CampaignConstants.Campaign.RULES_DOWNLOAD_PATH, campaignServer, propertyId, ecid)
 
-        guard let url = components.url else {
-            Log.error(label: LOG_TAG, "Building Campaign rules download URL failed, returning nil.")
-            return nil
-        }
-        return url
+        return components.url
     }
 
     /// Creates a payload for a Campaign registration request
     /// - Parameters:
-    ///   - state: the Campaign state
+    ///   - ecid: The experience cloud id of user
     ///   - data: additional profile data to be sent to Campaign
     /// - Returns: A string containing the payload for the Campaign request
-    static func buildBody(state: CampaignState, data: [String: String]?) -> String? {
-        guard let ecid = state.ecid else {
-            Log.error(label: Self.LOG_TAG, "The Campaign state did not contain an experience cloud id, returning nil.")
+    static func buildBody(ecid: String, data: [String: String]?) -> String? {
+        guard !ecid.isEmpty else {
             return nil
         }
 
