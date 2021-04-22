@@ -79,10 +79,13 @@ class CampaignHitProcessor: HitProcessing {
             Log.warning(label: LOG_TAG, "\(#function) - Retrying Campaign hit, request with url \(hit.url.absoluteString) failed with error \(connection.error?.localizedDescription ?? "") and recoverable status code \(connection.responseCode ?? -1)")
             completion(false)
         } else if let error = connection.error {
-            // retry this hit later if the error code is `notConnectedToInternet`
+            // retry this hit later if the error code is `notConnectedToInternet`. other
             if let urlError = error as? URLError, urlError.code == URLError.Code.notConnectedToInternet {
                 Log.warning(label: LOG_TAG, "\(#function) - Retrying Campaign hit, there is currently no network connectivity")
                 completion(false)
+            } else {
+                Log.warning(label: LOG_TAG, "\(#function) - Dropping Campaign hit, request with url \(hit.url.absoluteString) failed with error \(error)")
+                completion(true)
             }
         } else {
             // unrecoverable error. delete the hit from the database and continue
