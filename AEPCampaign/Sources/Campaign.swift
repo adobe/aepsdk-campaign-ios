@@ -68,7 +68,7 @@ public class Campaign: NSObject, Extension {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
             return
         }
-        // state.queueRegistrationRequest(event: event)
+        state.queueRegistrationRequest(event: event)
     }
     
     ///Handles events of type `Configuration`
