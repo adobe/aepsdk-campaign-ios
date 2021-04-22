@@ -24,7 +24,7 @@ public class Campaign: NSObject, Extension {
     public let runtime: ExtensionRuntime
     var state: CampaignState?
     //Takes eventName, eventType, eventSource and ContextData as input
-    typealias EventDispatcher = (String, String, String, [String:Any]?) -> Void
+    typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String:Any]?) -> Void
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
