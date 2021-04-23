@@ -23,7 +23,13 @@ public class Campaign: NSObject, Extension {
     public var metadata: [String : String]?
     public let runtime: ExtensionRuntime
     var state: CampaignState?
-    //Takes eventName, eventType, eventSource and ContextData as input
+    
+    private let dependencies: [String] = [
+        CampaignConstants.Configuration.EXTENSION_NAME,
+        CampaignConstants.Identity.EXTENSION_NAME
+    ]
+
+    // Takes eventName, eventType, eventSource and ContextData as input
     typealias EventDispatcher = (String, String, String, [String:Any]?) -> Void
     
     public required init?(runtime: ExtensionRuntime) {
@@ -58,12 +64,24 @@ public class Campaign: NSObject, Extension {
     
     ///Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event){
-        
+        guard let state = state else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
+            return
+        }
+        // state.queueRegistrationRequest(event: event)
     }
     
     ///Handles events of type `Configuration`
     private func handleConfigurationEvents(event: Event){
-        
+        var sharedStates = [String: [String: Any]?]()
+        for extensionName in dependencies {
+            sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
+        }
+        state?.update(dataMap: sharedStates)
+
+        if state?.privacyStatus == .optedOut {
+            // handle opt out
+        }
     }
     
     ///Handles `Hub Shared state` events
@@ -92,15 +110,26 @@ public class Campaign: NSObject, Extension {
         let event = Event(name: name, type: type, source: source, data: data)
         dispatch(event: event)
     }
+
+    /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
+    /// - Parameter hit: The `CampaignHit` which was successfully sent
+    private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
+        state?.updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
+    }
             
     /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
     private func setupHitQueue() -> HitQueuing? {
         guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
-            Log.error(label: LOG_TAG, "\(#function) - Failed to create DataQueue, Campaign could not be initialized")
+            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, Campaign could not be initialized")
             return nil
         }
         
-        let hitProcessor = CampaignHitProcessor()
+        guard let state = self.state else {
+            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, the Campaign State is nil")
+            return nil
+        }
+        
+        let hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout, responseHandler: handleSuccessfulNetworkRequest(hit:))
         return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
 }

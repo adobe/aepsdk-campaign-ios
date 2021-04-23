@@ -29,8 +29,9 @@ class CampaignHitQueuingTests: XCTestCase {
             return []
         }
         var queuedHits: [CampaignHit] = []
+        let ecid = state.ecid ?? ""
         for _ in 1 ... numberOfHits {
-            guard let payload = URL.buildBody(state: state, data: nil) else {
+            guard let payload = URL.buildBody(ecid: ecid, data: nil) else {
                 XCTFail("Failed to create request payload")
                 return []
             }
