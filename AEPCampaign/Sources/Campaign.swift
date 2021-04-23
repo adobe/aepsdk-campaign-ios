@@ -23,7 +23,8 @@ public class Campaign: NSObject, Extension {
     public var metadata: [String: String]?
     public let runtime: ExtensionRuntime
     var state: CampaignState?
-
+    typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String:Any]?) -> Void
+    
     private let dependencies: [String] = [
         CampaignConstants.Configuration.EXTENSION_NAME,
         CampaignConstants.Identity.EXTENSION_NAME
