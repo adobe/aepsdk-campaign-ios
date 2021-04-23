@@ -171,23 +171,26 @@ class CampaignState {
         Log.debug(label: LOG_TAG, "\(#function) - The registration request will not be sent because the registration delay of \(registrationDelay) seconds has not elapsed.")
         return false
     }
-    
+
     /// Invoked by the Campaign extension to queue a Campaign registration request.
     /// - Parameters:
-    ///   - event: The `Event` to be processed
+    ///   - event: The Lifecycle`Event` which triggered the registration request
     func queueRegistrationRequest(event: Event) {
-        if !canRegisterWithCurrentState() {
+        guard canRegisterWithCurrentState() else {
             Log.error(label: LOG_TAG, "\(#function) - Registration request cannot be sent, the Campaign extension is not configured.")
             return
         }
-        guard let url = URL.getCampaignProfileUrl(campaignServer: campaignServer ?? "", pkey: campaignPkey ?? "", ecid: ecid ?? "") else {
+
+        guard let url = URL.getCampaignProfileUrl(campaignServer: campaignServer, pkey: campaignPkey, ecid: ecid) else {
             Log.error(label: LOG_TAG, "\(#function) - Failed to build the registration request URL, the request will not be sent.")
             return
         }
-        guard let body = URL.buildBody(ecid: ecid ?? "", data: nil) else {
+
+        guard let body = URL.buildBody(ecid: ecid, data: nil) else {
             Log.error(label: LOG_TAG, "\(#function) - Failed to build the registration request body, the request will not be sent.")
             return
         }
+
         processRequest(url: url, payload: body, event: event)
     }
 
@@ -209,7 +212,7 @@ class CampaignState {
     }
 
     /// Invoked by the Campaign extension each time we successfully send a Campaign network request.
-    /// If the request was a Campaign registration request, the current timestamp and ecid will be stored in the Campaign Datastore.
+    /// If the request was a Campaign registration request, the current timestamp and ECID will be stored in the Campaign Datastore.
     /// - Parameters:
     ///   - timestamp: The timestamp of the `CampaignHit` which was successfully sent
     func updateDatastoreWithSuccessfulRegistrationInfo(timestamp: TimeInterval) {

@@ -23,8 +23,8 @@ extension URL {
     ///    - pkey: Campaign pkey
     ///    - ecid: The experience cloud id of user
     /// - Returns: A `URL` destination to send the Campaign registration request, nil if failed
-    static func getCampaignProfileUrl(campaignServer: String, pkey: String, ecid: String) -> URL? {
-        guard !campaignServer.isEmpty, !pkey.isEmpty, !ecid.isEmpty else {
+    static func getCampaignProfileUrl(campaignServer: String?, pkey: String?, ecid: String?) -> URL? {
+        guard let campaignServer = campaignServer, let pkey = pkey, let ecid = ecid else {
             return nil
         }
         // profile url: https://campaignServer/rest/head/mobileAppV5/pkey/subscriptions/ecid
@@ -43,8 +43,8 @@ extension URL {
     ///    - propertyId: Campaign property id
     ///    - ecid: The experience cloud id of user
     /// - Returns: A`URL` destination to send the Campaign rules download request, nil if failed
-    static func getRulesDownloadUrl(mciasServer: String, campaignServer: String, propertyId: String, ecid: String) -> URL? {
-        guard !campaignServer.isEmpty, !mciasServer.isEmpty, !propertyId.isEmpty, !ecid.isEmpty else {
+    static func getRulesDownloadUrl(mciasServer: String?, campaignServer: String?, propertyId: String?, ecid: String?) -> URL? {
+        guard let mciasServer = mciasServer, let campaignServer = campaignServer, let propertyId = propertyId, let ecid = ecid else {
             return nil
         }
         // rules url: https://mciasServer/campaignServer/propertyId/ecid/rules.zip
@@ -58,11 +58,11 @@ extension URL {
 
     /// Creates a payload for a Campaign registration request
     /// - Parameters:
-    ///   - ecid: The experience cloud id of user
+    ///   - ecid: The experience cloud id of the user
     ///   - data: additional profile data to be sent to Campaign
     /// - Returns: A string containing the payload for the Campaign request
-    static func buildBody(ecid: String, data: [String: String]?) -> String? {
-        guard !ecid.isEmpty else {
+    static func buildBody(ecid: String?, data: [String: String]?) -> String? {
+        guard let ecid = ecid else {
             return nil
         }
 
