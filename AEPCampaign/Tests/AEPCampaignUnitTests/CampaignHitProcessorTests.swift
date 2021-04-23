@@ -153,6 +153,42 @@ class CampaignHitProcessorTests: XCTestCase {
         XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
     }
 
+    /// Tests that when there is an unexpected error (anything other than URLError.notConnectedToInternet) that we do not invoke the response handler and do not retry the hit
+    func testProcessHitUnexpectedNetworkError() {
+        // setup
+        enum error: Error {
+            case genericError
+        }
+        let server = "campaign-server"
+        let pkey = "pkey"
+        let ecid = "ecid"
+        let expectation = XCTestExpectation(description: "Callback should be invoked with true signaling this hit should not be retried")
+        guard let expectedUrl = URL.getCampaignProfileUrl(campaignServer: server, pkey: pkey, ecid: ecid) else {
+            XCTFail("Failed to build the request url")
+            return
+        }
+        guard let expectedBody = URL.buildBody(ecid: ecid, data: nil) else {
+            XCTFail("Failed to build the request body")
+            return
+        }
+        mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: nil, error: error.genericError)
+
+        let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+
+        // test
+        hitProcessor.processHit(entity: entity) { success in
+            XCTAssertTrue(success)
+            expectation.fulfill()
+        }
+
+        // verify
+        wait(for: [expectation], timeout: 0.5)
+        XCTAssertTrue(responseCallbackArgs.isEmpty) // response handler should have not been invoked
+        XCTAssertTrue(mockNetworkService?.connectAsyncCalled ?? false) // network request should have been made
+        XCTAssertEqual(mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url, expectedUrl) // network request should be made with the url in the hit
+    }
+
     /// Tests that when the network request fails and does not have a recoverable response code that we do not invoke the response handler and do not retry the hit
     func testProcessHitUnrecoverableNetworkError() {
         let server = "campaign-server"
