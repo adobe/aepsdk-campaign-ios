@@ -9,13 +9,32 @@
  OF ANY KIND, either express or implied. See the License for the specific language
  governing permissions and limitations under the License.
  */
+
+import AEPServices
 import Foundation
-@testable import AEPServices
 
-class MockNetworking : Networking {
+class MockNetworking: Networking {
+    public var connectAsyncCalled: Bool = false
+    public var connectAsyncCalledWithNetworkRequest: NetworkRequest?
+    public var connectAsyncCalledWithCompletionHandler: ((HttpConnection) -> Void)?
+    public var expectedResponse: HttpConnection?
+    public var cachedNetworkRequests: [NetworkRequest] = []
 
-    var cachedNetworkRequests: [NetworkRequest] = []
-    func connectAsync(networkRequest: NetworkRequest, completionHandler: ((HttpConnection) -> Void)?) {
+    func connectAsync(networkRequest: NetworkRequest, completionHandler: ((HttpConnection) -> Void)? = nil) {
+        print("Do nothing \(networkRequest)")
+        connectAsyncCalled = true
+        connectAsyncCalledWithNetworkRequest = networkRequest
+        connectAsyncCalledWithCompletionHandler = completionHandler
+        if let expectedResponse = expectedResponse, let completionHandler = completionHandler {
+            completionHandler(expectedResponse)
+        }
         cachedNetworkRequests.append(networkRequest)
+    }
+
+    func reset() {
+        connectAsyncCalled = false
+        connectAsyncCalledWithNetworkRequest = nil
+        connectAsyncCalledWithCompletionHandler = nil
+        cachedNetworkRequests = []
     }
 }

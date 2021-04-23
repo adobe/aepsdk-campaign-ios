@@ -16,6 +16,7 @@ import AEPServices
 
 class CampaignState {
     private let LOG_TAG = "CampaignState"
+    private(set) var dataStore: NamedCollectionDataStore
 
     // Privacy status
     private(set) var privacyStatus: PrivacyStatus = .unknown
@@ -40,6 +41,11 @@ class CampaignState {
     /// Creates a new `CampaignState`.
     init(hitQueue: HitQueuing) {
         self.hitQueue = hitQueue
+        self.dataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
+        // initialize defaults
+        self.campaignTimeout = TimeInterval(CampaignConstants.Campaign.DEFAULT_TIMEOUT)
+        self.campaignRegistrationDelay = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
+        self.campaignRegistrationPaused = false
     }
 
     /// Takes the shared states map and updates the data within the Campaign State.
@@ -88,6 +94,32 @@ class CampaignState {
             return
         }
         self.ecid = identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] as? String
+    }
+
+    /// Determines if this `CampaignState` is valid for sending a registration request to Campaign.
+    ///- Returns true if the CampaignState is valid else return false
+    private func canRegisterWithCurrentState() -> Bool {
+        guard privacyStatus != .optedOut else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Privacy status is Opted Out.")
+            return false
+        }
+
+        guard let ecid = ecid, !ecid.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. ECID is invalid.")
+            return false
+        }
+
+        guard let campaignServer = campaignServer, !campaignServer.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Campaign server value is invalid.")
+            return false
+        }
+
+        guard let campaignPkey = campaignPkey, !campaignPkey.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Campaign Pkey value is invalid.")
+            return false
+        }
+
+        return true
     }
 
     ///Determines if this `CampaignState` is valid for sending message track request to Campaign.
@@ -155,5 +187,15 @@ class CampaignState {
         }
 
         hitQueue.queue(url: url, payload: payload, timestamp: event.timestamp.timeIntervalSince1970, privacyStatus: privacyStatus)
+    }
+
+    /// Invoked by the Campaign extension each time we successfully send a Campaign network request.
+    /// If the request was a Campaign registration request, the current timestamp and ecid will be stored in the Campaign Datastore.
+    /// - Parameters:
+    ///   - timestamp: The timestamp of the `CampaignHit` which was successfully sent
+    func updateDatastoreWithSuccessfulRegistrationInfo(timestamp: TimeInterval) {
+        Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(timestamp) in Campaign Datastore.")
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: timestamp)
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
     }
 }
