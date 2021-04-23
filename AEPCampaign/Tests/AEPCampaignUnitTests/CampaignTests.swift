@@ -25,7 +25,7 @@ class CampaignTests: XCTestCase {
     var dataQueue: DataQueue!
     var networking: MockNetworking!
 
-    override func setUpWithError() throws {
+    override func setUp() {
         extensionRuntime = TestableExtensionRuntime()
         campaign = Campaign(runtime: extensionRuntime)
 

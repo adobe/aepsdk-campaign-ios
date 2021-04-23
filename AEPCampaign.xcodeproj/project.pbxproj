@@ -10,7 +10,6 @@
 		365BF09E72243DCF7A87B704 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7591D93F5A6B6C917325E5F5 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */; };
 		3D10A606262581650049BDA1 /* AEPCampaign.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D10A5F8262581650049BDA1 /* AEPCampaign.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3D10A6292625826D0049BDA1 /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
-		3D10A63D262582A60049BDA1 /* AEPCampaignUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A63C262582A60049BDA1 /* AEPCampaignUnitTests.swift */; };
 		3D10A63F262582A60049BDA1 /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
 		3D10A653262583C70049BDA1 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A652262583C70049BDA1 /* Campaign.swift */; };
 		3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A6572625841C0049BDA1 /* CampaignConstants.swift */; };
@@ -64,7 +63,6 @@
 		3D10A6242625826D0049BDA1 /* AEPCampaignFunctionalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPCampaignFunctionalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D10A6282625826D0049BDA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D10A63A262582A60049BDA1 /* AEPCampaignUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AEPCampaignUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D10A63C262582A60049BDA1 /* AEPCampaignUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEPCampaignUnitTests.swift; sourceTree = "<group>"; };
 		3D10A652262583C70049BDA1 /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Campaign.swift; path = AEPCampaign/Sources/Campaign.swift; sourceTree = SOURCE_ROOT; };
 		3D10A6572625841C0049BDA1 /* CampaignConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignConstants.swift; sourceTree = "<group>"; };
 		3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Campaign+PublicAPI.swift"; sourceTree = "<group>"; };
@@ -213,7 +211,6 @@
 		3D10A63B262582A60049BDA1 /* AEPCampaignUnitTests */ = {
 			isa = PBXGroup;
 			children = (
-				3D10A63C262582A60049BDA1 /* AEPCampaignUnitTests.swift */,
 				D6E823BA262616F80092C7DE /* CampaignStateTests.swift */,
 				D6E824272628A6700092C7DE /* CampaignHitQueuingTests.swift */,
 				D6577E2D262F44EB008F0528 /* CampaignHitProcessorTests.swift */,
@@ -533,7 +530,6 @@
 				D6577DEF2628DAC7008F0528 /* MockDataQueuing.swift in Sources */,
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
 				D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */,
-				3D10A63D262582A60049BDA1 /* AEPCampaignUnitTests.swift in Sources */,
 				D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
