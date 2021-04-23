@@ -14,7 +14,7 @@
 import Foundation
 
 public class MockDataQueueService: DataQueuing {
-    let queueMap = ThreadSafeDictionary<String,DataQueue>()
+    let queueMap = ThreadSafeDictionary<String, DataQueue>()
 
     public init() {}
 

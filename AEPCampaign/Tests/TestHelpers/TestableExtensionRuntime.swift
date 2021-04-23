@@ -14,7 +14,6 @@ import Foundation
 
 @testable import AEPCore
 
-
 class TestableExtensionRuntime: ExtensionRuntime {
 
     public var listeners: [String: EventListener] = [:]
@@ -57,7 +56,7 @@ class TestableExtensionRuntime: ExtensionRuntime {
         return mockedSharedStates["\(extensionName)"]
     }
 
-    public func createXDMSharedState(data: [String : Any], event: Event?) {
+    public func createXDMSharedState(data: [String: Any], event: Event?) {
         createdXdmSharedStates += [data]
     }
 

@@ -68,7 +68,7 @@ class CampaignHitProcessorTests: XCTestCase {
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: 200, httpVersion: nil, headerFields: nil), error: nil)
 
         let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try? JSONEncoder().encode(hit))
 
         // test
         hitProcessor.processHit(entity: entity) { success in
@@ -105,7 +105,7 @@ class CampaignHitProcessorTests: XCTestCase {
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: NetworkServiceConstants.RECOVERABLE_ERROR_CODES.first!, httpVersion: nil, headerFields: nil), error: nil)
 
         let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try? JSONEncoder().encode(hit))
 
         // test
         hitProcessor.processHit(entity: entity) { success in
@@ -138,7 +138,7 @@ class CampaignHitProcessorTests: XCTestCase {
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: nil, error: URLError(URLError.notConnectedToInternet))
 
         let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try? JSONEncoder().encode(hit))
 
         // test
         hitProcessor.processHit(entity: entity) { success in
@@ -174,7 +174,7 @@ class CampaignHitProcessorTests: XCTestCase {
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: nil, error: error.genericError)
 
         let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try? JSONEncoder().encode(hit))
 
         // test
         hitProcessor.processHit(entity: entity) { success in
@@ -206,7 +206,7 @@ class CampaignHitProcessorTests: XCTestCase {
         mockNetworkService?.expectedResponse = HttpConnection(data: nil, response: HTTPURLResponse(url: expectedUrl, statusCode: -1, httpVersion: nil, headerFields: nil), error: nil)
 
         let hit = CampaignHit(url: expectedUrl, payload: expectedBody, timestamp: Date().timeIntervalSince1970)
-        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try! JSONEncoder().encode(hit))
+        let entity = DataEntity(uniqueIdentifier: "test-uuid", timestamp: Date(), data: try? JSONEncoder().encode(hit))
 
         // test
         hitProcessor.processHit(entity: entity) { success in
