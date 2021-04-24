@@ -77,7 +77,7 @@ jobs:
                shasum -a $i -c --ignore-missing <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM") ||
                shasum -a $i -c <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM" | grep -w "codecov")
              done  
-             bash ./codecov -v -X s3 -c -D "./out/Logs/Test" -J "AEPCampaign" -t ${CODECOV_TOKEN}
+             bash ./codecov -v -X s3 -c -D "./out/Build/ProfileData" -J "AEPCampaign" -t ${CODECOV_TOKEN}
 
       # verify XCFramework archive builds
       - run:
