@@ -30,6 +30,7 @@ public class Campaign: NSObject, Extension {
         CampaignConstants.Identity.EXTENSION_NAME
     ]
 
+    /// Initializes the Campaign extension
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
         super.init()
@@ -38,6 +39,7 @@ public class Campaign: NSObject, Extension {
         }
     }
 
+    /// Invoked when the Campaign extension has been registered by the `EventHub`
     public func onRegistered() {
         registerListener(type: EventType.campaign, source: EventSource.requestContent, listener: handleCampaignEvents)
         registerListener(type: EventType.lifecycle, source: EventSource.responseContent, listener: handleLifecycleEvents)
@@ -46,8 +48,14 @@ public class Campaign: NSObject, Extension {
         registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvent)
     }
 
-    public func onUnregistered() {}
+    /// Invoked when the Campaign extension has been unregistered by the `EventHub`, currently a no-op.
+    public func onUnregistered() {
 
+    }
+
+    /// Called before each `Event` processed by the Campaign extension
+    /// - Parameter event: event that will be processed next
+    /// - Returns: *true* if Configuration and Identity shared states are available
     public func readyForEvent(_ event: Event) -> Bool {
         guard getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set, getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set  else {
             return false
@@ -55,12 +63,12 @@ public class Campaign: NSObject, Extension {
         return true
     }
 
-    ///Handles events of type `Campaign`
+    /// Handles events of type `Campaign` and source `requestContent`
     private func handleCampaignEvents(event: Event) {
 
     }
 
-    ///Handles events of type `Lifecycle`
+    /// Handles events of type `Lifecycle` and source `responseContent`
     private func handleLifecycleEvents(event: Event) {
         guard let state = state else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
@@ -69,7 +77,7 @@ public class Campaign: NSObject, Extension {
         state.queueRegistrationRequest(event: event)
     }
 
-    ///Handles events of type `Configuration`
+    /// Handles events of type `Configuration` and source `responseContent`
     private func handleConfigurationEvents(event: Event) {
         var sharedStates = [String: [String: Any]?]()
         for extensionName in dependencies {
@@ -82,12 +90,12 @@ public class Campaign: NSObject, Extension {
         }
     }
 
-    ///Handles `Hub Shared state` events
+    /// Handles `Shared state` update events
     private func handleHubSharedStateEvent(event: Event) {
 
     }
 
-    ///Handles `Generic Data` events
+    /// Handles events of type `Generic Data` and source `os`
     private func handleGenericDataEvent(event: Event) {
         guard let state = state else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to handle event '\(event.id)'. Campaign State is nil.")
@@ -97,8 +105,8 @@ public class Campaign: NSObject, Extension {
         MessageInteractionTracker.processMessageInformation(event: event, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
     }
 
-    ///Dispatches an event with provided `Name`, `Type`, `Source` and `Data`.
-    /// - Parameters:
+    /// Dispatches an event with provided `Name`, `Type`, `Source` and `Data`.
+    ///  - Parameters:
     ///    - eventName: Name of event
     ///    - eventType: `EventType` for event
     ///    - eventSource: `EventSource` for event

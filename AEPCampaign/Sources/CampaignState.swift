@@ -174,7 +174,7 @@ class CampaignState {
 
     /// Invoked by the Campaign extension to queue a Campaign registration request.
     /// - Parameters:
-    ///   - event: The Lifecycle`Event` which triggered the registration request
+    ///   - event: The Lifecycle `Event` which triggered the registration request
     func queueRegistrationRequest(event: Event) {
         guard canRegisterWithCurrentState() else {
             Log.error(label: LOG_TAG, "\(#function) - Registration request cannot be sent, the Campaign extension is not configured.")
