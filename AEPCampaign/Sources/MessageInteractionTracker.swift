@@ -22,7 +22,7 @@ class MessageInteractionTracker {
     /// - Parameters:
     ///    - event: `Event`to be processed
     ///    - state: Current `Campaign State`
-    ///    - campaign: Instance of `Campaign` type
+    ///    - eventDispatcher: The Campaign event dispatcher
     static func processMessageInformation(event: Event, state: CampaignState, eventDispatcher: Campaign.EventDispatcher) {
         guard state.canSendTrackInfoWithCurrentState() else {
             Log.debug(label: LOG_TAG, "\(#function) - Campaign extension is not configured to send message track request.")
