@@ -44,8 +44,8 @@ public class Campaign: NSObject, Extension {
         registerListener(type: EventType.campaign, source: EventSource.requestContent, listener: handleCampaignEvents)
         registerListener(type: EventType.lifecycle, source: EventSource.responseContent, listener: handleLifecycleEvents)
         registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationEvents)
-        registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleHubSharedStateEvent)
-        registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvent)
+        registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleSharedStateUpdateEvents)
+        registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvents)
     }
 
     /// Invoked when the Campaign extension has been unregistered by the `EventHub`, currently a no-op.
@@ -63,12 +63,12 @@ public class Campaign: NSObject, Extension {
         return true
     }
 
-    /// Handles events of type `Campaign` and source `requestContent`
+    /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
 
     }
 
-    /// Handles events of type `Lifecycle` and source `responseContent`
+    /// Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event) {
         guard let state = state else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
@@ -77,7 +77,7 @@ public class Campaign: NSObject, Extension {
         state.queueRegistrationRequest(event: event)
     }
 
-    /// Handles events of type `Configuration` and source `responseContent`
+    /// Handles events of type `Configuration`
     private func handleConfigurationEvents(event: Event) {
         var sharedStates = [String: [String: Any]?]()
         for extensionName in dependencies {
@@ -91,12 +91,12 @@ public class Campaign: NSObject, Extension {
     }
 
     /// Handles `Shared state` update events
-    private func handleHubSharedStateEvent(event: Event) {
+    private func handleSharedStateUpdateEvents(event: Event) {
 
     }
 
-    /// Handles events of type `Generic Data` and source `os`
-    private func handleGenericDataEvent(event: Event) {
+    /// Handles events of type `Generic Data`
+    private func handleGenericDataEvents(event: Event) {
         guard let state = state else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to handle event '\(event.id)'. Campaign State is nil.")
             return
