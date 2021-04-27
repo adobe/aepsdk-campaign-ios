@@ -74,7 +74,11 @@ class CampaignTests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count > 0)
         let dataEntity = hitProcessor.processedEntities[0]
-        let hit = try? JSONDecoder().decode(CampaignHit.self, from: dataEntity.data!)
+        guard let data = dataEntity.data else {
+            XCTFail("Failed to get data")
+            return
+        }
+        let hit = try? JSONDecoder().decode(CampaignHit.self, from: data)
         XCTAssert(hit != nil)
         XCTAssertEqual(hit?.url.absoluteString, "https://\(campaignServer)/r?id=\(broadLogId),\(deliveryId),\(action)&mcId=\(ecid)")
     }
@@ -299,7 +303,11 @@ class CampaignTests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count > 0)
         let dataEntity = hitProcessor.processedEntities[0]
-        let hit = try? JSONDecoder().decode(CampaignHit.self, from: dataEntity.data!)
+        guard let data = dataEntity.data else {
+            XCTFail("Failed to get data")
+            return
+        }
+        let hit = try? JSONDecoder().decode(CampaignHit.self, from: data)
         XCTAssert(hit != nil)
         XCTAssertEqual(hit?.url.absoluteString, "https://\(campaignServer)/rest/head/mobileAppV5/\(pkey)/subscriptions/\(ecid)")
     }
