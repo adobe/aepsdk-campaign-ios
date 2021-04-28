@@ -24,6 +24,11 @@ public class Campaign: NSObject, Extension {
     public let runtime: ExtensionRuntime
     var state: CampaignState?
     typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String:Any]?) -> Void
+    let dispatchQueue: DispatchQueue
+    let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper())
+    private let rulesEngine: LaunchRulesEngine!
+    private var hasCachedRulesLoaded = false
+    
     
     private let dependencies: [String] = [
         CampaignConstants.Configuration.EXTENSION_NAME,
@@ -32,6 +37,8 @@ public class Campaign: NSObject, Extension {
     
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
+        dispatchQueue = DispatchQueue(label: friendlyName)
+        rulesEngine = LaunchRulesEngine(name: friendlyName, extensionRuntime: runtime)
         super.init()
         if let hitQueue = setupHitQueue() {
             state = CampaignState(hitQueue: hitQueue)
@@ -76,9 +83,19 @@ public class Campaign: NSObject, Extension {
             sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
         }
         state?.update(dataMap: sharedStates)
+        if !hasCachedRulesLoaded {
+            Log.trace(label: LOG_TAG, "\(#function) - Loading the Cached Campaign Rules.")
+            dispatchQueue.async { [weak self] in
+                self?.loadCachedRules()
+            }
+        }
 
         if state?.privacyStatus == .optedOut {
             // handle opt out
+        }
+        
+        dispatchQueue.async { [weak self] in
+            self?.downloadRules()
         }
     }
     
@@ -129,5 +146,23 @@ public class Campaign: NSObject, Extension {
         
         let hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout, responseHandler: handleSuccessfulNetworkRequest(hit:))
         return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
+    }
+    
+    ///Load the `Campaign` rules from the cache. It happens only once after the  Configuration Response event is received.
+    private func loadCachedRules() {
+        guard let mciasServer = state?.campaignMciasServer, let campaignServer = state?.campaignServer, let propertyId = state?.campaignPropertyId, let ecid = state?.ecid else {
+            return
+        }
+        
+        if let rulesUrl = URL.getRulesDownloadUrl(mciasServer: mciasServer, campaignServer: campaignServer, propertyId: propertyId, ecid: ecid) {
+            rulesEngine.replaceRulesWithCache(from: rulesUrl.absoluteString)
+        }
+    }
+    
+    ///Download the `Campaign` Rules, cache them and load them in `Rules Engine`.
+    private func downloadRules(){
+        campaignRulesDownloader.loadRulesFromUrl(rulesUrl: "") { data in
+            
+        }
     }
 }

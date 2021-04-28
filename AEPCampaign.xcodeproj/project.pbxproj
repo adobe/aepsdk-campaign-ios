@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		365BF09E72243DCF7A87B704 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7591D93F5A6B6C917325E5F5 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */; };
 		3D10A606262581650049BDA1 /* AEPCampaign.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D10A5F8262581650049BDA1 /* AEPCampaign.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3D10A6272625826D0049BDA1 /* AEPCampaignFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A6262625826D0049BDA1 /* AEPCampaignFunctionalTests.swift */; };
 		3D10A6292625826D0049BDA1 /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
@@ -16,11 +15,12 @@
 		3D10A653262583C70049BDA1 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A652262583C70049BDA1 /* Campaign.swift */; };
 		3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A6572625841C0049BDA1 /* CampaignConstants.swift */; };
 		3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */; };
-		3D10A67C26260FCC0049BDA1 /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E4A339944C71CD61160B8 /* Pods_AEPCampaign.framework */; };
 		3D46568B262A1DBE00BFC421 /* MessageInteractionTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */; };
 		3D465693262F4C9800BFC421 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */; };
 		3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4656A8262F510D00BFC421 /* CampaignTests.swift */; };
-		54DF607B3D7E4289EDDD6C27 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */; };
+		3D4657362637521700BFC421 /* CampaignRulesDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */; };
+		3D46573F2637739D00BFC421 /* CampaignCachedRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */; };
+		3D4657402637739D00BFC421 /* CampaignCacheable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46573E2637739D00BFC421 /* CampaignCacheable.swift */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DEE2628DAC7008F0528 /* MockDataQueuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */; };
@@ -37,6 +37,9 @@
 		D6E824282628A6710092C7DE /* CampaignHitQueuingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E824272628A6700092C7DE /* CampaignHitQueuingTests.swift */; };
 		D6E8243B2628A9830092C7DE /* MockHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E8243A2628A9830092C7DE /* MockHitProcessor.swift */; };
 		D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E8243A2628A9830092C7DE /* MockHitProcessor.swift */; };
+		F62F7186641312D56F1E3174 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E8C9F4BC2CD59F4F24B594 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */; };
+		F821A3F06EC862F87C55AE5B /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60983956DBC18CFACE9B9EEB /* Pods_AEPCampaign.framework */; };
+		FBC72DECF4C17AC282D257B6 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E924FEBD1F7F1AD4CB42979 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,8 +60,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		150C854BF5853ED961FE86F8 /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
-		34D46E0BDD44BB731B5E372E /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
+		25E8097AA1B4CF6D66768E08 /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
+		2E924FEBD1F7F1AD4CB42979 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignUnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		32FE365CAB8996C15C94874D /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3D10A5F5262581650049BDA1 /* AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D10A5F8262581650049BDA1 /* AEPCampaign.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AEPCampaign.h; sourceTree = "<group>"; };
 		3D10A5F9262581650049BDA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,13 +77,14 @@
 		3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInteractionTracker.swift; sourceTree = "<group>"; };
 		3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
 		3D4656A8262F510D00BFC421 /* CampaignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignTests.swift; sourceTree = "<group>"; };
-		4D09EDCE32512CC3F38B932E /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
-		553E4A339944C71CD61160B8 /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7591D93F5A6B6C917325E5F5 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignUnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		832CA6B995776E9E268A1372 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
-		A3A99FAF3EF2C88ACE12F2DC /* Pods-AEPCampaign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.release.xcconfig"; sourceTree = "<group>"; };
-		BAA0DA070500C13F89C7115E /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignRulesDownloader.swift; sourceTree = "<group>"; };
+		3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCachedRules.swift; sourceTree = "<group>"; };
+		3D46573E2637739D00BFC421 /* CampaignCacheable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCacheable.swift; sourceTree = "<group>"; };
+		60983956DBC18CFACE9B9EEB /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		98E8C9F4BC2CD59F4F24B594 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB48E30CBDE110F9AACD49CC /* Pods-AEPCampaign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.release.xcconfig"; sourceTree = "<group>"; };
+		BF99E79A29292B39B48208C6 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C0EB4B80360536E137893843 /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
 		D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueueService.swift; sourceTree = "<group>"; };
 		D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueuing.swift; sourceTree = "<group>"; };
 		D6577DF92628F48A008F0528 /* URL+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Campaign.swift"; sourceTree = "<group>"; };
@@ -92,6 +97,7 @@
 		D6E823E12627617F0092C7DE /* CampaignHit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignHit.swift; sourceTree = "<group>"; };
 		D6E824272628A6700092C7DE /* CampaignHitQueuingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignHitQueuingTests.swift; sourceTree = "<group>"; };
 		D6E8243A2628A9830092C7DE /* MockHitProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHitProcessor.swift; sourceTree = "<group>"; };
+		F7DBD8E668CF7884AFC65677 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D10A67C26260FCC0049BDA1 /* Pods_AEPCampaign.framework in Frameworks */,
+				F821A3F06EC862F87C55AE5B /* Pods_AEPCampaign.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,7 +114,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D10A6292625826D0049BDA1 /* AEPCampaign.framework in Frameworks */,
-				54DF607B3D7E4289EDDD6C27 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */,
+				F62F7186641312D56F1E3174 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,19 +123,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D10A63F262582A60049BDA1 /* AEPCampaign.framework in Frameworks */,
-				365BF09E72243DCF7A87B704 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */,
+				FBC72DECF4C17AC282D257B6 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		12D8E3E1F60C49269F3E7366 /* Frameworks */ = {
+		26A2BD5124D3A357DD151235 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				553E4A339944C71CD61160B8 /* Pods_AEPCampaign.framework */,
-				6B7BB779B9ECEE8AA8FA0D79 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */,
-				7591D93F5A6B6C917325E5F5 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */,
+				60983956DBC18CFACE9B9EEB /* Pods_AEPCampaign.framework */,
+				98E8C9F4BC2CD59F4F24B594 /* Pods_AEPCampaign_AEPCampaignFunctionalTests.framework */,
+				2E924FEBD1F7F1AD4CB42979 /* Pods_AEPCampaign_AEPCampaignUnitTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -137,12 +143,12 @@
 		2AB161FD1BE5CCC7C18D7E78 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				150C854BF5853ED961FE86F8 /* Pods-AEPCampaign.debug.xcconfig */,
-				A3A99FAF3EF2C88ACE12F2DC /* Pods-AEPCampaign.release.xcconfig */,
-				832CA6B995776E9E268A1372 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */,
-				4D09EDCE32512CC3F38B932E /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */,
-				BAA0DA070500C13F89C7115E /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */,
-				34D46E0BDD44BB731B5E372E /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */,
+				C0EB4B80360536E137893843 /* Pods-AEPCampaign.debug.xcconfig */,
+				BB48E30CBDE110F9AACD49CC /* Pods-AEPCampaign.release.xcconfig */,
+				BF99E79A29292B39B48208C6 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */,
+				F7DBD8E668CF7884AFC65677 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */,
+				32FE365CAB8996C15C94874D /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */,
+				25E8097AA1B4CF6D66768E08 /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -153,7 +159,7 @@
 				3D10A5F7262581650049BDA1 /* AEPCampaign */,
 				3D10A5F6262581650049BDA1 /* Products */,
 				2AB161FD1BE5CCC7C18D7E78 /* Pods */,
-				12D8E3E1F60C49269F3E7366 /* Frameworks */,
+				26A2BD5124D3A357DD151235 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -179,6 +185,7 @@
 		3D10A61B262581AD0049BDA1 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3D4657162633813800BFC421 /* rules */,
 				3D10A5F8262581650049BDA1 /* AEPCampaign.h */,
 				3D10A5F9262581650049BDA1 /* Info.plist */,
 				3D10A652262583C70049BDA1 /* Campaign.swift */,
@@ -225,6 +232,16 @@
 			path = AEPCampaignUnitTests;
 			sourceTree = "<group>";
 		};
+		3D4657162633813800BFC421 /* rules */ = {
+			isa = PBXGroup;
+			children = (
+				3D46573E2637739D00BFC421 /* CampaignCacheable.swift */,
+				3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */,
+				3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */,
+			);
+			path = rules;
+			sourceTree = "<group>";
+		};
 		D6E824392628A9640092C7DE /* TestHelpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -255,7 +272,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D10A609262581650049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaign" */;
 			buildPhases = (
-				8208F379A32DC42383BC7457 /* [CP] Check Pods Manifest.lock */,
+				E8BD20BE5813C5732D53C7EC /* [CP] Check Pods Manifest.lock */,
 				3D10A5F0262581650049BDA1 /* Headers */,
 				3D10A5F1262581650049BDA1 /* Sources */,
 				3D10A5F2262581650049BDA1 /* Frameworks */,
@@ -274,11 +291,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D10A62C2625826D0049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignFunctionalTests" */;
 			buildPhases = (
-				A2779C34D0E8CCBEE5538075 /* [CP] Check Pods Manifest.lock */,
+				22DE77683CA95D0860C817FA /* [CP] Check Pods Manifest.lock */,
 				3D10A6202625826D0049BDA1 /* Sources */,
 				3D10A6212625826D0049BDA1 /* Frameworks */,
 				3D10A6222625826D0049BDA1 /* Resources */,
-				3A4336AB0933108633D1F255 /* [CP] Embed Pods Frameworks */,
+				F9D3C8E0EA12F163251B4F60 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -294,11 +311,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D10A642262582A60049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignUnitTests" */;
 			buildPhases = (
-				E5399E354E372695108B262F /* [CP] Check Pods Manifest.lock */,
+				8E05333ABBB7C94C60C8ED01 /* [CP] Check Pods Manifest.lock */,
 				3D10A636262582A60049BDA1 /* Sources */,
 				3D10A637262582A60049BDA1 /* Frameworks */,
 				3D10A638262582A60049BDA1 /* Resources */,
-				1AF77B918F60F828650551A2 /* [CP] Embed Pods Frameworks */,
+				42CFAEEDA2765BD616E8A1E2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -376,63 +393,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1AF77B918F60F828650551A2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3A4336AB0933108633D1F255 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8208F379A32DC42383BC7457 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPCampaign-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A2779C34D0E8CCBEE5538075 /* [CP] Check Pods Manifest.lock */ = {
+		22DE77683CA95D0860C817FA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -454,7 +415,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E5399E354E372695108B262F /* [CP] Check Pods Manifest.lock */ = {
+		42CFAEEDA2765BD616E8A1E2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignUnitTests/Pods-AEPCampaign-AEPCampaignUnitTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8E05333ABBB7C94C60C8ED01 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -476,6 +454,45 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E8BD20BE5813C5732D53C7EC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AEPCampaign-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9D3C8E0EA12F163251B4F60 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaign-AEPCampaignFunctionalTests/Pods-AEPCampaign-AEPCampaignFunctionalTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -483,7 +500,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D4657362637521700BFC421 /* CampaignRulesDownloader.swift in Sources */,
 				3D46568B262A1DBE00BFC421 /* MessageInteractionTracker.swift in Sources */,
+				3D4657402637739D00BFC421 /* CampaignCacheable.swift in Sources */,
+				3D46573F2637739D00BFC421 /* CampaignCachedRules.swift in Sources */,
 				D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */,
 				3D10A653262583C70049BDA1 /* Campaign.swift in Sources */,
 				D6577DFA2628F48A008F0528 /* URL+Campaign.swift in Sources */,
@@ -664,7 +684,7 @@
 		};
 		3D10A60A262581650049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 150C854BF5853ED961FE86F8 /* Pods-AEPCampaign.debug.xcconfig */;
+			baseConfigurationReference = C0EB4B80360536E137893843 /* Pods-AEPCampaign.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -693,7 +713,7 @@
 		};
 		3D10A60B262581650049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A3A99FAF3EF2C88ACE12F2DC /* Pods-AEPCampaign.release.xcconfig */;
+			baseConfigurationReference = BB48E30CBDE110F9AACD49CC /* Pods-AEPCampaign.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -721,7 +741,7 @@
 		};
 		3D10A62D2625826D0049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 832CA6B995776E9E268A1372 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */;
+			baseConfigurationReference = BF99E79A29292B39B48208C6 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -741,7 +761,7 @@
 		};
 		3D10A62E2625826D0049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D09EDCE32512CC3F38B932E /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */;
+			baseConfigurationReference = F7DBD8E668CF7884AFC65677 /* Pods-AEPCampaign-AEPCampaignFunctionalTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -761,7 +781,7 @@
 		};
 		3D10A643262582A60049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BAA0DA070500C13F89C7115E /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */;
+			baseConfigurationReference = 32FE365CAB8996C15C94874D /* Pods-AEPCampaign-AEPCampaignUnitTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -781,7 +801,7 @@
 		};
 		3D10A644262582A60049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 34D46E0BDD44BB731B5E372E /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */;
+			baseConfigurationReference = 25E8097AA1B4CF6D66768E08 /* Pods-AEPCampaign-AEPCampaignUnitTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
