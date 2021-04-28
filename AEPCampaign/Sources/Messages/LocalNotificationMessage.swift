@@ -99,9 +99,17 @@ class LocalNotificationMessage: Message {
         let content = UNMutableNotificationContent()
         let notificationCenter = UNUserNotificationCenter.current()
 
+        // content is required
         content.body = self.content
+        
+        // title, sound, user info, and fire date are optional
         if let title = title, !title.isEmpty {
             content.title = title
+        }
+        if let sound = sound, !sound.isEmpty {
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(sound))
+        } else {
+            content.sound = UNNotificationSound.default
         }
         if let userData = userData, !userData.isEmpty {
             content.userInfo = userData
@@ -112,7 +120,8 @@ class LocalNotificationMessage: Message {
         }
 
         let request = UNNotificationRequest(identifier: messageId, content: content, trigger: trigger)
-
+        
+        Log.trace(label: LOG_TAG, "\(#function) - Scheduling local notification for message id \(messageId).")
         notificationCenter.add(request) { error in
             if let error = error {
                 print("Error \(error.localizedDescription)")

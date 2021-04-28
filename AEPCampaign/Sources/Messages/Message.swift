@@ -38,7 +38,7 @@ protocol Message {
     func shouldDownloadAssets() -> Bool
 }
 
-/// Define default implementation for common or optional methods within the Message Protocol
+/// Define default implementation for common or optional methods within the Message Protocol. These default methods can be overriden.
 extension Message {
     /// Creates a Campaign Message Object
     ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
