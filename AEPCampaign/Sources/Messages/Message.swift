@@ -17,7 +17,7 @@ import AEPServices
 protocol Message {
     static var eventDispatcher: Campaign.EventDispatcher? {get set}
     static var state: CampaignState? {get set}
-    var messageId: String {get set}
+    var messageId: String? {get set}
 
     /// Message class initializer
     ///  - Parameters:
@@ -139,6 +139,10 @@ extension Message {
             if key == CampaignConstants.Campaign.MessagePayload.INTERACTION_URL {
                 guard let url = URL(string: value) else {
                     Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Failed to create URL from \(value).")
+                    return
+                }
+                guard let messageId = messageId else {
+                    Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message clicked with data event, the message id is nil.")
                     return
                 }
                 let urlTokens = [CampaignConstants.Campaign.MESSAGE_ID_TOKEN: messageId]

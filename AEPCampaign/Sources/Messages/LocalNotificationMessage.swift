@@ -20,14 +20,14 @@ class LocalNotificationMessage: Message {
     private var consequence: CampaignRuleConsequence
     internal static var eventDispatcher: Campaign.EventDispatcher?
     internal static var state: CampaignState?
-    internal var messageId: String
+    internal var messageId: String?
 
     private var content: String
-    private var deeplink: String
-    private var sound: String
-    private var userData: [String: Any]
-    private var fireDate: TimeInterval
-    private var title: String
+    private var deeplink: String?
+    private var sound: String?
+    private var userData: [String: Any]?
+    private var fireDate: TimeInterval?
+    private var title: String?
 
     /// LocalNotification class initializer
     ///  - Parameters:
@@ -67,28 +67,32 @@ class LocalNotificationMessage: Message {
     }
 
     func showMessage() {
-        guard !userData.isEmpty else {
+        guard let messageId = messageId else {
+            Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot show local notification, the message id is nil.")
+            return
+        }
+
+        if let userData = userData, !userData.isEmpty {
+            guard let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !broadlogId.isEmpty else {
+                Log.trace(label: LOG_TAG, "\(#function) - Cannot dispatch message info event, broadlog id is nil or empty.")
+                return
+            }
+
+            guard let deliveryId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, !deliveryId.isEmpty else {
+                Log.trace(label: LOG_TAG, "\(#function) - Cannot dispatch message info event, delivery id is nil or empty.")
+                return
+            }
+
+            // dispatch triggered event
+            triggered(deliveryId: deliveryId)
+
+            // dispatch generic data message info event
+            if let eventDispatcher = Self.eventDispatcher, let state = Self.state {
+                Log.trace(label: LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
+                MessageInteractionTracker.dispatchMessageInfoEvent(broadlogId: broadlogId, deliveryId: deliveryId, action: CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE, state: state, eventDispatcher: eventDispatcher)
+            }
+        } else {
             Log.trace(label: LOG_TAG, "\(#function) - Cannot dispatch message info event, user info is nil or empty.")
-            return
-        }
-
-        guard let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !broadlogId.isEmpty else {
-            Log.trace(label: LOG_TAG, "\(#function) - Cannot dispatch message info event, broadlog id is nil or empty.")
-            return
-        }
-
-        guard let deliveryId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, !deliveryId.isEmpty else {
-            Log.trace(label: LOG_TAG, "\(#function) - Cannot dispatch message info event, delivery id is nil or empty.")
-            return
-        }
-
-        // dispatch triggered event
-        triggered(deliveryId: deliveryId)
-
-        // dispatch generic data message info event
-        if let eventDispatcher = Self.eventDispatcher, let state = Self.state {
-            Log.trace(label: LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
-            MessageInteractionTracker.dispatchMessageInfoEvent(broadlogId: broadlogId, deliveryId: deliveryId, action: CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE, state: state, eventDispatcher: eventDispatcher)
         }
 
         // schedule local notification
@@ -96,18 +100,18 @@ class LocalNotificationMessage: Message {
         let notificationCenter = UNUserNotificationCenter.current()
 
         content.body = self.content
-        if !title.isEmpty {
+        if let title = title, !title.isEmpty {
             content.title = title
         }
-        if !userData.isEmpty {
+        if let userData = userData, !userData.isEmpty {
             content.userInfo = userData
         }
         var trigger: UNTimeIntervalNotificationTrigger?
-        if fireDate > TimeInterval(0) {
+        if let fireDate = fireDate, fireDate > TimeInterval(0) {
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: fireDate, repeats: false)
         }
 
-        let request = UNNotificationRequest(identifier: consequence.id, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: messageId, content: content, trigger: trigger)
 
         notificationCenter.add(request) { error in
             if let error = error {
