@@ -50,7 +50,7 @@ class LocalNotificationMessage: Message {
 
     func triggered(deliveryId: String) {
         guard let eventDispatcher = Self.eventDispatcher else {
-            Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
+            Log.trace(label: LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
             return
         }
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message triggered event.")
@@ -59,10 +59,10 @@ class LocalNotificationMessage: Message {
 
     func viewed(deliveryId: String) {
         guard let eventDispatcher = Self.eventDispatcher else {
-            Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
+            Log.trace(label: LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
             return
         }
-        Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message triggered event.")
+        Log.trace(label: LOG_TAG, "\(#function) - Dispatching message triggered event.")
         MessageInteractionTracker.dispatchMessageEvent(action: CampaignConstants.ContextDataKeys.MESSAGE_TRIGGERED, deliveryId: deliveryId, eventDispatcher: eventDispatcher)
     }
 
@@ -87,7 +87,7 @@ class LocalNotificationMessage: Message {
 
         // dispatch generic data message info event
         if let eventDispatcher = Self.eventDispatcher, let state = Self.state {
-            Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
+            Log.trace(label: LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
             MessageInteractionTracker.dispatchMessageInfoEvent(broadlogId: broadlogId, deliveryId: deliveryId, action: CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE, state: state, eventDispatcher: eventDispatcher)
         }
 

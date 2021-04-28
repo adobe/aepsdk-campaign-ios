@@ -150,6 +150,7 @@ extension Message {
             }
         }
 
+        Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message clicked with data event.")
         messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
         messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = "1"
         eventDispatcher("InternalGenericDataEvent", EventType.genericData, EventSource.os, messageData)
