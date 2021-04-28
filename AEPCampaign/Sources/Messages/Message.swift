@@ -16,23 +16,17 @@ import AEPServices
 
 protocol Message {
     static var eventDispatcher: Campaign.EventDispatcher? {get set}
-    static var state: CampaignState? {get set}
     var messageId: String? {get set}
 
-    /// Message class initializer
-    ///  - Parameters:
-    ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
-    ///    - state: The CampaignState
-    ///    - eventDispatcher: The Campaign event dispatcher
-    init(consequence: CampaignRuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher)
-
-    /// Used by the Message subclass to display the message.
+    /// Implemented by the Message subclass to display the message.
     func showMessage()
 
+    /// Implemented by the Message subclass.
     /// Generates a dictionary with message data for a "message triggered" event and dispatches it using the Campaign event dispatcher.
     /// - Parameter deliveryId: the delivery id of the triggered message
     func triggered(deliveryId: String)
 
+    /// Implemented by the Message subclass.
     /// Determines whether a message should attempt to download assets for caching.
     ///  - Returns: A boolean indicating whether this should download assets.
     func shouldDownloadAssets() -> Bool
@@ -40,25 +34,10 @@ protocol Message {
 
 /// Define default implementation for common or optional methods within the Message Protocol. These default methods can be overriden.
 extension Message {
-    /// Creates a Campaign Message Object
+    /// Default implementation to create a Campaign Message object. This method must be implemented in the subclass.
     ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    ///  - Returns: A Campaign message object
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence) -> Message? {
-        guard let eventDispatcher = self.eventDispatcher else {
-            Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot create message object, the event dispatcher is nil.")
-            return nil
-        }
-        guard let state = self.state else {
-            Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot create message object, the Campaign State is nil.")
-            return nil
-        }
-
-        let messageObject = self.init(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
-        if messageObject.shouldDownloadAssets() {
-            messageObject.downloadRemoteAssets(consequence: consequence)
-        }
-        return messageObject
-    }
+    ///  - Returns: A Campaign message object or nil if the message object creation failed.
+    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence) -> Message? { return nil }
 
     /// Creates an instance of the Message subclass and invokes a method within the class to handle asset downloading if it supports remote assets.
     ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload

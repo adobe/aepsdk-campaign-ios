@@ -63,9 +63,30 @@ public class Campaign: NSObject, Extension {
         return true
     }
 
+    // TODO: replace this with the actual implementation
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
-
+        guard let state = state else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
+            return
+        }
+        guard let eventData = event.data, !eventData.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, event data is nil or empty.")
+            return
+        }
+        guard let consequenceDict = eventData[CampaignConstants.EventDataKeys.RulesEngine.TRIGGERED_CONSEQUENCES] as? [String: Any], !consequenceDict.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence is nil or empty.")
+            return
+        }
+        let detailDictionary = consequenceDict["detailDictionary"] as? [String: Any] ?? [:]
+        let consequence = CampaignRuleConsequence(id: consequenceDict["id"] as? String ?? "", type: consequenceDict["type"] as? String ?? "", assetsPath: consequenceDict["assetsPath"] as? String ?? "", detailDictionary: detailDictionary)
+        let template = detailDictionary["template"] as? String
+        if template == "local" {
+            guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
+                return
+            }
+            message.showMessage()
+        }
     }
 
     /// Handles events of type `Lifecycle`
@@ -130,12 +151,7 @@ public class Campaign: NSObject, Extension {
             return nil
         }
 
-        guard let state = self.state else {
-            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, the Campaign State is nil")
-            return nil
-        }
-
-        let hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout, responseHandler: handleSuccessfulNetworkRequest(hit:))
+        let hitProcessor = CampaignHitProcessor(timeout: 5, responseHandler: handleSuccessfulNetworkRequest(hit:))
         return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
 }

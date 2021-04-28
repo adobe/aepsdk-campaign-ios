@@ -87,7 +87,7 @@ enum CampaignConstants {
 
     enum Identity {
         static let EXTENSION_NAME = "com.adobe.module.identity"
-        static let EXPERIENCE_CLOUD_ID = "marketingCloudId"
+        static let EXPERIENCE_CLOUD_ID = "mid"
     }
 
     enum Lifecycle {
