@@ -162,7 +162,7 @@ class LocalNotificationMessage: Message {
             return
         }
         // content is required
-        guard let content = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL] as? String, !content.isEmpty else {
+        guard let content = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CONTENT] as? String, !content.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The content for a local notification is required, dropping the notification.")
             return
         }
