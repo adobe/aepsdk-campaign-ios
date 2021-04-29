@@ -14,37 +14,34 @@ import Foundation
 import AEPCore
 import AEPServices
 
+/// Defines Message Protocol for ACS In-App Messages.
 protocol Message {
     static var eventDispatcher: Campaign.EventDispatcher? {get set}
     var messageId: String? {get set}
 
+    /// Implemented by the Message subclass to create a Campaign Message object.
+    ///  - Parameters:
+    ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
+    ///    - state: The CampaignState
+    ///    - eventDispatcher: The Campaign event dispatcher
+    ///  - Returns: A Campaign message object or nil if the message object creation failed.
+    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> Message?
+
     /// Implemented by the Message subclass to display the message.
     func showMessage()
 
-    /// Implemented by the Message subclass.
-    /// Generates a dictionary with message data for a "message triggered" event and dispatches it using the Campaign event dispatcher.
+    /// Implemented by the Message subclass. This method generates a dictionary with message data for a "message triggered" event and
+    /// dispatches it using the Campaign event dispatcher.
     /// - Parameter deliveryId: the delivery id of the triggered message
     func triggered(deliveryId: String)
 
-    /// Implemented by the Message subclass.
-    /// Determines whether a message should attempt to download assets for caching.
+    /// Implemented by the Message subclass. This method determines whether a message should attempt to download assets for caching.
     ///  - Returns: A boolean indicating whether this should download assets.
     func shouldDownloadAssets() -> Bool
 }
 
-/// Define default implementation for common or optional methods within the Message Protocol. These default methods can be overriden.
+/// Defines default implementation for common or optional methods within the Message Protocol. These default methods *can* be overriden if desired.
 extension Message {
-    /// Default implementation to create a Campaign Message object. This method must be implemented in the subclass.
-    ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    ///  - Returns: A Campaign message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence) -> Message? { return nil }
-
-    /// Creates an instance of the Message subclass and invokes a method within the class to handle asset downloading if it supports remote assets.
-    ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    func downloadRemoteAssets(consequence: CampaignRuleConsequence) {
-        Self.createMessageObject(consequence: consequence)
-    }
-
     /// Expands the provided tokens in the given input string.
     ///  - Parameters:
     ///    - input: The input string containing tokens to be expanded
@@ -141,4 +138,8 @@ extension Message {
 
     /// Optional method to let the Message subclass handle asset downloading.
     func downloadAssets() {}
+
+    /// Optional method which creates an instance of the Message subclass and invokes a method within the class to handle asset downloading.
+    ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
+    func downloadRemoteAssets() {}
 }
