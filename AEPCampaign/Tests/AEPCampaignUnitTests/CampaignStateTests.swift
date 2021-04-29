@@ -24,11 +24,7 @@ class CampaignStateTests: XCTestCase {
     override func setUp() {
         dataQueue = MockDataQueue()
         hitProcessor = MockHitProcessor()
-        state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))
-    }
-
-    func testHitQueueNotNilOnCampaignStateInit() {
-        XCTAssertNotNil(state.hitQueue)
+        state = CampaignState()
     }
 
     func testUpdateWithConfigurationSharedState() {
@@ -63,6 +59,7 @@ class CampaignStateTests: XCTestCase {
         XCTAssertEqual(state.campaignPropertyId, propertyId)
         XCTAssertEqual(state.campaignRegistrationDelay, TimeInterval(864000)) // 10 days in seconds
         XCTAssertEqual(state.campaignRegistrationPaused, registrationPaused)
+        XCTAssertNotNil(state.hitQueue)
     }
 
     func testUpdateWithConfigurationSharedStateVerifyDefaultValues() {
@@ -89,6 +86,7 @@ class CampaignStateTests: XCTestCase {
         XCTAssertEqual(state.campaignPropertyId, propertyId)
         XCTAssertEqual(state.campaignRegistrationDelay, TimeInterval(604800)) // default value is 7 days in seconds
         XCTAssertEqual(state.campaignRegistrationPaused, false) // default value is false
+        XCTAssertNotNil(state.hitQueue)
     }
 
     func testUpdateWithIdentitySharedState() {

@@ -34,13 +34,16 @@ class CampaignState {
     private(set) var ecid: String?
 
     // Campaign Persistent HitQueue
-    private(set) var hitQueue: HitQueuing
+    #if DEBUG
+        var hitQueue: HitQueuing?
+    #else
+        private(set) var hitQueue: HitQueuing?
+    #endif
 
     private(set) var namedCollectionDataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
 
     /// Creates a new `CampaignState`.
-    init(hitQueue: HitQueuing) {
-        self.hitQueue = hitQueue
+    init() {
         self.dataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
         // initialize defaults
         self.campaignTimeout = TimeInterval(CampaignConstants.Campaign.DEFAULT_TIMEOUT)
@@ -82,8 +85,12 @@ class CampaignState {
         }
         self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
 
-        // update the hitQueue with the latest privacy status
-        hitQueue.handlePrivacyChange(status: self.privacyStatus)
+        // create the hitqueue if not yet created. otherwise, update the hitQueue with the latest privacy status.
+        if let hitQueue = hitQueue {
+            hitQueue.handlePrivacyChange(status: self.privacyStatus)
+        } else {
+            hitQueue = setupHitQueue()
+        }
     }
 
     /// Extracts the identity data from the provided shared state data.
@@ -207,7 +214,10 @@ class CampaignState {
                 return
             }
         }
-
+        guard let hitQueue = hitQueue else {
+            Log.trace(label: LOG_TAG, "\(#function) - Failed to queue the network request, the hitQueue is nil.")
+            return
+        }
         hitQueue.queue(url: url, payload: payload, timestamp: event.timestamp.timeIntervalSince1970, privacyStatus: privacyStatus)
     }
 
@@ -219,5 +229,24 @@ class CampaignState {
         Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(timestamp) in Campaign Datastore.")
         dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: timestamp)
         dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+    }
+
+    /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
+    private func setupHitQueue() -> HitQueuing? {
+        guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: CampaignConstants.EXTENSION_NAME) else {
+            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, Campaign could not be initialized")
+            return nil
+        }
+
+        let hitProcessor = CampaignHitProcessor(timeout: self.campaignTimeout ?? TimeInterval(CampaignConstants.Campaign.DEFAULT_TIMEOUT), responseHandler: handleSuccessfulNetworkRequest(hit:))
+        let hitQueue = PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
+        hitQueue.handlePrivacyChange(status: self.privacyStatus)
+        return hitQueue
+    }
+
+    /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
+    /// - Parameter hit: The `CampaignHit` which was successfully sent
+    private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
+        updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
     }
 }
