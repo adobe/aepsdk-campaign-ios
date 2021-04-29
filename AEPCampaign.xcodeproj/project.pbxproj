@@ -53,6 +53,7 @@
 		D6E978AB2639D1F2003F3372 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A82639D1F2003F3372 /* UserNotifications.framework */; };
 		D6E979022639DFE6003F3372 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6E979012639DFE6003F3372 /* Assets.xcassets */; };
 		D6E9792F263B4775003F3372 /* Event+Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E9792E263B4775003F3372 /* Event+Campaign.swift */; };
+		D6E97925263B34FE003F3372 /* LocalNotificationMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +137,7 @@
 		D6E978A82639D1F2003F3372 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		D6E979012639DFE6003F3372 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D6E9792E263B4775003F3372 /* Event+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Campaign.swift"; sourceTree = "<group>"; };
+		D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessageTests.swift; sourceTree = "<group>"; };
 		FCB64B12141CA636FC40E888 /* Pods-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -290,6 +292,7 @@
 				D6E824272628A6700092C7DE /* CampaignHitQueuingTests.swift */,
 				D6577E2D262F44EB008F0528 /* CampaignHitProcessorTests.swift */,
 				3D4656A8262F510D00BFC421 /* CampaignTests.swift */,
+				D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */,
 			);
 			path = AEPCampaignUnitTests;
 			sourceTree = "<group>";
@@ -717,6 +720,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6E97925263B34FE003F3372 /* LocalNotificationMessageTests.swift in Sources */,
 				D6E824282628A6710092C7DE /* CampaignHitQueuingTests.swift in Sources */,
 				D6577E34262F6E12008F0528 /* MockNetworking.swift in Sources */,
 				D6577E2E262F44EC008F0528 /* CampaignHitProcessorTests.swift in Sources */,
