@@ -70,11 +70,7 @@ public class Campaign: NSObject, Extension {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
             return
         }
-        guard let eventData = event.data, !eventData.isEmpty else {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, event data is nil or empty.")
-            return
-        }
-        guard let consequenceDict = eventData[CampaignConstants.EventDataKeys.RulesEngine.TRIGGERED_CONSEQUENCES] as? [String: Any], !consequenceDict.isEmpty else {
+        guard let consequenceDict = event.triggeredConsequence, !consequenceDict.isEmpty else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence is nil or empty.")
             return
         }

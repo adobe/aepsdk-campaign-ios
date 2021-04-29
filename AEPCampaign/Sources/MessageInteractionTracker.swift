@@ -29,22 +29,17 @@ class MessageInteractionTracker {
             return
         }
 
-        guard let eventData = event.data else {
-            Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, eventData is null.")
-            return
-        }
-
-        guard let broadlogId = eventData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !broadlogId.isEmpty else {
+        guard let broadlogId = event.broadlogId, !broadlogId.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, broadlogId is empty.")
             return
         }
 
-        guard let deliveryId = eventData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, !deliveryId.isEmpty else {
+        guard let deliveryId = event.deliveryId, !deliveryId.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, deliveryId is empty.")
             return
         }
 
-        guard let action = eventData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION] as? String, !action.isEmpty else {
+        guard let action = event.action, !action.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, action is empty.")
             return
         }

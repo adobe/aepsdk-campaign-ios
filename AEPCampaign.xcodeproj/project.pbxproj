@@ -52,6 +52,7 @@
 		D6E978AA2639D1F2003F3372 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A72639D1F2003F3372 /* NotificationCenter.framework */; };
 		D6E978AB2639D1F2003F3372 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A82639D1F2003F3372 /* UserNotifications.framework */; };
 		D6E979022639DFE6003F3372 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6E979012639DFE6003F3372 /* Assets.xcassets */; };
+		D6E9792F263B4775003F3372 /* Event+Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E9792E263B4775003F3372 /* Event+Campaign.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,6 +135,7 @@
 		D6E978A72639D1F2003F3372 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		D6E978A82639D1F2003F3372 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		D6E979012639DFE6003F3372 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D6E9792E263B4775003F3372 /* Event+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Campaign.swift"; sourceTree = "<group>"; };
 		FCB64B12141CA636FC40E888 /* Pods-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,9 +257,10 @@
 				D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */,
 				3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */,
 				D6E823B8262616E90092C7DE /* CampaignState.swift */,
+				D6E9792E263B4775003F3372 /* Event+Campaign.swift */,
+				D6577E19262DFFA9008F0528 /* HitQueuing+Campaign.swift */,
 				3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */,
 				D6577DF92628F48A008F0528 /* URL+Campaign.swift */,
-				D6577E19262DFFA9008F0528 /* HitQueuing+Campaign.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -684,6 +687,7 @@
 				3D46568B262A1DBE00BFC421 /* MessageInteractionTracker.swift in Sources */,
 				D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */,
 				3D10A653262583C70049BDA1 /* Campaign.swift in Sources */,
+				D6E9792F263B4775003F3372 /* Event+Campaign.swift in Sources */,
 				D6577DFA2628F48A008F0528 /* URL+Campaign.swift in Sources */,
 				3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */,
 				D6E823E22627617F0092C7DE /* CampaignHit.swift in Sources */,
