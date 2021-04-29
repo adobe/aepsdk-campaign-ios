@@ -67,8 +67,8 @@ class LocalNotificationMessage: Message {
         MessageInteractionTracker.dispatchMessageEvent(action: CampaignConstants.ContextDataKeys.MESSAGE_TRIGGERED, deliveryId: deliveryId, eventDispatcher: eventDispatcher)
     }
 
-    /// Validates the parsed Local Notification message payload and if valid, creates a `UNNotificationRequest` and schedules it with
-    /// the `UNUserNotificationCenter`.
+    /// Validates the parsed Local Notification message payload and if valid, attempts to send message tracking events.
+    /// It then calls `scheduleLocalNotification` to schedule a local notification with the `UNUserNotificationCenter`.
     func showMessage() {
         if let userData = userData, !userData.isEmpty {
             guard let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !broadlogId.isEmpty else {
@@ -99,7 +99,7 @@ class LocalNotificationMessage: Message {
     private func scheduleLocalNotification() {
         // content (message body) is required, bail early if we don't have it
         guard let body = self.content else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot show local notification, the message detail is nil.")
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message detail is nil.")
             return
         }
 
