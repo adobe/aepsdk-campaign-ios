@@ -82,7 +82,7 @@ extension Message {
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message triggered event.")
         var messageData: [String: Any] = [:]
         messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
-        messageData[CampaignConstants.ContextDataKeys.MESSAGE_TRIGGERED] = CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_TRIGGERED] = "1"
         MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
     }
 
@@ -96,7 +96,7 @@ extension Message {
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message viewed event.")
         var messageData: [String: Any] = [:]
         messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
-        messageData[CampaignConstants.ContextDataKeys.MESSAGE_VIEWED] = CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_VIEWED] = "1"
         MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
     }
 
@@ -110,7 +110,7 @@ extension Message {
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message clicked event.")
         var messageData: [String: Any] = [:]
         messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
-        messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = CampaignConstants.EventDataKeys.MESSAGE_CLICKED_ACTION_VALUE
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = "1"
         MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
     }
 
@@ -149,7 +149,7 @@ extension Message {
 
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message clicked with data event.")
         messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
-        messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = CampaignConstants.EventDataKeys.MESSAGE_CLICKED_ACTION_VALUE
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = "1"
         MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
     }
 
