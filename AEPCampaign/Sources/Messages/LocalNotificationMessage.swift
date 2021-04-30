@@ -53,18 +53,11 @@ class LocalNotificationMessage: Message {
             return nil
         }
         let messageObject = LocalNotificationMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
-        return messageObject
-    }
-
-    /// Generates a dictionary with message data for a "message triggered" event and dispatches it using the Campaign event dispatcher.
-    /// - Parameter deliveryId: the delivery id of the triggered message
-    func triggered(deliveryId: String) {
-        guard let eventDispatcher = Self.eventDispatcher else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
-            return
+        // content is required so no message object is returned if it is nil
+        guard messageObject.content != nil else {
+            return nil
         }
-        Log.trace(label: Self.LOG_TAG, "\(#function) - Dispatching message triggered event.")
-        MessageInteractionTracker.dispatchMessageEvent(action: CampaignConstants.ContextDataKeys.MESSAGE_TRIGGERED, deliveryId: deliveryId, eventDispatcher: eventDispatcher)
+        return messageObject
     }
 
     /// Validates the parsed Local Notification message payload and if valid, attempts to send message tracking events.

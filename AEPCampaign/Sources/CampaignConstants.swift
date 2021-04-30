@@ -105,6 +105,8 @@ enum CampaignConstants {
 
     // MARK: EventDataKeys
     enum EventDataKeys {
+        static let MESSAGE_VIEWED_ACTION_VALUE = "1"
+        static let MESSAGE_CLICKED_ACTION_VALUE = "2"
         static let MESSAGE_TRIGGERED_ACTION_VALUE = "7"
         static let STATE_OWNER = "stateowner"
         static let LINKAGE_FIELDS = "linkagefields"

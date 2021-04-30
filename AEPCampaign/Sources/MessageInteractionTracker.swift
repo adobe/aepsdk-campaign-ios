@@ -74,10 +74,10 @@ class MessageInteractionTracker {
         eventDispatcher("InternalGenericDataEvent", EventType.genericData, EventSource.os, eventData)
     }
 
-    ///Dispatches an event with action `click` and message `deliveryId`. This is to mark that a notification is interacted by user.    
-    static func dispatchMessageEvent(action: String, deliveryId: String, eventDispatcher: Campaign.EventDispatcher) {
+    ///Dispatches an event with action `viewed` or `clicked` and message `deliveryId`. This is to mark that a notification is interacted by user.
+    private static func dispatchMessageEvent(action: String, deliveryId: String, eventDispatcher: Campaign.EventDispatcher) {
 
-        guard action == "2" || action == "1" else { //Dispatch only when action is open(2) or click(1)
+        guard action == "2" || action == "1" else { //Dispatch only when action is clicked(2) or viewed(1)
             Log.trace(label: LOG_TAG, "\(#function) - Action received is other than viewed or clicked, so cannot dispatch Message Event.")
             return
         }
@@ -97,6 +97,11 @@ class MessageInteractionTracker {
             CampaignConstants.ContextDataKeys.MESSAGE_ID: "\(decimalDeliveryId)",
             actionKey: "1"
         ]
-        eventDispatcher("DataForMessageRequest", EventType.campaign, EventSource.responseContent, contextData)
+        dispatchMessageInteraction(data: contextData, eventDispatcher: eventDispatcher)
+    }
+
+    /// Invokes the Campaign  event dispatcher to dispatch message interaction events
+    static func dispatchMessageInteraction(data: [String: Any], eventDispatcher: Campaign.EventDispatcher) {
+        eventDispatcher("DataForMessageRequest", EventType.campaign, EventSource.responseContent, data)
     }
 }

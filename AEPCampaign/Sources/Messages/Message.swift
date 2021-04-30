@@ -30,11 +30,6 @@ protocol Message {
     /// Implemented by the Message subclass to display the message.
     func showMessage()
 
-    /// Implemented by the Message subclass. This method generates a dictionary with message data for a "message triggered" event and
-    /// dispatches it using the Campaign event dispatcher.
-    /// - Parameter deliveryId: the delivery id of the triggered message
-    func triggered(deliveryId: String)
-
     /// Implemented by the Message subclass. This method determines whether a message should attempt to download assets for caching.
     ///  - Returns: A boolean indicating whether this should download assets.
     func shouldDownloadAssets() -> Bool
@@ -50,10 +45,10 @@ extension Message {
     ///     * Input string is nil or empty.
     ///     * Provided tokens dictionary is nil or empty.
     ///     * No key from the tokens dictionary is present in the input string.
-    func expandTokens(input: String?, tokens: [String: String]?) -> String {
+    func expandTokens(input: String?, tokens: [String: String]?) -> String? {
         guard let input = input, !input.isEmpty else {
             Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot expand tokens, the input string is nil or empty.")
-            return ""
+            return nil
         }
         guard let tokens = tokens, !tokens.isEmpty else {
             Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot expand tokens, the token dictionary is nil or empty.")
@@ -77,6 +72,20 @@ extension Message {
         ServiceProvider.shared.urlService.openUrl(url)
     }
 
+    /// Generates a dictionary with message data for a "message triggered" event and dispatches it using the Campaign event dispatcher.
+    /// - Parameter deliveryId: the delivery id of the triggered message
+    func triggered(deliveryId: String) {
+        guard let eventDispatcher = Self.eventDispatcher else {
+            Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
+            return
+        }
+        Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message triggered event.")
+        var messageData: [String: Any] = [:]
+        messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_TRIGGERED] = CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE
+        MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
+    }
+
     /// Generates a dictionary with message data for a "message viewed" event and dispatches it using the Campaign event dispatcher.
     /// - Parameter deliveryId: the delivery id of the viewed message
     func viewed(deliveryId: String) {
@@ -85,7 +94,10 @@ extension Message {
             return
         }
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message viewed event.")
-        MessageInteractionTracker.dispatchMessageEvent(action: CampaignConstants.ContextDataKeys.MESSAGE_VIEWED, deliveryId: deliveryId, eventDispatcher: eventDispatcher)
+        var messageData: [String: Any] = [:]
+        messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_VIEWED] = CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE
+        MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
     }
 
     /// Generates a dictionary with message data for a "message clicked" event and dispatches it using the Campaign event dispatcher.
@@ -96,11 +108,15 @@ extension Message {
             return
         }
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message clicked event.")
-        MessageInteractionTracker.dispatchMessageEvent(action: CampaignConstants.ContextDataKeys.MESSAGE_CLICKED, deliveryId: deliveryId, eventDispatcher: eventDispatcher)
+        var messageData: [String: Any] = [:]
+        messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = CampaignConstants.EventDataKeys.MESSAGE_CLICKED_ACTION_VALUE
+        MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
     }
 
-    /// Generates a dictionary with message data for a "message triggered" event and dispatches it using the Campaign event dispatcher.
-    /// This method also adds the click through URL to the data and attempts to open the URL, after decoding and expanding tokens in the URL.
+    /// Generates a dictionary with message data for a "message clicked" event and adds the click through URL to the data.
+    /// The URL will also be opened after decoding and expanding any tokens present in the URL.
+    /// The message data and click through URL are then dispatched using the Campaign event dispatcher.
     ///  - Parameters:
     ///    - deliveryId: the delivery id of the clicked message
     ///    - data: A dictionary containing message interaction data
@@ -122,9 +138,10 @@ extension Message {
                     return
                 }
                 let urlTokens = [CampaignConstants.Campaign.MESSAGE_ID_TOKEN: messageId]
-                let expandedUrl = expandTokens(input: url.absoluteString, tokens: urlTokens)
-                openUrl(url: URL(string: expandedUrl))
-                messageData[key] = expandedUrl
+                if let expandedUrl = expandTokens(input: url.absoluteString, tokens: urlTokens), !expandedUrl.isEmpty {
+                    openUrl(url: URL(string: expandedUrl))
+                    messageData[key] = expandedUrl
+                }
             } else {
                 messageData[key] = value
             }
@@ -132,8 +149,8 @@ extension Message {
 
         Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Dispatching message clicked with data event.")
         messageData[CampaignConstants.Campaign.MESSAGE_ID_TOKEN] = messageId
-        messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = "1"
-        eventDispatcher("InternalGenericDataEvent", EventType.genericData, EventSource.os, messageData)
+        messageData[CampaignConstants.ContextDataKeys.MESSAGE_CLICKED] = CampaignConstants.EventDataKeys.MESSAGE_CLICKED_ACTION_VALUE
+        MessageInteractionTracker.dispatchMessageInteraction(data: messageData, eventDispatcher: eventDispatcher)
     }
 
     /// Optional method to let the Message subclass handle asset downloading.
