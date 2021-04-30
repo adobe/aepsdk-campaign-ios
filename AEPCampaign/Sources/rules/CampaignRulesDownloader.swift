@@ -10,30 +10,46 @@
  governing permissions and limitations under the License.
  */
 
+import Foundation
 import AEPCore
 import AEPServices
-import Foundation
 
-/// The `RulesDownloader` is responsible for loading `Rule`s from cache and/or downloading them from the remote server
+///The `CampaignRulesDownloader` is responsible for downloading rules from remote server/retrieve them from cache and loading them into `Rules Engine`.
 struct CampaignRulesDownloader {
-    private let fileUnzipper: Unzipping
-    private let cache: Cache
 
-    init(fileUnzipper: Unzipping) {
-        self.fileUnzipper = fileUnzipper
-        cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
-    }
-
+    ///Represents possible error during Rules downloading and saving.
     enum RulesDownloaderError: Error {
         case unableToCreateTempDirectory
         case unableToStoreDataInTempDirectory
     }
 
-//    func loadRulesFromCache(rulesUrl: URL) -> Data? {
-//        return getCachedRules(rulesUrl: rulesUrl.absoluteString)?.cacheable
-//    }
+    private let LOG_TAG = "CampaignRulesDownloader"
+    private let fileUnzipper: Unzipping
+    private let cache: Cache
+    private let rulesEngine: LaunchRulesEngine
 
-    func loadRulesFromUrl(rulesUrl: URL, completion: @escaping (Data?) -> Void) {
+    init(fileUnzipper: Unzipping, ruleEngine: LaunchRulesEngine) {
+        self.fileUnzipper = fileUnzipper
+        cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
+        self.rulesEngine = ruleEngine
+    }
+
+    ///Load the Cached Campaign rules into Rules engine.
+    /// - Parameters:
+    ///   - rulesUrlString: The String representation of the URL used for downloading the rules.
+    func loadRulesFromCache(rulesUrlString: String) {        
+        guard let cachedRules = getCachedRules(rulesUrl: rulesUrlString) else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to load Campaign cached rules for URL (\(rulesUrlString)")
+            return
+        }
+
+        loadRulesIntoRulesEngine(data: cachedRules.cacheable)
+    }
+
+    ///Download the Campaign rules from the passed `rulesUrl`, caches them and load them into the Rules engine.
+    /// - Parameters:
+    ///   - rulesUrl: The `URL` for downloading the Campaign rules.
+    func loadRulesFromUrl(rulesUrl: URL) {
         /// 304 - Not Modified support
         var headers = [String: String]()
         if let cachedRules = getCachedRules(rulesUrl: rulesUrl.absoluteString) {
@@ -43,12 +59,10 @@ struct CampaignRulesDownloader {
         let networkRequest = NetworkRequest(url: rulesUrl, httpMethod: .get, httpHeaders: headers)
         ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) { httpConnection in
             if httpConnection.responseCode == 304 {
-                completion(nil)
                 return
             }
 
             guard let data = httpConnection.data else {
-                completion(nil)
                 return
             }
             // Store Zip file in temp directory for unzipping
@@ -56,29 +70,33 @@ struct CampaignRulesDownloader {
             case let .success(url):
                 // Unzip the rules.json and assets from the zip file in to the cache directory. Get the rules dict from the rules.json file.
                 guard let data = self.unzipRules(at: url) else {
-                    completion(nil)
                     return
                 }
                 let cachedRules = CampaignCachedRules(cacheable: data,
-                                              lastModified: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.LAST_MODIFIED] as? String,
-                                              eTag: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.ETAG] as? String)
+                                                      lastModified: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.LAST_MODIFIED] as? String,
+                                                      eTag: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.ETAG] as? String)
                 // Cache the rules, if fails, log message
                 if !self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules) {
-                    Log.warning(label: "rules downloader", "Unable to cache rules")
+                    Log.warning(label: LOG_TAG, "Unable to cache Campaign rules")
                 }
-                completion(data)
+                loadRulesIntoRulesEngine(data: data)
                 return
             case let .failure(error):
-                Log.warning(label: "rules downloader", error.localizedDescription)
-                completion(nil)
+                Log.warning(label: LOG_TAG, error.localizedDescription)
                 return
             }
+        }
+    }
 
+    ///Replaces the existing rules with the new Collection of rules in Rules Engine.
+    private func loadRulesIntoRulesEngine(data: Data) {
+        if let rules = JSONRulesParser.parse(data) {
+            rulesEngine.replaceRules(with: rules)
         }
     }
 
     /// Stores the requested rules.zip data in a temp directory
-    /// - Parameter data: The rules.zip as data to be stored in the temp directory
+    /// - Parameter data: The rules.zip as Data to be stored in the temp directory
     /// - Returns a `Result<URL, RulesDownloaderError>` with a `URL` to the zip file if successful or a `RulesDownloaderError` if a failure occurs
     private func storeDataInTempDirectory(data: Data) -> Result<URL, RulesDownloaderError> {
         let temporaryDirectory = FileManager.default.temporaryDirectory

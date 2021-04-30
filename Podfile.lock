@@ -4,18 +4,22 @@ PODS:
     - AEPServices (= 3.1.1)
   - AEPIdentity (3.1.1):
     - AEPCore (= 3.1.1)
+  - AEPLifecycle (3.1.1):
+    - AEPCore (= 3.1.1)
   - AEPRulesEngine (1.0.0)
   - AEPServices (3.1.1)
 
 DEPENDENCIES:
   - "AEPCore (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.2`)"
   - AEPIdentity
+  - AEPLifecycle
   - AEPRulesEngine
   - "AEPServices (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.2`)"
 
 SPEC REPOS:
   trunk:
     - AEPIdentity
+    - AEPLifecycle
     - AEPRulesEngine
 
 EXTERNAL SOURCES:
@@ -37,9 +41,10 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AEPCore: 46ed4c5ed27ba49490990e397bb7454cf9906601
   AEPIdentity: 017d2ee5e49dd7a7cd29761339c535924e89d968
+  AEPLifecycle: 580d11bb4262e7b154751540852a2ff9febbde0d
   AEPRulesEngine: 8bbc694fce6900cd33b2496c7d4b33ee2eeffc46
   AEPServices: bdd8a78f1d6cda0165f6a58e42cce0d7e9f43ae1
 
-PODFILE CHECKSUM: 573aaed217bf522eba15d203e7b13f5130092ce3
+PODFILE CHECKSUM: 6a4511d15b9ee190b05d534f03ab4fa2e271d37b
 
 COCOAPODS: 1.10.1

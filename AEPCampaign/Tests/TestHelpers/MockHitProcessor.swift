@@ -24,7 +24,7 @@ public class MockHitProcessor: HitProcessing {
     }
 
     public func processHit(entity: DataEntity, completion: @escaping (Bool) -> Void) {
-        if (processResult) {
+        if processResult {
             processedEntities.append(entity)
         }
         completion(processResult)

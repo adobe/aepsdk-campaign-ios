@@ -10,6 +10,7 @@
  governing permissions and limitations under the License.
  */
 
+// swiftlint:disable redundant_objc_attribute
 @objc public extension Campaign {
 
     ///Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
