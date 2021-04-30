@@ -21,7 +21,6 @@ class LocalNotificationMessageTests: XCTestCase {
     var state: CampaignState!
     var hitProcessor: MockHitProcessor!
     var dataQueue: MockDataQueue!
-    var responseCallbackArgs = [CampaignHit]()
     var mockNetworkService: MockNetworking? {
         return ServiceProvider.shared.networkService as? MockNetworking
     }
@@ -29,14 +28,71 @@ class LocalNotificationMessageTests: XCTestCase {
     override func setUp() {
         dataQueue = MockDataQueue()
         hitProcessor = MockHitProcessor()
-        state = CampaignState(hitQueue: PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor))
+        state = CampaignState()
         addStateData()
     }
 
-    func testCreateLocalNotificationMessageWithValidConsequence() {
-        let localDetailDictionary = ["title": "ACS Local Notification Test", "detail": "This is some demo text 🌊☄️", "wait": TimeInterval(3), "userData": ["broadlogId": "h1cbf60",
-                                                                                                                                                          "deliveryId": "154767c"], "template": "local"] as [String: Any]
-        let localConsequence = ["id": UUID().uuidString, "type": "iam", "assetsPath": nil, "detailDictionary":
-        let consequence = CampaignRuleConsequence(id: <#T##String#>, type: <#T##String#>, assetsPath: <#T##String?#>, detailDictionary: <#T##[String : Any]?#>)
+    func addStateData(customConfig: [String: Any]? = nil) {
+        var configurationData = [String: Any]()
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = "campaign-server"
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = "pkey"
+        configurationData[CampaignConstants.Configuration.PROPERTY_ID] = "propertyId"
+        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.unknown.rawValue
+        configurationData.merge(customConfig ?? [:]) { _, new in new }
+        var identityData = [String: Any]()
+        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = "ecid"
+        var dataMap = [String: [String: Any]]()
+        dataMap[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
+        dataMap[CampaignConstants.Identity.EXTENSION_NAME] = identityData
+        state.update(dataMap: dataMap)
     }
+
+    func testCreateLocalNotificationMessageWithValidConsequence() {
+        // setup
+        let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": ["broadlogId": "h1bd500",
+                                                                                                                                                                           "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        // test
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
+        // verify
+        XCTAssertNotNil(messageObject)
+    }
+
+    func testCreateLocalNotificationMessageWithConsequenceMissingContent() {
+        // setup
+        let details = ["title": "local", "wait": 0, "userData": ["broadlogId": "h1bd500",
+                                                                 "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        // test
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
+        // verify
+        XCTAssertNil(messageObject)
+    }
+
+    func testCreateLocalNotificationMessageWithNilConsequence() {
+        // test
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: nil, state: state, eventDispatcher: { _, _, _, _ in })
+        // verify
+        XCTAssertNil(messageObject)
+    }
+
+    func testCreateLocalNotificationMessageWithNilDetailDictionary() {
+        // setup
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: nil)
+        // test
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
+        // verify
+        XCTAssertNil(messageObject)
+    }
+
+    func testCreateLocalNotificationMessageWithContentOnly() {
+        // setup
+        let details = ["content": "some content"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        // test
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
+        // verify
+        XCTAssertNotNil(messageObject)
+    }
+
 }

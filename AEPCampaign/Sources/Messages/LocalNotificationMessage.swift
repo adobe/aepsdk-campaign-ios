@@ -53,6 +53,10 @@ class LocalNotificationMessage: Message {
             return nil
         }
         let messageObject = LocalNotificationMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
+        // content is required so no message object is returned if it is nil
+        guard messageObject.content != nil else {
+            return nil
+        }
         return messageObject
     }
 

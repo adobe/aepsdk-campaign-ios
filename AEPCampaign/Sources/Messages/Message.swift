@@ -50,10 +50,10 @@ extension Message {
     ///     * Input string is nil or empty.
     ///     * Provided tokens dictionary is nil or empty.
     ///     * No key from the tokens dictionary is present in the input string.
-    func expandTokens(input: String?, tokens: [String: String]?) -> String {
+    func expandTokens(input: String?, tokens: [String: String]?) -> String? {
         guard let input = input, !input.isEmpty else {
             Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot expand tokens, the input string is nil or empty.")
-            return ""
+            return nil
         }
         guard let tokens = tokens, !tokens.isEmpty else {
             Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot expand tokens, the token dictionary is nil or empty.")
@@ -122,9 +122,10 @@ extension Message {
                     return
                 }
                 let urlTokens = [CampaignConstants.Campaign.MESSAGE_ID_TOKEN: messageId]
-                let expandedUrl = expandTokens(input: url.absoluteString, tokens: urlTokens)
-                openUrl(url: URL(string: expandedUrl))
-                messageData[key] = expandedUrl
+                if let expandedUrl = expandTokens(input: url.absoluteString, tokens: urlTokens), !expandedUrl.isEmpty {
+                    openUrl(url: URL(string: expandedUrl))
+                    messageData[key] = expandedUrl
+                }
             } else {
                 messageData[key] = value
             }
