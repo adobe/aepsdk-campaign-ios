@@ -37,8 +37,6 @@ class CampaignState {
     // Campaign Persistent HitQueue
     private(set) var hitQueue: HitQueuing
 
-    private(set) var namedCollectionDataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
-
     /// Creates a new `CampaignState`.
     init(hitQueue: HitQueuing) {
         self.hitQueue = hitQueue
@@ -163,13 +161,13 @@ class CampaignState {
             return false
         }
 
-        if namedCollectionDataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY, fallback: "") != ecid {
+        if dataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY, fallback: "") != ecid {
             Log.debug(label: LOG_TAG, "\(#function) - The current ecid '\(ecid)' is new, sending the registration request.")
-            namedCollectionDataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+            dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
             return true
         }
 
-        let retrievedTimeStamp = namedCollectionDataStore.getLong(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? Int64(CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE)
+        let retrievedTimeStamp = dataStore.getLong(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? Int64(CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE)
 
         if eventTimeStamp - TimeInterval(retrievedTimeStamp) >= registrationDelay {
             Log.debug(label: LOG_TAG, "\(#function) - Registration delay of '\(registrationDelay)' seconds has elapsed. Sending the Campaign registration request.")
@@ -227,5 +225,15 @@ class CampaignState {
         Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(timestamp) in Campaign Datastore.")
         dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: timestamp)
         dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+    }
+
+    ///Persist the rules url in data store
+    func updateRuleUrlInDataStore(rulesUrl: String) {
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY, value: rulesUrl)
+    }
+
+    ///Retrieves the rules url from the data store
+    func getRulesUrlFromDataStore() -> String? {
+        return dataStore.getString(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY)
     }
 }

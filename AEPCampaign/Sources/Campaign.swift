@@ -27,6 +27,7 @@ public class Campaign: NSObject, Extension {
     let dispatchQueue: DispatchQueue    
     private var hasCachedRulesLoaded = false
     private var rulesEngine: LaunchRulesEngine
+    private var linkageFields: String?
 
     private let dependencies: [String] = [
         CampaignConstants.Configuration.EXTENSION_NAME,
@@ -153,7 +154,13 @@ public class Campaign: NSObject, Extension {
                 //Download rules from the remote URL and cache them.
                 guard let self = self, let url = self.state?.campaignRulesDownloadUrl else {return}
                 let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
-                campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url)
+                var linkageFieldsHeader: [String: String]? = nil
+                if let linkageFields = self.linkageFields {
+                    linkageFieldsHeader = [
+                        CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
+                    ]
+                }
+                campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
             }
         }
     }
@@ -161,9 +168,9 @@ public class Campaign: NSObject, Extension {
     ///Loads the Cached Campaign rules on receiving the Configuration event first time.
     private func loadCachedRules() {
         if !hasCachedRulesLoaded {
-            Log.trace(label: LOG_TAG, "\(#function) - Loading the Cached Campaign Rules.")
+            Log.trace(label: LOG_TAG, "\(#function) - Attempting to load the Cached Campaign Rules.")
             dispatchQueue.async { [weak self] in
-                guard let self = self, let urlString = self.state?.campaignRulesDownloadUrl?.absoluteString else {return}
+                guard let self = self, let urlString = self.state?.getRulesUrlFromDataStore() else {return}
                 let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
                 campaignRulesDownloader.loadRulesFromCache(rulesUrlString: urlString)
                 self.hasCachedRulesLoaded = true

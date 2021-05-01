@@ -49,15 +49,22 @@ struct CampaignRulesDownloader {
     ///Download the Campaign rules from the passed `rulesUrl`, caches them and load them into the Rules engine.
     /// - Parameters:
     ///   - rulesUrl: The `URL` for downloading the Campaign rules.
-    func loadRulesFromUrl(rulesUrl: URL) {
+    ///   - linkageFieldHeaders: The header with `linkageField` value
+    ///   - state: Instance of `CampaignState` for storing rules download URL
+    func loadRulesFromUrl(rulesUrl: URL, linkageFieldHeaders: [String: String]?, state: CampaignState?) {
         /// 304 - Not Modified support
         var headers = [String: String]()
         if let cachedRules = getCachedRules(rulesUrl: rulesUrl.absoluteString) {
             headers = cachedRules.notModifiedHeaders()
         }
+        if let linkageFieldHeaders = linkageFieldHeaders {
+            for (key, value) in linkageFieldHeaders {
+                headers[key] = value
+            }
+        }
 
         let networkRequest = NetworkRequest(url: rulesUrl, httpMethod: .get, httpHeaders: headers)
-        ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) { httpConnection in
+        ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) {httpConnection in
             if httpConnection.responseCode == 304 {
                 return
             }
@@ -75,14 +82,19 @@ struct CampaignRulesDownloader {
                 let cachedRules = CampaignCachedRules(cacheable: data,
                                                       lastModified: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.LAST_MODIFIED] as? String,
                                                       eTag: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.ETAG] as? String)
+
                 // Cache the rules, if fails, log message
-                if !self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules) {
-                    Log.warning(label: LOG_TAG, "Unable to cache Campaign rules")
+                var hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
+
+                if hasRulesCached {
+                    state?.updateRuleUrlInDataStore(rulesUrl: url.absoluteString)
+                } else {
+                    Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
                 }
                 loadRulesIntoRulesEngine(data: data)
                 return
             case let .failure(error):
-                Log.warning(label: LOG_TAG, error.localizedDescription)
+                Log.warning(label: self.LOG_TAG, error.localizedDescription)
                 return
             }
         }
