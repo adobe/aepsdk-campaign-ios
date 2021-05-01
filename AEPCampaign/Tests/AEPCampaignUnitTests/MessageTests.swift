@@ -20,19 +20,24 @@ class MessageTests: XCTestCase {
     var state: CampaignState!
     var hitProcessor: MockHitProcessor!
     var dataQueue: MockDataQueue!
-    var mockNetworkService: MockNetworking? {
-        return ServiceProvider.shared.networkService as? MockNetworking
+    var mockUrlService: MockUrlService? {
+        return ServiceProvider.shared.urlService as? MockUrlService
     }
     var messageObject: Message!
+    var dispatchedEvents: [Event] = []
+    var consequence: CampaignRuleConsequence!
 
     override func setUp() {
+        ServiceProvider.shared.urlService = MockUrlService()
         dataQueue = MockDataQueue()
         hitProcessor = MockHitProcessor()
         state = CampaignState()
         addStateData()
         let details = ["content": "some content"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
-        messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
+        consequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        messageObject = TestMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        })
     }
 
     func addStateData(customConfig: [String: Any]? = nil) {
@@ -50,6 +55,7 @@ class MessageTests: XCTestCase {
         state.update(dataMap: dataMap)
     }
 
+    // MARK: expandTokens tests
     func testExpandTokens() {
         // setup
         let testString = "1,2,3,4,5,6,7"
@@ -76,5 +82,71 @@ class MessageTests: XCTestCase {
         let expandedString = messageObject.expandTokens(input: nil, tokens: tokens)
         // verify
         XCTAssertNil(expandedString)
+    }
+
+    // MARK: openUrl tests
+    func testOpenURL() {
+        // setup
+        let url = URL(string: "https://testurl.com")
+        // test
+        messageObject.openUrl(url: url)
+        // verify
+        XCTAssertEqual(mockUrlService?.openedUrl, url?.absoluteString)
+    }
+
+    func testOpenNilURL() {
+        // test
+        messageObject.openUrl(url: nil)
+        // verify
+        XCTAssertEqual(mockUrlService?.openedUrl, "")
+    }
+
+    // MARK: message interaction tests
+    func testMessageViewed() {
+        // test
+        messageObject.viewed()
+        // verify
+        let messageViewedEvent = dispatchedEvents.first
+        verifyCampaignResponseEvent(event: messageViewedEvent, actionType: "viewed", expectedDataSize: 2)
+    }
+
+    func testMessageClicked() {
+        // test
+        messageObject.clickedThrough()
+        // verify
+        let messageClickedEvent = dispatchedEvents.first
+        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 2)
+    }
+
+    func testMessageTriggered() {
+        // test
+        messageObject.triggered()
+        // verify
+        let messageTriggeredEvent = dispatchedEvents.first
+        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+    }
+
+    func testMessageClickedWithDataHasUrl() {
+        // test
+        messageObject.clickedWithData(data: ["url": "https://testUrlWithId=messageId"])
+        // verify
+        let messageClickedEvent = dispatchedEvents.first
+        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 3, additionalData: ["url": "https://testUrlWithId=20761932"])
+    }
+
+    func testMessageClickedWithDataHasGenericData() {
+        // test
+        messageObject.clickedWithData(data: ["key": "value", "key2": "value2"])
+        // verify
+        let messageClickedEvent = dispatchedEvents.first
+        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 4, additionalData: ["key": "value", "key2": "value2"])
+    }
+
+    func testMessageClickedWithDataEmptyData() {
+        // test
+        messageObject.clickedWithData(data: [:])
+        // verify
+        let messageClickedEvent = dispatchedEvents.first
+        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 2)
     }
 }

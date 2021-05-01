@@ -73,8 +73,7 @@ extension Message {
     }
 
     /// Generates a dictionary with message data for a "message triggered" event and dispatches it using the Campaign event dispatcher.
-    /// - Parameter deliveryId: the delivery id of the triggered message
-    func triggered(deliveryId: String) {
+    func triggered() {
         guard let eventDispatcher = Self.eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
             return
@@ -87,8 +86,7 @@ extension Message {
     }
 
     /// Generates a dictionary with message data for a "message viewed" event and dispatches it using the Campaign event dispatcher.
-    /// - Parameter deliveryId: the delivery id of the viewed message
-    func viewed(deliveryId: String) {
+    func viewed() {
         guard let eventDispatcher = Self.eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message viewed event, the event dispatcher is nil.")
             return
@@ -101,8 +99,7 @@ extension Message {
     }
 
     /// Generates a dictionary with message data for a "message clicked" event and dispatches it using the Campaign event dispatcher.
-    /// - Parameter deliveryId: the delivery id of the clicked message
-    func clickedThrough(deliveryId: String) {
+    func clickedThrough() {
         guard let eventDispatcher = Self.eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message clicked event, the event dispatcher is nil.")
             return
@@ -118,9 +115,8 @@ extension Message {
     /// The URL will also be opened after decoding and expanding any tokens present in the URL.
     /// The message data and click through URL are then dispatched using the Campaign event dispatcher.
     ///  - Parameters:
-    ///    - deliveryId: the delivery id of the clicked message
     ///    - data: A dictionary containing message interaction data
-    func clickedWithData(deliveryId: String, data: [String: String]) {
+    func clickedWithData(data: [String: String]) {
         guard let eventDispatcher = Self.eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message clicked with data event, the event dispatcher is nil.")
             return

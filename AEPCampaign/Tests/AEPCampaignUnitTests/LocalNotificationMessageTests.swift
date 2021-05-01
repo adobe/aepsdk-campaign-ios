@@ -21,9 +21,7 @@ class LocalNotificationMessageTests: XCTestCase {
     var state: CampaignState!
     var hitProcessor: MockHitProcessor!
     var dataQueue: MockDataQueue!
-    var mockNetworkService: MockNetworking? {
-        return ServiceProvider.shared.networkService as? MockNetworking
-    }
+    var dispatchedEvents: [Event] = []
 
     override func setUp() {
         dataQueue = MockDataQueue()
@@ -37,7 +35,7 @@ class LocalNotificationMessageTests: XCTestCase {
         configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = "campaign-server"
         configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = "pkey"
         configurationData[CampaignConstants.Configuration.PROPERTY_ID] = "propertyId"
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.unknown.rawValue
+        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
         configurationData.merge(customConfig ?? [:]) { _, new in new }
         var identityData = [String: Any]()
         identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = "ecid"
@@ -47,6 +45,7 @@ class LocalNotificationMessageTests: XCTestCase {
         state.update(dataMap: dataMap)
     }
 
+    // MARK: local notification message creation tests
     func testCreateLocalNotificationMessageWithValidConsequence() {
         // setup
         let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": ["broadlogId": "h1bd500",
@@ -93,6 +92,86 @@ class LocalNotificationMessageTests: XCTestCase {
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
         XCTAssertNotNil(messageObject)
+    }
+
+    // MARK: showMessage tests
+    func testLocalNotificationShowMessageHappy() {
+        // setup
+        let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": ["broadlogId": "h1bd500",
+                                                                                                                                                                           "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        })
+        // test
+        messageObject?.showMessage()
+        // verify
+        let messageTriggeredEvent = dispatchedEvents[0]
+        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+        let messageInfoEvent = dispatchedEvents[1]
+        verifyGenericDataOsEvent(event: messageInfoEvent)
+    }
+
+    func testLocalNotificationShowMessageNoBroadlogId() {
+        // setup
+        let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": [
+            "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        })
+        // test
+        messageObject?.showMessage()
+        // only a triggered event should be dispatched
+        XCTAssertEqual(1, dispatchedEvents.count)
+        // verify triggered event
+        let messageTriggeredEvent = dispatchedEvents[0]
+        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+    }
+
+    func testLocalNotificationShowMessageNoDeliveryId() {
+        // setup
+        let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": [
+            "broadlogId": "h1bd500"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        })
+        // test
+        messageObject?.showMessage()
+        // only a triggered event should be dispatched
+        XCTAssertEqual(1, dispatchedEvents.count)
+        // verify triggered event
+        let messageTriggeredEvent = dispatchedEvents[0]
+        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+    }
+
+    func testLocalNotificationShowMessageMissingContent() {
+        // setup
+        let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "wait": 0, "userData": ["broadlogId": "h1bd500",
+                                                                                                                                                "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        })
+        // test
+        messageObject?.showMessage()
+        // verify no events sent due to missing content
+        XCTAssertEqual(0, dispatchedEvents.count)
+    }
+
+    func testLocalNotificationShowMessageEmptyContent() {
+        // setup
+        let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "", "wait": 0, "userData": ["broadlogId": "h1bd500",
+                                                                                                                                                               "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
+        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        })
+        // test
+        messageObject?.showMessage()
+        // verify no events sent due to empty content
+        XCTAssertEqual(0, dispatchedEvents.count)
     }
 
 }

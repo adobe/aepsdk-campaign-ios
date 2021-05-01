@@ -44,3 +44,31 @@ extension FileManager {
         }
     }
 }
+
+extension XCTest {
+    func verifyCampaignResponseEvent(event: Event?, actionType: String, expectedDataSize: Int, additionalData: [String: String]? = nil) {
+        XCTAssertEqual(event?.name, "DataForMessageRequest")
+        XCTAssertEqual(event?.type, EventType.campaign)
+        XCTAssertEqual(event?.source, EventSource.responseContent)
+        let data = event?.data as? [String: String] ?? [:]
+        XCTAssertEqual(data.count, expectedDataSize)
+        XCTAssertEqual(data["messageId"], "20761932")
+        XCTAssertEqual(data["a.message.\(actionType)"], "1")
+        if let additionalData = additionalData {
+            for (key, value) in additionalData {
+                XCTAssertEqual(data[key], value)
+            }
+        }
+    }
+
+    func verifyGenericDataOsEvent(event: Event?) {
+        XCTAssertEqual(event?.name, "InternalGenericDataEvent")
+        XCTAssertEqual(event?.type, EventType.genericData)
+        XCTAssertEqual(event?.source, EventSource.os)
+        let data = event?.data as? [String: String] ?? [:]
+        XCTAssertEqual(data.count, 3)
+        XCTAssertEqual(data["action"], "7")
+        XCTAssertEqual(data["deliveryId"], "13ccd4c")
+        XCTAssertEqual(data["broadlogId"], "h1bd500")
+    }
+}

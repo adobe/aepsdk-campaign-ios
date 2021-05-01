@@ -63,24 +63,17 @@ class LocalNotificationMessage: Message {
     /// Validates the parsed Local Notification message payload and if valid, attempts to send message tracking events.
     /// It then calls `scheduleLocalNotification` to schedule a local notification with the `UNUserNotificationCenter`.
     func showMessage() {
+        // dispatch triggered event
+        triggered()
+        // dispatch generic data message info event
         if let userData = userData, !userData.isEmpty {
-            guard let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !broadlogId.isEmpty else {
-                Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, broadlog id is nil or empty.")
-                return
-            }
-
-            guard let deliveryId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, !deliveryId.isEmpty else {
-                Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, delivery id is nil or empty.")
-                return
-            }
-
-            // dispatch triggered event
-            triggered(deliveryId: deliveryId)
-
-            // dispatch generic data message info event
-            if let eventDispatcher = Self.eventDispatcher, let state = state {
-                Log.trace(label: Self.LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
-                MessageInteractionTracker.dispatchMessageInfoEvent(broadlogId: broadlogId, deliveryId: deliveryId, action: CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE, state: state, eventDispatcher: eventDispatcher)
+            if let deliveryId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !deliveryId.isEmpty, !broadlogId.isEmpty {
+                if let eventDispatcher = Self.eventDispatcher, let state = state {
+                    Log.trace(label: Self.LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
+                    MessageInteractionTracker.dispatchMessageInfoEvent(broadlogId: broadlogId, deliveryId: deliveryId, action: CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE, state: state, eventDispatcher: eventDispatcher)
+                }
+            } else {
+                Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, delivery id or broadlog id is nil or empty.")
             }
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, user info is nil or empty.")
@@ -89,17 +82,15 @@ class LocalNotificationMessage: Message {
         scheduleLocalNotification()
     }
 
+    /// Schedule the local notification with the `UNUserNotificationCenter`.
     private func scheduleLocalNotification() {
-        // content (message body) is required, bail early if we don't have it
-        guard let body = self.content else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message detail is nil.")
-            return
-        }
-
         let content = UNMutableNotificationContent()
         let notificationCenter = UNUserNotificationCenter.current()
 
-        content.body = body
+        // content previously verified in `parseLocalNotificationMessagePayload`
+        if let body = self.content {
+            content.body = body
+        }
 
         // title, sound, category, deeplink, user info, and fire date are optional
         if let title = title, !title.isEmpty {
