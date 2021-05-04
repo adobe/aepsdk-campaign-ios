@@ -15,14 +15,14 @@ import Foundation
 class CampaignRuleConsequence {
     private(set) var id: String
     private(set) var type: String
-    private(set) var detailDictionary: [String: Any]?
+    private(set) var detail: [String: Any]?
     var assetsPath: String?
 
-    init(id: String, type: String, assetsPath: String?, detailDictionary: [String: Any]?) {
+    init(id: String, type: String, assetsPath: String?, detail: [String: Any]?) {
         self.id = id
         self.type = type
         self.assetsPath = assetsPath
-        self.detailDictionary = detailDictionary
+        self.detail = detail
     }
 
     /// Set the assetsPath within this CampaignRuleConsequence with the provided value.

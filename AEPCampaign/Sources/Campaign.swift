@@ -61,17 +61,20 @@ public class Campaign: NSObject, Extension {
         return true
     }
 
-    // TODO: replace this with the actual implementation
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
         guard let consequenceDict = event.triggeredConsequence, !consequenceDict.isEmpty else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence is nil or empty.")
             return
         }
-        let detailDictionary = consequenceDict["detailDictionary"] as? [String: Any] ?? [:]
-        let consequence = CampaignRuleConsequence(id: consequenceDict["id"] as? String ?? "", type: consequenceDict["type"] as? String ?? "", assetsPath: consequenceDict["assetsPath"] as? String ?? "", detailDictionary: detailDictionary)
-        let template = detailDictionary["template"] as? String
-        if template == "local" {
+        guard let detail = consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL] as? [String: Any], !detail.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, detail dictionary is nil or empty.")
+            return
+        }
+        let consequence = CampaignRuleConsequence(id: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ID] as? String ?? "", type: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_TYPE] as? String ?? "", assetsPath: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ASSETS_PATH] as? String ?? "", detail: detail)
+        let template = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TEMPLATE] as? String
+        if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a local notification. Scheduling the received local notification.")
             guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
                 return
             }

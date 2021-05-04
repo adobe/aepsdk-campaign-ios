@@ -14,11 +14,11 @@ import Foundation
 import AEPCore
 import AEPServices
 
-class LocalNotificationMessage: Message {
+struct LocalNotificationMessage: Message {
     private static let LOG_TAG = "LocalNotificationMessage"
 
-    internal static var eventDispatcher: Campaign.EventDispatcher?
-    internal var messageId: String?
+    var eventDispatcher: Campaign.EventDispatcher?
+    var messageId: String?
 
     private var state: CampaignState?
     private var content: String?
@@ -36,7 +36,7 @@ class LocalNotificationMessage: Message {
     ///    - eventDispatcher: The Campaign event dispatcher
     private init(consequence: CampaignRuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
         self.messageId = consequence.id
-        Self.eventDispatcher = eventDispatcher
+        self.eventDispatcher = eventDispatcher
         self.state = state
         self.parseLocalNotificationMessagePayload(consequence: consequence)
     }
@@ -65,46 +65,52 @@ class LocalNotificationMessage: Message {
     func showMessage() {
         // dispatch triggered event
         triggered()
-        // dispatch generic data message info event
-        if let userData = userData, !userData.isEmpty {
-            if let deliveryId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !deliveryId.isEmpty, !broadlogId.isEmpty {
-                if let eventDispatcher = Self.eventDispatcher, let state = state {
-                    Log.trace(label: Self.LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
-                    MessageInteractionTracker.dispatchMessageInfoEvent(broadlogId: broadlogId, deliveryId: deliveryId, action: CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE, state: state, eventDispatcher: eventDispatcher)
-                }
-            } else {
-                Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, delivery id or broadlog id is nil or empty.")
-            }
-        } else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, user info is nil or empty.")
-        }
         // schedule local notification
         scheduleLocalNotification()
+        // dispatch generic data message info event
+        guard let userData = userData, !userData.isEmpty else {
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, user data is nil or empty.")
+            return
+        }
+        guard let deliveryId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !deliveryId.isEmpty, !broadlogId.isEmpty else {
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, delivery id or broadlog id is nil or empty.")
+            return
+        }
+        guard let eventDispatcher = self.eventDispatcher else {
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, the event dispatcher is nil.")
+            return
+        }
+        guard let state = self.state else {
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, the Campaign State is nil.")
+            return
+        }
+        Log.trace(label: Self.LOG_TAG, "\(#function) - Dispatching generic data triggered event.")
+        MessageInteractionTracker.dispatchMessageInfoEvent(broadlogId: broadlogId, deliveryId: deliveryId, action: CampaignConstants.EventDataKeys.MESSAGE_TRIGGERED_ACTION_VALUE, state: state, eventDispatcher: eventDispatcher)
     }
 
     private func scheduleLocalNotification() {
         // content (message body) is required, bail early if we don't have it
-        guard let body = self.content else {
+        guard let localNotificationBody = self.content else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message detail is nil.")
             return
         }
 
-        let content = UNMutableNotificationContent()
+        let unMutableNotificationContent = UNMutableNotificationContent()
         let notificationCenter = UNUserNotificationCenter.current()
 
-        content.body = body
+        unMutableNotificationContent.body = localNotificationBody
 
         // title, sound, category, deeplink, user info, and fire date are optional
         if let title = title, !title.isEmpty {
-            content.title = title
+            unMutableNotificationContent.title = title
         }
         if let sound = sound, !sound.isEmpty {
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(sound))
+            unMutableNotificationContent.sound = UNNotificationSound(named: UNNotificationSoundName(sound))
         } else {
-            content.sound = UNNotificationSound.default
+            unMutableNotificationContent.sound = UNNotificationSound.default
         }
         if let category = category, !category.isEmpty {
-            content.categoryIdentifier = category
+            unMutableNotificationContent.categoryIdentifier = category
         }
         var userInfo: [String: Any] = [:]
         if let deeplink = deeplink, !deeplink.isEmpty {
@@ -113,13 +119,13 @@ class LocalNotificationMessage: Message {
         if let userData = userData, !userData.isEmpty {
             userInfo.merge(userData) { _, new in new }
         }
-        content.userInfo = userInfo
+        unMutableNotificationContent.userInfo = userInfo
         var trigger: UNTimeIntervalNotificationTrigger?
         if let fireDate = fireDate, fireDate > TimeInterval(0) {
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: fireDate, repeats: false)
         }
         let messageId = self.messageId ?? ""
-        let request = UNNotificationRequest(identifier: messageId, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: messageId, content: unMutableNotificationContent, trigger: trigger)
 
         Log.trace(label: Self.LOG_TAG, "\(#function) - Scheduling local notification for message id \(messageId).")
         notificationCenter.add(request) { error in
@@ -142,56 +148,56 @@ class LocalNotificationMessage: Message {
     ///     * category: A `String` containing an app defined category for the notification.
     ///     * title: A `String` containing the title for this message.
     ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    private func parseLocalNotificationMessagePayload(consequence: CampaignRuleConsequence) {
-        guard let detailDictionary = consequence.detailDictionary, !detailDictionary.isEmpty else {
+    private mutating func parseLocalNotificationMessagePayload(consequence: CampaignRuleConsequence) {
+        guard let detail = consequence.detail, !detail.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The consequence details are nil or empty, dropping the local notification.")
             return
         }
         // content is required
-        guard let content = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CONTENT] as? String, !content.isEmpty else {
+        guard let content = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CONTENT] as? String, !content.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The content for a local notification is required, dropping the notification.")
             return
         }
         self.content = content
 
         // prefer the date specified by fire date, otherwise use provided delay. both are optional.
-        let fireDate = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DATE] as? TimeInterval ?? TimeInterval(0)
+        let fireDate = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DATE] as? TimeInterval ?? TimeInterval(0)
         if fireDate <= TimeInterval(0) {
-            self.fireDate = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_WAIT] as? TimeInterval ?? TimeInterval(0.1)
+            self.fireDate = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_WAIT] as? TimeInterval ?? TimeInterval(0.1)
         } else {
             self.fireDate = fireDate
         }
 
         // deeplink is optional
-        if let deeplink = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DEEPLINK] as? String, !deeplink.isEmpty {
+        if let deeplink = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DEEPLINK] as? String, !deeplink.isEmpty {
             self.deeplink = deeplink
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read adb_deeplink for local notification but found none. This is not a required field.")
         }
 
         // user info is optional
-        if let userData = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_USER_INFO] as? [String: Any], !userData.isEmpty {
+        if let userData = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_USER_INFO] as? [String: Any], !userData.isEmpty {
             self.userData = userData
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read userData for local notification but found none. This is not a required field.")
         }
 
         // sound is optional
-        if let sound = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_SOUND] as? String, !sound.isEmpty {
+        if let sound = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_SOUND] as? String, !sound.isEmpty {
             self.sound = sound
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read sound for local notification but found none. This is not a required field.")
         }
 
         // category is optional
-        if let category = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CATEGORY] as? String, !category.isEmpty {
+        if let category = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CATEGORY] as? String, !category.isEmpty {
             self.category = category
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read category for local notification but found none. This is not a required field.")
         }
 
         // title is optional
-        if let title = detailDictionary[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TITLE] as? String, !title.isEmpty {
+        if let title = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TITLE] as? String, !title.isEmpty {
             self.title = title
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read title for local notification but found none. This is not a required field.")
