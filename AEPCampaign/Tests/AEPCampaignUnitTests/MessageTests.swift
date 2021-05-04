@@ -34,7 +34,7 @@ class MessageTests: XCTestCase {
         state = CampaignState()
         addStateData()
         let details = ["content": "some content"] as [String: Any]
-        consequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detailDictionary: details)
+        consequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
         messageObject = TestMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         })

@@ -14,17 +14,17 @@ import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 
-/// TestMessage class for testing the Message Protocol's default implementation
-class TestMessage: Message {
-    static var eventDispatcher: Campaign.EventDispatcher?
-    static var consequence: CampaignRuleConsequence?
+/// TestMessage struct for testing the Message Protocol's default implementation
+struct TestMessage: Message {
+    var eventDispatcher: Campaign.EventDispatcher?
+    var consequence: CampaignRuleConsequence?
     var messageId: String?
     var state: CampaignState?
 
     private init(consequence: CampaignRuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
-        Self.consequence = consequence
+        self.consequence = consequence
         self.messageId = consequence.id
-        Self.eventDispatcher = eventDispatcher
+        self.eventDispatcher = eventDispatcher
         self.state = state
     }
 
