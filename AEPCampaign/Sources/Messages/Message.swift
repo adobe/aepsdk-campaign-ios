@@ -16,7 +16,7 @@ import AEPServices
 
 /// Defines Message Protocol for ACS In-App Messages.
 protocol Message {
-    static var eventDispatcher: Campaign.EventDispatcher? {get set}
+    var eventDispatcher: Campaign.EventDispatcher? {get set}
     var messageId: String? {get set}
 
     /// Implemented by the Message subclass to create a Campaign Message object.
@@ -74,7 +74,7 @@ extension Message {
 
     /// Generates a dictionary with message data for a "message triggered" event and dispatches it using the Campaign event dispatcher.
     func triggered() {
-        guard let eventDispatcher = Self.eventDispatcher else {
+        guard let eventDispatcher = eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message triggered event, the event dispatcher is nil.")
             return
         }
@@ -87,7 +87,7 @@ extension Message {
 
     /// Generates a dictionary with message data for a "message viewed" event and dispatches it using the Campaign event dispatcher.
     func viewed() {
-        guard let eventDispatcher = Self.eventDispatcher else {
+        guard let eventDispatcher = eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message viewed event, the event dispatcher is nil.")
             return
         }
@@ -100,7 +100,7 @@ extension Message {
 
     /// Generates a dictionary with message data for a "message clicked" event and dispatches it using the Campaign event dispatcher.
     func clickedThrough() {
-        guard let eventDispatcher = Self.eventDispatcher else {
+        guard let eventDispatcher = eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message clicked event, the event dispatcher is nil.")
             return
         }
@@ -117,7 +117,7 @@ extension Message {
     ///  - Parameters:
     ///    - data: A dictionary containing message interaction data
     func clickedWithData(data: [String: String]) {
-        guard let eventDispatcher = Self.eventDispatcher else {
+        guard let eventDispatcher = eventDispatcher else {
             Log.trace(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot dispatch message clicked with data event, the event dispatcher is nil.")
             return
         }
