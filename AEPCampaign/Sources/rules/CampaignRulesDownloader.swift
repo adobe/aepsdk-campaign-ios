@@ -84,14 +84,14 @@ struct CampaignRulesDownloader {
                                                       eTag: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.ETAG] as? String)
 
                 // Cache the rules, if fails, log message
-                var hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
+                let hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
 
                 if hasRulesCached {
                     state?.updateRuleUrlInDataStore(rulesUrl: url.absoluteString)
                 } else {
                     Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
                 }
-                loadRulesIntoRulesEngine(data: data)
+                self.loadRulesIntoRulesEngine(data: data)
                 return
             case let .failure(error):
                 Log.warning(label: self.LOG_TAG, error.localizedDescription)
