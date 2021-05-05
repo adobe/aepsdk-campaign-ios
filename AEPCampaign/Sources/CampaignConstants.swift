@@ -87,7 +87,7 @@ enum CampaignConstants {
 
     enum Identity {
         static let EXTENSION_NAME = "com.adobe.module.identity"
-        static let EXPERIENCE_CLOUD_ID = "marketingCloudId"
+        static let EXPERIENCE_CLOUD_ID = "mid"
     }
 
     enum Lifecycle {
@@ -96,13 +96,16 @@ enum CampaignConstants {
         static let CONTEXT_DATA = "lifecyclecontextdata"
     }
 
-    // MARK: EventDataKeys
-    enum EventDataKeys {
-        static let MESSAGE_TRIGGERED_ACTION_VALUE = "7"
+    enum ContextDataKeys {
         static let MESSAGE_TRIGGERED = "a.message.triggered"
         static let MESSAGE_CLICKED = "a.message.clicked"
         static let MESSAGE_VIEWED = "a.message.viewed"
         static let MESSAGE_ID = "a.message.id"
+    }
+
+    // MARK: EventDataKeys
+    enum EventDataKeys {
+        static let MESSAGE_TRIGGERED_ACTION_VALUE = "7"
         static let STATE_OWNER = "stateowner"
         static let LINKAGE_FIELDS = "linkagefields"
         static let TRACK_INFO_KEY_BROADLOG_ID  = "broadlogId"

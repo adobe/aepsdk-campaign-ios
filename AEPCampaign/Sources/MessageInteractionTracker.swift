@@ -18,33 +18,28 @@ class MessageInteractionTracker {
 
     private static let LOG_TAG = "MessageInteractionTracker"
 
-    ///Processes `Generic Data` event to send message tracking request to the configured Campaign server. If the current Configuration properties do not allow sending track request, no request is sent.
+    ///Processes `Generic Data` event to send message tracking request to the configured Campaign server. If the current Configuration properties do not allow sending track requests, no request is sent.
     /// - Parameters:
     ///    - event: `Event`to be processed
     ///    - state: Current `Campaign State`
-    ///    - campaign: Instance of `Campaign` type
+    ///    - eventDispatcher: The Campaign event dispatcher
     static func processMessageInformation(event: Event, state: CampaignState, eventDispatcher: Campaign.EventDispatcher) {
         guard state.canSendTrackInfoWithCurrentState() else {
             Log.debug(label: LOG_TAG, "\(#function) - Campaign extension is not configured to send message track request.")
             return
         }
 
-        guard let eventData = event.data else {
-            Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, eventData is null.")
-            return
-        }
-
-        guard let broadlogId = eventData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !broadlogId.isEmpty else {
+        guard let broadlogId = event.broadlogId, !broadlogId.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, broadlogId is empty.")
             return
         }
 
-        guard let deliveryId = eventData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, !deliveryId.isEmpty else {
+        guard let deliveryId = event.deliveryId, !deliveryId.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, deliveryId is empty.")
             return
         }
 
-        guard let action = eventData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION] as? String, !action.isEmpty else {
+        guard let action = event.action, !action.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Cannot send message track request, action is empty.")
             return
         }
@@ -58,10 +53,31 @@ class MessageInteractionTracker {
         state.processRequest(url: url, payload: "", event: event)
     }
 
-    ///Dispatches an event with action `click` and message `deliveryId`. This is to mark that a notification is interacted by user.    
+    /// Creates a generic data event to send an internal message track request to the configured Campaign server.
+    /// If the current Configuration properties do not allow sending track requests, no request is sent.
+    /// - Parameters:
+    ///    - broadlogId: The tracked message's broadlog id
+    ///    - deliveryId: The tracked message's delivery id
+    ///    - action: The tracked message's interaction type
+    ///    - state: Current `Campaign State`
+    ///    - eventDispatcher: The Campaign event dispatcher
+    static func dispatchMessageInfoEvent(broadlogId: String, deliveryId: String, action: String, state: CampaignState, eventDispatcher: Campaign.EventDispatcher) {
+        guard state.canSendTrackInfoWithCurrentState() else {
+            Log.debug(label: LOG_TAG, "\(#function) - Campaign extension is not configured to send message track request.")
+            return
+        }
+        let eventData = [
+            CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadlogId,
+            CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
+            CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION: action
+        ]
+        eventDispatcher("InternalGenericDataEvent", EventType.genericData, EventSource.os, eventData)
+    }
+
+    ///Dispatches an event with action `viewed` or `clicked` and message `deliveryId`. This is to mark that a notification is interacted by user.
     private static func dispatchMessageEvent(action: String, deliveryId: String, eventDispatcher: Campaign.EventDispatcher) {
 
-        guard action == "2" || action == "1" else { //Dispatch only when action is open(2) or click(1)
+        guard action == "2" || action == "1" else { //Dispatch only when action is clicked(2) or viewed(1)
             Log.trace(label: LOG_TAG, "\(#function) - Action received is other than viewed or clicked, so cannot dispatch Message Event.")
             return
         }
@@ -72,15 +88,20 @@ class MessageInteractionTracker {
         }
         let actionKey: String
         if action == "1" {
-            actionKey = CampaignConstants.EventDataKeys.MESSAGE_VIEWED
+            actionKey = CampaignConstants.ContextDataKeys.MESSAGE_VIEWED
         } else {
-            actionKey = CampaignConstants.EventDataKeys.MESSAGE_CLICKED
+            actionKey = CampaignConstants.ContextDataKeys.MESSAGE_CLICKED
         }
 
         let contextData = [
-            CampaignConstants.EventDataKeys.MESSAGE_ID: "\(decimalDeliveryId)",
+            CampaignConstants.ContextDataKeys.MESSAGE_ID: "\(decimalDeliveryId)",
             actionKey: "1"
         ]
-        eventDispatcher("DataForMessageRequest", EventType.campaign, EventSource.responseContent, contextData)
+        dispatchMessageInteraction(data: contextData, eventDispatcher: eventDispatcher)
+    }
+
+    /// Invokes the Campaign  event dispatcher to dispatch message interaction events
+    static func dispatchMessageInteraction(data: [String: Any], eventDispatcher: Campaign.EventDispatcher) {
+        eventDispatcher("DataForMessageRequest", EventType.campaign, EventSource.responseContent, data)
     }
 }

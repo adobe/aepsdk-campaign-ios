@@ -22,7 +22,7 @@ public class Campaign: NSObject, Extension {
     public static var extensionVersion = CampaignConstants.EXTENSION_VERSION
     public var metadata: [String: String]?
     public let runtime: ExtensionRuntime
-    var state: CampaignState?
+    var state: CampaignState
     typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String: Any]?) -> Void
 
     private let dependencies: [String] = [
@@ -33,10 +33,8 @@ public class Campaign: NSObject, Extension {
     /// Initializes the Campaign extension
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
+        self.state = CampaignState()
         super.init()
-        if let hitQueue = setupHitQueue() {
-            state = CampaignState(hitQueue: hitQueue)
-        }
     }
 
     /// Invoked when the Campaign extension has been registered by the `EventHub`
@@ -65,15 +63,27 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
-
+        guard let consequenceDict = event.triggeredConsequence, !consequenceDict.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence is nil or empty.")
+            return
+        }
+        guard let detail = consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL] as? [String: Any], !detail.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, detail dictionary is nil or empty.")
+            return
+        }
+        let consequence = CampaignRuleConsequence(id: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ID] as? String ?? "", type: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_TYPE] as? String ?? "", assetsPath: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ASSETS_PATH] as? String ?? "", detail: detail)
+        let template = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TEMPLATE] as? String
+        if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a local notification. Scheduling the received local notification.")
+            guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
+                return
+            }
+            message.showMessage()
+        }
     }
 
     /// Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event) {
-        guard let state = state else {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to process request. CampaignState is nil.")
-            return
-        }
         state.queueRegistrationRequest(event: event)
     }
 
@@ -83,9 +93,9 @@ public class Campaign: NSObject, Extension {
         for extensionName in dependencies {
             sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
         }
-        state?.update(dataMap: sharedStates)
+        state.update(dataMap: sharedStates)
 
-        if state?.privacyStatus == .optedOut {
+        if state.privacyStatus == .optedOut {
             // handle opt out
         }
     }
@@ -97,11 +107,6 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Generic Data`
     private func handleGenericDataEvents(event: Event) {
-        guard let state = state else {
-            Log.debug(label: LOG_TAG, "\(#function) - Unable to handle event '\(event.id)'. Campaign State is nil.")
-            return
-        }
-
         MessageInteractionTracker.processMessageInformation(event: event, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
     }
 
@@ -115,27 +120,5 @@ public class Campaign: NSObject, Extension {
 
         let event = Event(name: name, type: type, source: source, data: data)
         dispatch(event: event)
-    }
-
-    /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
-    /// - Parameter hit: The `CampaignHit` which was successfully sent
-    private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
-        state?.updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
-    }
-
-    /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
-    private func setupHitQueue() -> HitQueuing? {
-        guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
-            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, Campaign could not be initialized")
-            return nil
-        }
-
-        guard let state = self.state else {
-            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, the Campaign State is nil")
-            return nil
-        }
-
-        let hitProcessor = CampaignHitProcessor(timeout: state.campaignTimeout, responseHandler: handleSuccessfulNetworkRequest(hit:))
-        return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
 }
