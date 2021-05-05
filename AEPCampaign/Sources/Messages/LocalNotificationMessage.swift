@@ -90,14 +90,14 @@ struct LocalNotificationMessage: Message {
 
     /// Schedule the local notification with the `UNUserNotificationCenter`.
     private func scheduleLocalNotification() {
-        let unMutableNotificationContent = UNMutableNotificationContent()
-        let notificationCenter = UNUserNotificationCenter.current()
-
         // content (message body) is required, bail early if we don't have it
         guard let localNotificationBody = self.content else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message detail is nil.")
             return
         }
+        
+        let unMutableNotificationContent = UNMutableNotificationContent()
+        let notificationCenter = UNUserNotificationCenter.current()
 
         unMutableNotificationContent.body = localNotificationBody
 
