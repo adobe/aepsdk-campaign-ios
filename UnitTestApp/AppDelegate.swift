@@ -12,7 +12,7 @@
 
 import UIKit
 
-@main
+@UIApplicationMain
 /// This app is added to allow local notifications to be scheduled in unit tests
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
