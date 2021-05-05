@@ -29,7 +29,7 @@ struct LocalNotificationMessage: Message {
     private var fireDate: TimeInterval?
     private var title: String?
 
-    /// LocalNotification class initializer. It is accessed via the `createMessageObject` method.
+    /// LocalNotification struct initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
     ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
     ///    - state: The CampaignState

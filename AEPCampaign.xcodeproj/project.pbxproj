@@ -47,6 +47,8 @@
 		D6B4060A263C99EF002814FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6B40609263C99EF002814FC /* Assets.xcassets */; };
 		D6B4060D263C99EF002814FC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6B4060C263C99EF002814FC /* Preview Assets.xcassets */; };
 		D6B40610263C99F0002814FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6B4060E263C99EF002814FC /* LaunchScreen.storyboard */; };
+		D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */; };
+		D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */; };
 		D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823B8262616E90092C7DE /* CampaignState.swift */; };
 		D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823BA262616F80092C7DE /* CampaignStateTests.swift */; };
 		D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */; };
@@ -155,6 +157,8 @@
 		D6B4060C263C99EF002814FC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D6B4060F263C99EF002814FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D6B40611263C99F0002814FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessage.swift; sourceTree = "<group>"; };
+		D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessageDelegate.swift; sourceTree = "<group>"; };
 		D6E823B8262616E90092C7DE /* CampaignState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
 		D6E823BA262616F80092C7DE /* CampaignStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
 		D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignHitProcessor.swift; sourceTree = "<group>"; };
@@ -348,6 +352,8 @@
 			children = (
 				D6B2F04D26386EB100747CFE /* Message.swift */,
 				D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */,
+				D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */,
+				D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -801,8 +807,10 @@
 				3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */,
 				D6B2F02E2637786D00747CFE /* LocalNotificationMessage.swift in Sources */,
 				D6577E1A262DFFA9008F0528 /* HitQueuing+Campaign.swift in Sources */,
+				D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */,
 				D6B2F04E26386EB100747CFE /* Message.swift in Sources */,
 				D6B2F0292637445D00747CFE /* CampaignRuleConsequence.swift in Sources */,
+				D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */,
 				D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

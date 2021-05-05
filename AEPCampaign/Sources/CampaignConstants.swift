@@ -56,6 +56,15 @@ enum CampaignConstants {
             static let INTERACTION_TYPE  = "type"
         }
 
+        enum MessageData {
+            static let ID_TOKENS_LEN = 3
+            static let TAG_ID = "id"
+            static let TAG_ID_DELIMITER = ","
+            static let TAG_ID_BUTTON_1 = "3"
+            static let TAG_ID_BUTTON_2 = "4"
+            static let TAG_ID_BUTTON_X = "5"
+        }
+
         enum AppEnvironment {
             static let DEV = "dev"
             static let STAGE = "stage"
