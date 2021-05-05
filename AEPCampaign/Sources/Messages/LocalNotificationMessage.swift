@@ -95,7 +95,7 @@ struct LocalNotificationMessage: Message {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message detail is nil.")
             return
         }
-        
+
         let unMutableNotificationContent = UNMutableNotificationContent()
         let notificationCenter = UNUserNotificationCenter.current()
 
