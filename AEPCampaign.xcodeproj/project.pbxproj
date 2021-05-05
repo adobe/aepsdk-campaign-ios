@@ -35,7 +35,7 @@
 		D6B2F0172634B46200747CFE /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F0152634B46200747CFE /* TestHelper.swift */; };
 		D6B2F0292637445D00747CFE /* CampaignRuleConsequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F0282637445D00747CFE /* CampaignRuleConsequence.swift */; };
 		D6B2F02E2637786D00747CFE /* LocalNotificationMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */; };
-		D6B2F04E26386EB100747CFE /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F04D26386EB100747CFE /* Message.swift */; };
+		D6B2F04E26386EB100747CFE /* CampaignMessaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F04D26386EB100747CFE /* CampaignMessaging.swift */; };
 		D6B405AC263B801B002814FC /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B405AB263B801B002814FC /* MessageTests.swift */; };
 		D6B405C3263C58F7002814FC /* TestMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B405C2263C58F7002814FC /* TestMessage.swift */; };
 		D6B405C9263C6057002814FC /* MockUrlService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B405C8263C6057002814FC /* MockUrlService.swift */; };
@@ -49,6 +49,8 @@
 		D6B40610263C99F0002814FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6B4060E263C99EF002814FC /* LaunchScreen.storyboard */; };
 		D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */; };
 		D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */; };
+		D6B406BD264316A7002814FC /* MessageAssetsDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B406BC264316A7002814FC /* MessageAssetsDownloader.swift */; };
+		D6B406CF2643579E002814FC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
 		D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823B8262616E90092C7DE /* CampaignState.swift */; };
 		D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823BA262616F80092C7DE /* CampaignStateTests.swift */; };
 		D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */; };
@@ -145,7 +147,7 @@
 		D6B2F0152634B46200747CFE /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		D6B2F0282637445D00747CFE /* CampaignRuleConsequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRuleConsequence.swift; sourceTree = "<group>"; };
 		D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessage.swift; sourceTree = "<group>"; };
-		D6B2F04D26386EB100747CFE /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		D6B2F04D26386EB100747CFE /* CampaignMessaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMessaging.swift; sourceTree = "<group>"; };
 		D6B405AB263B801B002814FC /* MessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
 		D6B405C2263C58F7002814FC /* TestMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMessage.swift; sourceTree = "<group>"; };
 		D6B405C8263C6057002814FC /* MockUrlService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUrlService.swift; sourceTree = "<group>"; };
@@ -159,6 +161,9 @@
 		D6B40611263C99F0002814FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessage.swift; sourceTree = "<group>"; };
 		D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessageDelegate.swift; sourceTree = "<group>"; };
+		D6B406BC264316A7002814FC /* MessageAssetsDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAssetsDownloader.swift; sourceTree = "<group>"; };
+		D6B406C3264347C3002814FC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		D6B406D52643638D002814FC /* CampaignTester.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CampaignTester.entitlements; sourceTree = "<group>"; };
 		D6E823B8262616E90092C7DE /* CampaignState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
 		D6E823BA262616F80092C7DE /* CampaignStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
 		D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignHitProcessor.swift; sourceTree = "<group>"; };
@@ -219,6 +224,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6B406CF2643579E002814FC /* WebKit.framework in Frameworks */,
 				D6E978A92639D1F2003F3372 /* UserNotificationsUI.framework in Frameworks */,
 				D6E978AA2639D1F2003F3372 /* NotificationCenter.framework in Frameworks */,
 				D6E978AB2639D1F2003F3372 /* UserNotifications.framework in Frameworks */,
@@ -232,6 +238,7 @@
 		12D8E3E1F60C49269F3E7366 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D6B406C3264347C3002814FC /* WebKit.framework */,
 				D6E978A72639D1F2003F3372 /* NotificationCenter.framework */,
 				D6E978A82639D1F2003F3372 /* UserNotifications.framework */,
 				D6E978A62639D1F2003F3372 /* UserNotificationsUI.framework */,
@@ -350,10 +357,11 @@
 		D6B2F01E2637326800747CFE /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				D6B2F04D26386EB100747CFE /* Message.swift */,
+				D6B2F04D26386EB100747CFE /* CampaignMessaging.swift */,
 				D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */,
 				D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */,
 				D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */,
+				D6B406BC264316A7002814FC /* MessageAssetsDownloader.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -407,6 +415,7 @@
 		D6E9787E2639D197003F3372 /* CampaignTester */ = {
 			isa = PBXGroup;
 			children = (
+				D6B406D52643638D002814FC /* CampaignTester.entitlements */,
 				D6E979012639DFE6003F3372 /* Assets.xcassets */,
 				D6E9787F2639D197003F3372 /* AppDelegate.swift */,
 				D6E978812639D197003F3372 /* SceneDelegate.swift */,
@@ -808,10 +817,11 @@
 				D6B2F02E2637786D00747CFE /* LocalNotificationMessage.swift in Sources */,
 				D6577E1A262DFFA9008F0528 /* HitQueuing+Campaign.swift in Sources */,
 				D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */,
-				D6B2F04E26386EB100747CFE /* Message.swift in Sources */,
+				D6B2F04E26386EB100747CFE /* CampaignMessaging.swift in Sources */,
 				D6B2F0292637445D00747CFE /* CampaignRuleConsequence.swift in Sources */,
 				D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */,
 				D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */,
+				D6B406BD264316A7002814FC /* MessageAssetsDownloader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1231,6 +1241,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CampaignTester/CampaignTester.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"CampaignTester/Preview Content\"";
 				DEVELOPMENT_TEAM = FKGEE875K4;
@@ -1254,6 +1265,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CampaignTester/CampaignTester.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"CampaignTester/Preview Content\"";
 				DEVELOPMENT_TEAM = FKGEE875K4;

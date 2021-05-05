@@ -17,7 +17,7 @@ import AEPCampaign
 import AEPLifecycle
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     private let LAUNCH_ENVIRONMENT_FILE_ID = "94f571f308d5/0d8e122e1a29/launch-dad327eb0536-development"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

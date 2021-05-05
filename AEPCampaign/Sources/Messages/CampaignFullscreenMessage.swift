@@ -14,17 +14,21 @@ import Foundation
 import AEPCore
 import AEPServices
 
-class CampaignFullscreenMessage: Message {
+class CampaignFullscreenMessage: CampaignMessaging {
     static let LOG_TAG = "FullscreenMessage"
 
     var eventDispatcher: Campaign.EventDispatcher?
     var messageId: String?
 
+    public weak var campaignFullscreenMessageDelegate: CampaignFullscreenMessage?
+
     private var state: CampaignState?
     private var html: String?
-    private var htmlContent: String?
     private var assetsPath: String?
     private var extractedAssets: [[String]]?
+    private var isUsingLocalImage: Bool
+    private var fullscreenMessage: FullscreenPresentable?
+    private var messageAssetsDownloader: MessageAssetsDownloader?
 
     /// Campaign Fullscreen Message class initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
@@ -35,6 +39,7 @@ class CampaignFullscreenMessage: Message {
         self.messageId = consequence.id
         self.eventDispatcher = eventDispatcher
         self.state = state
+        self.isUsingLocalImage = false
         self.parseFullscreenMessagePayload(consequence: consequence)
     }
 
@@ -44,25 +49,45 @@ class CampaignFullscreenMessage: Message {
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> Message? {
+    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         guard let consequence = consequence else {
             Log.trace(label: LOG_TAG, "\(#function) - Cannot create a Fullscreen Message object, the consequence is nil.")
             return nil
         }
-        let messageObject = CampaignFullscreenMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
+        let fullscreenMessage = CampaignFullscreenMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
         // html is required so no message object is returned if it is nil
-        guard messageObject.html != nil else {
+        guard fullscreenMessage.html != nil else {
             return nil
         }
-        return messageObject
+        return fullscreenMessage
     }
 
+    /// Creates and shows a new Campaign Fullscreen Message object.
+    /// This method reads the html content from the cached html at assetsPath and generates the expanded html by
+    /// replacing assets URLs with cached references, before calling the method to display the message.
     func showMessage() {
-        // state.fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: webViewHtml, listener: fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
-        // state.fullscreenMessage?.show()
+        guard let assetsPath = assetsPath, let html = html else {
+            Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot show the fullscreen message, assets path or html is nil.")
+            return
+        }
+        let htmlLocation = assetsPath + CampaignConstants.Campaign.PATH_SEPARATOR + html
+        guard let htmlContent = readHtmlFromFile(location: htmlLocation) else {
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Failed to read html content from the cache location: \(htmlLocation)")
+            return
+        }
+
+        // use assets if not empty
+        var finalHtml = ""
+        if let extractedAssets = extractedAssets, !extractedAssets.isEmpty {
+            finalHtml = generateExpandedHtml(sourceHtml: htmlContent)
+        } else {
+            finalHtml = htmlContent
+        }
+        self.fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.campaignFullscreenMessageDelegate, isLocalImageUsed: isUsingLocalImage)
+        self.fullscreenMessage?.show()
     }
 
-    // The Campaign Fullscreen Message class should download assets
+    // Returns true as the Campaign Fullscreen Message class should download assets
     func shouldDownloadAssets() -> Bool {
         return true
     }
@@ -89,6 +114,27 @@ class CampaignFullscreenMessage: Message {
         }
     }
 
+    func downloadAssets() {
+        guard let extractedAssets = extractedAssets, !extractedAssets.isEmpty else {
+            Log.debug(label: Self.LOG_TAG, "\(#function) - No assets to be downloaded.")
+            return
+        }
+
+        for currentAssetArray in extractedAssets {
+            let currentAssetArrayCount = currentAssetArray.count
+
+            // no strings in this asset, skip this entry
+            if currentAssetArrayCount <= 0 {
+                continue
+            }
+
+            let messageId = self.messageId ?? ""
+            self.messageAssetsDownloader = MessageAssetsDownloader(assets: currentAssetArray, messageId: messageId)
+            Log.debug(label: Self.LOG_TAG, "\(#function) - Downloading assets for message id: \(messageId).")
+            messageAssetsDownloader?.downloadAssetCollection()
+        }
+    }
+
     /// Parses a `CampaignRuleConsequence` instance defining message payload for a `FullscreenMessage` object.
     /// Required fields:
     ///     * assetsPath: A `String` containing the location of cached fullscreen assets.
@@ -106,9 +152,11 @@ class CampaignFullscreenMessage: Message {
             Log.error(label: Self.LOG_TAG, "\(#function) - Unable to create fullscreen message, provided assets path is missing/empty.")
             return
         }
+        self.assetsPath = assetsPath
+
         // html is required
         guard let html = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_HTML] as? String, !html.isEmpty else {
-            Log.error(label: Self.LOG_TAG, "\(#function) - The html for a fullscreen message is required, dropping the notification.")
+            Log.error(label: Self.LOG_TAG, "\(#function) - The html filename for a fullscreen message is required, dropping the notification.")
             return
         }
         self.html = html
@@ -125,7 +173,7 @@ class CampaignFullscreenMessage: Message {
 
     private func extractAsset(assets: [String]) {
         guard !assets.isEmpty else {
-            Log.warning(label: Self.LOG_TAG, "\(#function) - There are no assets to extract.")
+            Log.debug(label: Self.LOG_TAG, "\(#function) - There are no assets to extract.")
             return
         }
         var currentAsset: [String] = []
@@ -134,5 +182,81 @@ class CampaignFullscreenMessage: Message {
         }
         Log.trace(label: Self.LOG_TAG, "\(#function) - Adding \(currentAsset) to extracted assets.")
         extractedAssets?.append(currentAsset)
+    }
+
+    private func readHtmlFromFile(location: String) -> String? {
+        // FOR TESTING ONLY, use final implementation from rules downloader
+        let fileManager = FileManager.default
+        let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
+        let cachesDirectoryUrl = urls[0]
+        let fileUrl = cachesDirectoryUrl.appendingPathComponent("adbdownloadcache/temp.html")
+        let filePath = fileUrl.path
+
+        guard let data = fileManager.contents(atPath: filePath) else {
+            return nil
+        }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    private func generateExpandedHtml(sourceHtml: String) -> String {
+        // if we have no extracted assets, return the source html unchanged
+        guard let extractedAssets = extractedAssets, !extractedAssets.isEmpty else {
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Not generating expanded html, extracted assets is nil or empty.")
+            return sourceHtml
+        }
+        var imageTokens: [String: String] = [:]
+        // the first element in assets is a url
+        // the remaining elements in the are urls or file paths to assets that should replace that asset in the resulting html if they are already cached
+        for asset in extractedAssets {
+            // the url to replace
+            let assetUrl = asset[0]
+
+            // use getAssetReplacement to get the string that should
+            // replace the given asset
+            let assetValue = getAssetReplacement(assetArray: asset) ?? ""
+            if assetValue.isEmpty {
+                continue // no replacement, move on
+            } else {
+                // save it
+                imageTokens[assetUrl] = assetValue
+            }
+        }
+
+        // actually replace the asset
+        return expandTokens(input: sourceHtml, tokens: imageTokens) ?? ""
+    }
+
+    private func getAssetReplacement(assetArray: [String]) -> String? {
+        guard !assetArray.isEmpty else { // edge case
+            Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace assets, the assets array is empty.")
+            return nil
+        }
+
+        // first prioritize remote urls that are cached
+        for asset in assetArray {
+            if let url = URL(string: asset) {
+                if MessageAssetsDownloader.isAssetDownloadable(url: url) {
+                    let cacheService = ServiceProvider.shared.cacheService
+                    let messageId = self.messageId ?? ""
+                    let cacheEntry = cacheService.get(cacheName: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER + CampaignConstants.Campaign.PATH_SEPARATOR + messageId, key: asset)
+                    if let data = cacheEntry?.data {
+                        Log.debug(label: Self.LOG_TAG, "\(#function) - Replaced assets using cached assets.")
+                        return String(decoding: data, as: UTF8.self)
+                    }
+                }
+            }
+        }
+
+        // then fallback to local urls
+        for asset in assetArray {
+            if let url = URL(string: asset) {
+                if MessageAssetsDownloader.isAssetDownloadable(url: url) {
+                    Log.debug(label: Self.LOG_TAG, "\(#function) - Replaced assets using local url.")
+                    self.isUsingLocalImage = true
+                    return asset
+                }
+            }
+        }
+        return nil
     }
 }

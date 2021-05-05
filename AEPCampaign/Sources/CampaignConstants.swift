@@ -39,6 +39,7 @@ enum CampaignConstants {
         static let RULES_DOWNLOAD_PATH = "/%@/%@/%@/rules.zip"
         static let TRACKING_URL = "https://%@/r/?id=%@,%@,%s&mcId=%@"
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%@__"
+        static let PATH_SEPARATOR = "/"
 
         enum Datastore {
             static let NAME = "CampaignDataStore"

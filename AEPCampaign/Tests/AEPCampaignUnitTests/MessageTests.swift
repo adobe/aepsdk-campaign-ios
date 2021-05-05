@@ -23,7 +23,7 @@ class MessageTests: XCTestCase {
     var mockUrlService: MockUrlService? {
         return ServiceProvider.shared.urlService as? MockUrlService
     }
-    var messageObject: Message!
+    var messageObject: CampaignMessaging!
     var dispatchedEvents: [Event] = []
     var consequence: CampaignRuleConsequence!
 
