@@ -15,12 +15,12 @@ import AEPCore
 import AEPServices
 
 class CampaignFullscreenMessage: CampaignMessaging {
-    static let LOG_TAG = "FullscreenMessage"
+    private static let LOG_TAG = "FullscreenMessage"
 
     var eventDispatcher: Campaign.EventDispatcher?
     var messageId: String?
 
-    public weak var campaignFullscreenMessageDelegate: CampaignFullscreenMessage?
+    private let campaignFullscreenMessageDelegate = CampaignFullscreenMessageDelegate()
 
     private var state: CampaignState?
     private var html: String?
@@ -83,8 +83,9 @@ class CampaignFullscreenMessage: CampaignMessaging {
         } else {
             finalHtml = htmlContent
         }
-        self.fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.campaignFullscreenMessageDelegate, isLocalImageUsed: isUsingLocalImage)
-        self.fullscreenMessage?.show()
+        
+        fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: campaignFullscreenMessageDelegate, isLocalImageUsed: isUsingLocalImage)
+        fullscreenMessage?.show()
     }
 
     // Returns true as the Campaign Fullscreen Message class should download assets
@@ -142,7 +143,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     /// Optional fields:
     ///     * assets: An array of `[String]` containing remote assets to prefetch and cache.
     ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    private func parseFullscreenMessagePayload(consequence: CampaignRuleConsequence) {
+    func parseFullscreenMessagePayload(consequence: CampaignRuleConsequence) {
         guard let detail = consequence.detail, !detail.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The consequence details are nil or empty, dropping the fullscreen message.")
             return
@@ -171,7 +172,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         }
     }
 
-    private func extractAsset(assets: [String]) {
+    func extractAsset(assets: [String]) {
         guard !assets.isEmpty else {
             Log.debug(label: Self.LOG_TAG, "\(#function) - There are no assets to extract.")
             return
@@ -189,7 +190,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         let cachesDirectoryUrl = urls[0]
-        let fileUrl = cachesDirectoryUrl.appendingPathComponent("adbdownloadcache/temp.html")
+        let fileUrl = cachesDirectoryUrl.appendingPathComponent("adbdownloadcache/assets/test.html")
         let filePath = fileUrl.path
 
         guard let data = fileManager.contents(atPath: filePath) else {
@@ -226,7 +227,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         return expandTokens(input: sourceHtml, tokens: imageTokens) ?? ""
     }
 
-    private func getAssetReplacement(assetArray: [String]) -> String? {
+    func getAssetReplacement(assetArray: [String]) -> String? {
         guard !assetArray.isEmpty else { // edge case
             Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace assets, the assets array is empty.")
             return nil

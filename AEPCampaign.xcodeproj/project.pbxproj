@@ -51,6 +51,10 @@
 		D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */; };
 		D6B406BD264316A7002814FC /* MessageAssetsDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B406BC264316A7002814FC /* MessageAssetsDownloader.swift */; };
 		D6B406CF2643579E002814FC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
+		D6B407102643921E002814FC /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
+		D6B407112643921E002814FC /* AEPCampaign.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D6B407302643A8F1002814FC /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A72639D1F2003F3372 /* NotificationCenter.framework */; };
+		D6B407312643A8F1002814FC /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A82639D1F2003F3372 /* UserNotifications.framework */; };
 		D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823B8262616E90092C7DE /* CampaignState.swift */; };
 		D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823BA262616F80092C7DE /* CampaignStateTests.swift */; };
 		D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */; };
@@ -63,9 +67,6 @@
 		D6E978842639D197003F3372 /* CampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E978832639D197003F3372 /* CampaignView.swift */; };
 		D6E978892639D199003F3372 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6E978882639D199003F3372 /* Preview Assets.xcassets */; };
 		D6E9788C2639D199003F3372 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6E9788A2639D199003F3372 /* LaunchScreen.storyboard */; };
-		D6E978A92639D1F2003F3372 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A62639D1F2003F3372 /* UserNotificationsUI.framework */; };
-		D6E978AA2639D1F2003F3372 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A72639D1F2003F3372 /* NotificationCenter.framework */; };
-		D6E978AB2639D1F2003F3372 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6E978A82639D1F2003F3372 /* UserNotifications.framework */; };
 		D6E979022639DFE6003F3372 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6E979012639DFE6003F3372 /* Assets.xcassets */; };
 		D6E97925263B34FE003F3372 /* LocalNotificationMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */; };
 		D6E9792F263B4775003F3372 /* Event+Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E9792E263B4775003F3372 /* Event+Campaign.swift */; };
@@ -108,6 +109,20 @@
 			remoteInfo = AEPCampaign;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D6B407122643921E002814FC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D6B407112643921E002814FC /* AEPCampaign.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0658E66756CCA4CD9BC43EEA /* Pods-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -224,10 +239,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6B407102643921E002814FC /* AEPCampaign.framework in Frameworks */,
+				D6B407302643A8F1002814FC /* NotificationCenter.framework in Frameworks */,
+				D6B407312643A8F1002814FC /* UserNotifications.framework in Frameworks */,
 				D6B406CF2643579E002814FC /* WebKit.framework in Frameworks */,
-				D6E978A92639D1F2003F3372 /* UserNotificationsUI.framework in Frameworks */,
-				D6E978AA2639D1F2003F3372 /* NotificationCenter.framework in Frameworks */,
-				D6E978AB2639D1F2003F3372 /* UserNotifications.framework in Frameworks */,
 				62FD4F96F29454684E169BA6 /* Pods_CampaignTester.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -537,6 +552,7 @@
 				D6E9787A2639D197003F3372 /* Frameworks */,
 				D6E9787B2639D197003F3372 /* Resources */,
 				4F184F52CEF4E9B1231257ED /* [CP] Embed Pods Frameworks */,
+				D6B407122643921E002814FC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

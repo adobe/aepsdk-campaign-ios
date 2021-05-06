@@ -11,24 +11,25 @@
  */
 
 import Foundation
-import AEPCore
 import AEPServices
 
-extension CampaignFullscreenMessage: FullscreenMessageDelegate {
+class CampaignFullscreenMessageDelegate: FullscreenMessageDelegate {
+    private let LOG_TAG = "CampaignFullscreenMessageDelegate"
+
     /// Invoked when a Campaign Fullscreen Message is displayed.
     /// Triggers a call to parent method `triggered()`
     ///  - Parameter message: the Campaign Fullscreen Message being displayed
     func onShow(message: FullscreenMessage) {
-        Log.debug(label: Self.LOG_TAG, "\(#function) - Fullscreen on show callback received.")
-        triggered()
+        Log.debug(label: LOG_TAG, "\(#function) - Fullscreen on show callback received.")
+        //triggered()
     }
 
     /// Invoked when a Campaign Fullscreen Message is dismissed.
     /// Triggers a call to parent method `viewed()`
     ///  - Parameter message: the Campaign Fullscreen Message being dismissed
     func onDismiss(message: FullscreenMessage) {
-        Log.debug(label: Self.LOG_TAG, "\(#function) - Fullscreen on dismiss callback received.")
-        viewed()
+        Log.debug(label: LOG_TAG, "\(#function) - Fullscreen on dismiss callback received.")
+        //viewed()
     }
 
     /// Invoked when a Campaign Fullscreen Message is attempting to load a URL.
@@ -45,32 +46,35 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
     ///  - Returns: true if the SDK wants to handle the URL, false otherwise
     func overrideUrlLoad(message: FullscreenMessage, url: String?) -> Bool {
         guard let urlString = url, !urlString.isEmpty else {
-            Log.error(label: Self.LOG_TAG, "\(#function) - Cannot process provided URL string, it is nil or empty.")
+            Log.error(label: LOG_TAG, "\(#function) - Cannot process provided URL string, it is nil or empty.")
             return false
         }
-        Log.debug(label: Self.LOG_TAG, "\(#function) - Fullscreen overrideUrlLoad callback received with url \(urlString)")
+        Log.debug(label: LOG_TAG, "\(#function) - Fullscreen overrideUrlLoad callback received with url \(urlString)")
 
         // convert url to url components
         guard let url = URL(string: urlString), let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            Log.error(label: Self.LOG_TAG, "\(#function) - Unable to create a url from \(urlString).")
+            Log.error(label: LOG_TAG, "\(#function) - Unable to create a url from \(urlString).")
             return false
         }
 
         // check adbinapp scheme
-        guard let scheme = components.scheme, scheme == CampaignConstants.Campaign.MessagePayload.DEEPLINK_SCHEME else {
-            Log.error(label: Self.LOG_TAG, "\(#function) - Invalid message scheme found in URI: \(url.scheme ?? "").")
+        let scheme = components.scheme
+        if scheme == "file" {
+            return true
+        } else if scheme != CampaignConstants.Campaign.MessagePayload.DEEPLINK_SCHEME {
+            Log.error(label: LOG_TAG, "\(#function) - Invalid message scheme found in URI: \(url.scheme ?? "").")
             return false
         }
 
         // cancel or confirm
         guard let host = components.host, (host == CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CONFIRM || host == CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CANCEL) else {
-            Log.error(label: Self.LOG_TAG, "\(#function) - Unsupported URI host found, neither confirm nor cancel found in URI: \(urlString).")
+            Log.error(label: LOG_TAG, "\(#function) - Unsupported URI host found, neither confirm nor cancel found in URI: \(urlString).")
             return false
         }
 
         // extract query parameters, eg: id=h11901a,86f10d,3&url=https://www.adobe.com
         guard let queryParameters = components.queryItems else {
-            Log.error(label: Self.LOG_TAG, "\(#function) - Invalid query parameters found in URI: \(urlString).")
+            Log.error(label: LOG_TAG, "\(#function) - Invalid query parameters found in URI: \(urlString).")
             return false
         }
 
@@ -82,13 +86,13 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
 
         if !messageData.isEmpty {
             messageData[CampaignConstants.Campaign.MessagePayload.INTERACTION_TYPE] = host
-            processMessageInteraction(query: messageData)
+            //processMessageInteraction(query: messageData)
         }
 
         return true
     }
 
     func onShowFailure() {
-        Log.debug(label: Self.LOG_TAG, "\(#function) - Fullscreen message failed to show.")
+        Log.debug(label: LOG_TAG, "\(#function) - Fullscreen message failed to show.")
     }
 }

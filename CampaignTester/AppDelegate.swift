@@ -11,6 +11,7 @@
  */
 
 import UIKit
+import UserNotifications
 import AEPCore
 import AEPIdentity
 import AEPCampaign
@@ -18,9 +19,11 @@ import AEPLifecycle
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    let notificationCenter = UNUserNotificationCenter.current()
     private let LAUNCH_ENVIRONMENT_FILE_ID = "94f571f308d5/0d8e122e1a29/launch-dad327eb0536-development"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        notificationCenter.delegate = self
 
         MobileCore.setLogLevel(.trace)
         MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self], {
@@ -29,8 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         })
 
         // request permission to display notifications
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
+        notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
             if let error = error {
                 print("error encountered when requesting notification authorization: \(error)")
                 // Handle the error here.
