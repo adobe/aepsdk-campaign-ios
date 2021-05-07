@@ -71,7 +71,7 @@ public class Campaign: NSObject, Extension {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, detail dictionary is nil or empty.")
             return
         }
-        let consequence = CampaignRuleConsequence(id: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ID] as? String ?? "", type: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_TYPE] as? String ?? "", assetsPath: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ASSETS_PATH] as? String ?? "", detail: detail)
+        let consequence = CampaignRuleConsequence(id: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ID] as? String ?? "", type: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_TYPE] as? String ?? "", detail: detail)
         let template = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TEMPLATE] as? String
         if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
             Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a local notification. Scheduling the received local notification.")

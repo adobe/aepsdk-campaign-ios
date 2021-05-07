@@ -41,6 +41,11 @@ enum CampaignConstants {
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%@__"
         static let PATH_SEPARATOR = "/"
 
+        enum Scheme {
+            static let FILE = "file"
+            static let HTTPS = "https"
+        }
+
         enum Datastore {
             static let NAME = "CampaignDataStore"
             static let REMOTE_URL_KEY = "CampaignRemoteUrl"

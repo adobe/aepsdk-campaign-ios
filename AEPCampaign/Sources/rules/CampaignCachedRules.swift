@@ -1,6 +1,6 @@
 /*
  Copyright 2021 Adobe. All rights reserved.
- This file is licensed to you under the Apache License, Version 2.0 (the "License")
+ This file is licensed to you under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License. You may obtain a copy
  of the License at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -11,15 +11,13 @@
  */
 
 import Foundation
+import AEPServices
 
-class CampaignRuleConsequence {
-    private(set) var id: String
-    private(set) var type: String
-    private(set) var detail: [String: Any]?
+/// Represents a Cached rules type which has some additional metadata on top of the rules
+struct CampaignCachedRules: CampaignCacheable, Codable {
+    let cacheable: Data
 
-    init(id: String, type: String, detail: [String: Any]?) {
-        self.id = id
-        self.type = type
-        self.detail = detail
-    }
+    let lastModified: String?
+
+    let eTag: String?
 }
