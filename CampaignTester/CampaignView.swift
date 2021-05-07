@@ -18,8 +18,6 @@ import AEPServices
 struct CampaignView: View {
     let LOG_TAG = "CampaignTester::CampaignView"
 
-    @UIApplicationDelegateAdaptor(AppDelegate.self) weak var appDelegate
-
     // state vars
     @State private var extensionVersion: String = ""
     @State private var trackActionVar: String = ""
