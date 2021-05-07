@@ -68,7 +68,7 @@ struct CampaignView: View {
                         Text("Notification Testing").bold()
 
                         Button(action: {
-                            extensionVersion = Campaign.extensionVersion
+                            self.extensionVersion = Campaign.extensionVersion
                         }
                         ) {
                             Text("Extension Version")
