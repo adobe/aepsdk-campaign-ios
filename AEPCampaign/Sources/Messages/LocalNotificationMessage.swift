@@ -14,7 +14,7 @@ import Foundation
 import AEPCore
 import AEPServices
 
-struct LocalNotificationMessage: Message {
+struct LocalNotificationMessage: CampaignMessaging {
     private static let LOG_TAG = "LocalNotificationMessage"
 
     var eventDispatcher: Campaign.EventDispatcher?
@@ -47,7 +47,7 @@ struct LocalNotificationMessage: Message {
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> Message? {
+    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         guard let consequence = consequence else {
             Log.trace(label: LOG_TAG, "\(#function) - Cannot create a Local Notification Message object, the consequence is nil.")
             return nil

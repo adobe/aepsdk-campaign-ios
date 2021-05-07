@@ -14,8 +14,8 @@ import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 
-/// TestMessage struct for testing the Message Protocol's default implementation
-struct TestMessage: Message {
+/// TestMessage struct for testing the CampaignMessaging Protocol's default implementation
+struct TestMessage: CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher?
     var consequence: CampaignRuleConsequence?
     var messageId: String?
@@ -28,7 +28,7 @@ struct TestMessage: Message {
         self.state = state
     }
 
-    static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> Message? {
+    static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         guard let consequence = consequence else {
             return nil
         }

@@ -15,7 +15,7 @@ import AEPCore
 import AEPServices
 
 /// Defines Message Protocol for ACS In-App Messages.
-protocol Message {
+protocol CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher? {get set}
     var messageId: String? {get set}
 
@@ -25,7 +25,7 @@ protocol Message {
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Campaign message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> Message?
+    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging?
 
     /// Implemented by the Message subclass to display the message.
     func showMessage()
@@ -35,8 +35,8 @@ protocol Message {
     func shouldDownloadAssets() -> Bool
 }
 
-/// Defines default implementation for common or optional methods within the Message Protocol. These default methods *can* be overriden if desired.
-extension Message {
+/// Defines default implementation for common or optional methods within the CampaignMessaging Protocol. These default methods *can* be overridden if desired.
+extension CampaignMessaging {
     /// Expands the provided tokens in the given input string.
     ///  - Parameters:
     ///    - input: The input string containing tokens to be expanded
