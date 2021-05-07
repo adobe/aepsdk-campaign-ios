@@ -107,7 +107,8 @@ class LocalNotificationMessageTests: XCTestCase {
         messageObject?.showMessage()
         // verify
         let messageTriggeredEvent = dispatchedEvents[0]
-        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+        let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
         let messageInfoEvent = dispatchedEvents[1]
         verifyGenericDataOsEvent(event: messageInfoEvent)
     }
@@ -126,7 +127,8 @@ class LocalNotificationMessageTests: XCTestCase {
         XCTAssertEqual(1, dispatchedEvents.count)
         // verify triggered event
         let messageTriggeredEvent = dispatchedEvents[0]
-        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+        let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
     func testLocalNotificationShowMessageNoDeliveryId() {
@@ -143,7 +145,8 @@ class LocalNotificationMessageTests: XCTestCase {
         XCTAssertEqual(1, dispatchedEvents.count)
         // verify triggered event
         let messageTriggeredEvent = dispatchedEvents[0]
-        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+        let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
     func testLocalNotificationShowMessageMissingContent() {

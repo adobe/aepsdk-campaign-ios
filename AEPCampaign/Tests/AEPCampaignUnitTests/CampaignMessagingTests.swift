@@ -16,7 +16,7 @@ import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 
-class MessageTests: XCTestCase {
+class CampaignMessageTests: XCTestCase {
     var state: CampaignState!
     var hitProcessor: MockHitProcessor!
     var dataQueue: MockDataQueue!
@@ -107,7 +107,8 @@ class MessageTests: XCTestCase {
         messageObject.viewed()
         // verify
         let messageViewedEvent = dispatchedEvents.first
-        verifyCampaignResponseEvent(event: messageViewedEvent, actionType: "viewed", expectedDataSize: 2)
+        let messageParameters = ["event": messageViewedEvent as Any, "actionType": "viewed", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
     func testMessageClicked() {
@@ -115,7 +116,8 @@ class MessageTests: XCTestCase {
         messageObject.clickedThrough()
         // verify
         let messageClickedEvent = dispatchedEvents.first
-        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 2)
+        let messageParameters = ["event": messageClickedEvent as Any, "actionType": "clicked", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
     func testMessageTriggered() {
@@ -123,7 +125,8 @@ class MessageTests: XCTestCase {
         messageObject.triggered()
         // verify
         let messageTriggeredEvent = dispatchedEvents.first
-        verifyCampaignResponseEvent(event: messageTriggeredEvent, actionType: "triggered", expectedDataSize: 2)
+        let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
     func testMessageClickedWithDataHasUrl() {
@@ -131,7 +134,8 @@ class MessageTests: XCTestCase {
         messageObject.clickedWithData(data: ["url": "https://testUrlWithId=messageId"])
         // verify
         let messageClickedEvent = dispatchedEvents.first
-        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 3, additionalData: ["url": "https://testUrlWithId=20761932"])
+        let messageParameters = ["event": messageClickedEvent as Any, "actionType": "clicked", "size": 3] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
     func testMessageClickedWithDataHasGenericData() {
@@ -139,7 +143,8 @@ class MessageTests: XCTestCase {
         messageObject.clickedWithData(data: ["key": "value", "key2": "value2"])
         // verify
         let messageClickedEvent = dispatchedEvents.first
-        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 4, additionalData: ["key": "value", "key2": "value2"])
+        let messageParameters = ["event": messageClickedEvent as Any, "actionType": "clicked", "size": 4] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
     func testMessageClickedWithDataEmptyData() {
@@ -147,6 +152,7 @@ class MessageTests: XCTestCase {
         messageObject.clickedWithData(data: [:])
         // verify
         let messageClickedEvent = dispatchedEvents.first
-        verifyCampaignResponseEvent(event: messageClickedEvent, actionType: "clicked", expectedDataSize: 2)
+        let messageParameters = ["event": messageClickedEvent as Any, "actionType": "clicked", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 }

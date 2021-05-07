@@ -14,7 +14,7 @@ import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 
-/// TestMessage struct for testing the Message Protocol's default implementation
+/// TestMessage struct for testing the CampaignMessaging Protocol's default implementation
 struct TestMessage: CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher?
     var consequence: CampaignRuleConsequence?

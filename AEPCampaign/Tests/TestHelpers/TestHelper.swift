@@ -46,7 +46,11 @@ extension FileManager {
 }
 
 extension XCTest {
-    func verifyCampaignResponseEvent(event: Event?, actionType: String, expectedDataSize: Int, additionalData: [String: String]? = nil) {
+    func verifyCampaignResponseEvent(expectedParameters: [String: Any]) {
+        let event = expectedParameters["event"] as? Event
+        let actionType = expectedParameters["actionType"] as? String ?? ""
+        let expectedDataSize = expectedParameters["size"] as? Int ?? 0
+
         XCTAssertEqual(event?.name, "DataForMessageRequest")
         XCTAssertEqual(event?.type, EventType.campaign)
         XCTAssertEqual(event?.source, EventSource.responseContent)
@@ -54,7 +58,7 @@ extension XCTest {
         XCTAssertEqual(data.count, expectedDataSize)
         XCTAssertEqual(data["messageId"], "20761932")
         XCTAssertEqual(data["a.message.\(actionType)"], "1")
-        if let additionalData = additionalData {
+        if let additionalData = expectedParameters["additionalData"] as? [String: String] {
             for (key, value) in additionalData {
                 XCTAssertEqual(data[key], value)
             }

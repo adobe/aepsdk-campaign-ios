@@ -35,7 +35,7 @@ protocol CampaignMessaging {
     func shouldDownloadAssets() -> Bool
 }
 
-/// Defines default implementation for common or optional methods within the Message Protocol. These default methods *can* be overriden if desired.
+/// Defines default implementation for common or optional methods within the CampaignMessaging Protocol. These default methods *can* be overridden if desired.
 extension CampaignMessaging {
     /// Expands the provided tokens in the given input string.
     ///  - Parameters:
