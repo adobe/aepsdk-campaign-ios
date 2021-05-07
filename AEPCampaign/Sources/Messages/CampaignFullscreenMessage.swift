@@ -20,15 +20,15 @@ class CampaignFullscreenMessage: CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher?
     var messageId: String?
 
-    private let campaignFullscreenMessageDelegate = CampaignFullscreenMessageDelegate()
+    public weak var fullscreenMessageDelegate: FullscreenMessageDelegate?
 
     private var state: CampaignState?
     private var html: String?
     private var assetsPath: String?
     private var extractedAssets: [[String]]?
-    private var isUsingLocalImage: Bool
-    private var fullscreenMessage: FullscreenPresentable?
+    private var isUsingLocalImage = false
     private var messageAssetsDownloader: MessageAssetsDownloader?
+    private var fullscreenMessage: FullscreenPresentable?
 
     /// Campaign Fullscreen Message class initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
@@ -67,7 +67,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     /// replacing assets URLs with cached references, before calling the method to display the message.
     func showMessage() {
         guard let assetsPath = assetsPath, let html = html else {
-            Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot show the fullscreen message, assets path or html is nil.")
+            Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot create the fullscreen message, assets path or html is nil.")
             return
         }
         let htmlLocation = assetsPath + CampaignConstants.Campaign.PATH_SEPARATOR + html
@@ -83,9 +83,10 @@ class CampaignFullscreenMessage: CampaignMessaging {
         } else {
             finalHtml = htmlContent
         }
-        
-        fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: campaignFullscreenMessageDelegate, isLocalImageUsed: isUsingLocalImage)
-        fullscreenMessage?.show()
+        DispatchQueue.main.async {
+            self.fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
+            self.fullscreenMessage?.show()
+        }
     }
 
     // Returns true as the Campaign Fullscreen Message class should download assets
@@ -196,7 +197,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         guard let data = fileManager.contents(atPath: filePath) else {
             return nil
         }
-        return String(decoding: data, as: UTF8.self)
+        return String(data: data, encoding: .utf8)
     }
 
     private func generateExpandedHtml(sourceHtml: String) -> String {
