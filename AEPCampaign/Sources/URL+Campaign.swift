@@ -17,7 +17,6 @@ extension URL {
 
     private static let LOG_TAG = "URL+Campaign"
 
-
     /// Builds the `URL` responsible for sending a Campaign registration request
     /// - Parameters:
     ///    - campaignServer: Campaign server

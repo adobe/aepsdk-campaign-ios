@@ -27,23 +27,27 @@ struct CampaignRulesDownloader {
     private let fileUnzipper: Unzipping
     private let cache: Cache
     private let rulesEngine: LaunchRulesEngine
+    private let campaignMessageAssetsCache: CampaignMessageAssetsCache?
 
-    init(fileUnzipper: Unzipping, ruleEngine: LaunchRulesEngine) {
+    init(fileUnzipper: Unzipping, ruleEngine: LaunchRulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache? = nil) {
         self.fileUnzipper = fileUnzipper
         cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
         self.rulesEngine = ruleEngine
+        self.campaignMessageAssetsCache = campaignMessageAssetsCache
     }
 
     ///Load the Cached Campaign rules into Rules engine.
     /// - Parameters:
     ///   - rulesUrlString: The String representation of the URL used for downloading the rules.
-    func loadRulesFromCache(rulesUrlString: String) {        
+    func loadRulesFromCache(rulesUrlString: String) {
         guard let cachedRules = getCachedRules(rulesUrl: rulesUrlString) else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to load Campaign cached rules for URL (\(rulesUrlString)")
             return
         }
 
-        loadRulesIntoRulesEngine(data: cachedRules.cacheable)
+        if let rules = JSONRulesParser.parse(cachedRules.cacheable) {
+            rulesEngine.replaceRules(with: rules)
+        }
     }
 
     ///Download the Campaign rules from the passed `rulesUrl`, caches them and load them into the Rules engine.
@@ -58,8 +62,8 @@ struct CampaignRulesDownloader {
             headers = cachedRules.notModifiedHeaders()
         }
         if let linkageFieldHeaders = linkageFieldHeaders {
-            for (key, value) in linkageFieldHeaders {
-                headers[key] = value
+            headers.merge(linkageFieldHeaders) { _, newValue in
+                newValue
             }
         }
 
@@ -87,11 +91,11 @@ struct CampaignRulesDownloader {
                 let hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
 
                 if hasRulesCached {
-                    state?.updateRuleUrlInDataStore(rulesUrl: url.absoluteString)
+                    state?.updateRuleUrlInDataStore(url: url.absoluteString)
                 } else {
                     Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
                 }
-                self.loadRulesIntoRulesEngine(data: data)
+                onPostRulesDownload(data: data)
                 return
             case let .failure(error):
                 Log.warning(label: self.LOG_TAG, error.localizedDescription)
@@ -100,11 +104,32 @@ struct CampaignRulesDownloader {
         }
     }
 
-    ///Replaces the existing rules with the new Collection of rules in Rules Engine.
-    private func loadRulesIntoRulesEngine(data: Data) {
+    private func onPostRulesDownload(data: Data) {
         if let rules = JSONRulesParser.parse(data) {
             rulesEngine.replaceRules(with: rules)
+            downloadMessageAssets(rules:rules)
         }
+    }
+
+    private func downloadMessageAssets(rules: [LaunchRule]) {
+        var messageIdsWithAssets = [String]()
+        for rule in rules {
+            for consequence in rule.consequences {
+                if consequence.hasAssetsToDownload() {
+                    messageIdsWithAssets.append(consequence.id)
+                    if let assetsUrl = consequence.createAssetUrlArray(), !assetsUrl.isEmpty {
+                        campaignMessageAssetsCache?.downloadAssetsForMessage(from: assetsUrl, messageId: consequence.id)
+                    }
+                }
+            }
+        }
+
+        clearCachedMessageAssets(except: messageIdsWithAssets)
+    }
+
+    private func clearCachedMessageAssets(except messageIds: [String]) {
+        campaignMessageAssetsCache?.clearCachedAssetsForMessagesNotInList(filesToRetain: messageIds, pathRelativeToCacheDir: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)
+
     }
 
     /// Stores the requested rules.zip data in a temp directory
@@ -184,5 +209,37 @@ struct CampaignRulesDownloader {
             return nil
         }
         return try? JSONDecoder().decode(CampaignCachedRules.self, from: cachedEntry.data)
+    }
+}
+
+private extension RuleConsequence {
+
+    func hasAssetsToDownload() -> Bool {
+        guard type == CampaignConstants.Campaign.IAM_CONSEQUENCE_TYPE else {
+            return false
+        }
+
+        guard details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TEMPLATE] as? String == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN else {
+            return false
+        }
+
+        guard details.keys.contains(CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_REMOTE_ASSETS) else {
+            return false
+        }
+
+        return true
+    }
+
+    func createAssetUrlArray() -> [String]? {
+        guard let assetsArray = details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_REMOTE_ASSETS] as? [[String]]  else {
+            return nil
+        }
+        var assetsToDownload: [String] = []
+        for assets in assetsArray {
+            for asset in assets {
+                assetsToDownload.append(asset)
+            }
+        }
+        return assetsToDownload
     }
 }

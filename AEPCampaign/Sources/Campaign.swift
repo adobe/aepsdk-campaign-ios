@@ -23,7 +23,7 @@ public class Campaign: NSObject, Extension {
     public var metadata: [String: String]?
     public let runtime: ExtensionRuntime
     var state: CampaignState?
-    typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String:Any]?) -> Void
+    typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String: Any]?) -> Void
     let dispatchQueue: DispatchQueue    
     private var hasCachedRulesLoaded = false
     private var rulesEngine: LaunchRulesEngine
@@ -150,18 +150,30 @@ public class Campaign: NSObject, Extension {
         }
 
         if state?.privacyStatus == PrivacyStatus.optedIn {
-            dispatchQueue.async { [weak self] in
-                //Download rules from the remote URL and cache them.
-                guard let self = self, let url = self.state?.campaignRulesDownloadUrl else {return}
-                let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
-                var linkageFieldsHeader: [String: String]? = nil
-                if let linkageFields = self.linkageFields {
-                    linkageFieldsHeader = [
-                        CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
-                    ]
-                }
-                campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
+//            let fakeUrl = URL(string: "https://assets.adobedtm.com/94f571f308d5/0d8e122e1a29/launch-dad327eb0536-development-rules.zip")
+//            var campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
+//            campaignRulesDownloader.loadRulesFromUrl(rulesUrl: fakeUrl!, linkageFieldHeaders: nil, state: self.state)
+            triggerRulesDownload()
+        }
+    }
+
+    ///Triggers the rules downloading and caching.
+    private func triggerRulesDownload() {
+        dispatchQueue.async { [weak self] in
+            //Download rules from the remote URL and cache them.
+            guard let self = self else {return}
+            guard let url = self.state?.campaignRulesDownloadUrl else {
+                Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
+                return
             }
+            let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache())
+            var linkageFieldsHeader: [String: String]?
+            if let linkageFields = self.linkageFields {
+                linkageFieldsHeader = [
+                    CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
+                ]
+            }
+            campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
         }
     }
 

@@ -20,6 +20,7 @@
 		3D46573F2637739D00BFC421 /* CampaignCachedRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */; };
 		3D4657402637739D00BFC421 /* CampaignCacheable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46573E2637739D00BFC421 /* CampaignCacheable.swift */; };
 		3D4657A2263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657A1263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift */; };
+		3D4657D426449FA900BFC421 /* CampaignMessageAssetsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */; };
 		8A9D4CA692408E3DBBA8B6FA /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2FBA1F7C667F55AD84258E5 /* Pods_CampaignTester.framework */; };
 		911F095B87226D3F5216C5E1 /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37ECDE62E1223B4A3818D037 /* Pods_AEPCampaign.framework */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
@@ -101,6 +102,7 @@
 		3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCachedRules.swift; sourceTree = "<group>"; };
 		3D46573E2637739D00BFC421 /* CampaignCacheable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCacheable.swift; sourceTree = "<group>"; };
 		3D4657A1263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRuleDownloaderUnitTests.swift; sourceTree = "<group>"; };
+		3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMessageAssetsCache.swift; sourceTree = "<group>"; };
 		7D22E9581FEE591DC2126C40 /* Pods-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
 		7D92187EE8EA1A743E737070 /* Pods-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9ED586E526A9EF0EB2F5E824 /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 		3D10A61B262581AD0049BDA1 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3D4657D226449D1200BFC421 /* assets */,
 				3D4657162633813800BFC421 /* rules */,
 				3D10A5F8262581650049BDA1 /* AEPCampaign.h */,
 				3D10A5F9262581650049BDA1 /* Info.plist */,
@@ -295,6 +298,14 @@
 				3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */,
 			);
 			path = rules;
+			sourceTree = "<group>";
+		};
+		3D4657D226449D1200BFC421 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */,
+			);
+			path = assets;
 			sourceTree = "<group>";
 		};
 		D6E824392628A9640092C7DE /* TestHelpers */ = {
@@ -681,6 +692,7 @@
 				D6E823E22627617F0092C7DE /* CampaignHit.swift in Sources */,
 				3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */,
 				D6577E1A262DFFA9008F0528 /* HitQueuing+Campaign.swift in Sources */,
+				3D4657D426449FA900BFC421 /* CampaignMessageAssetsCache.swift in Sources */,
 				D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -228,8 +228,14 @@ class CampaignState {
     }
 
     ///Persist the rules url in data store
-    func updateRuleUrlInDataStore(rulesUrl: String) {
-        dataStore.set(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY, value: rulesUrl)
+    func updateRuleUrlInDataStore(url: String?) {
+        guard let url = url else {
+            Log.trace(label: LOG_TAG, "\(#function) - Removing Rules URL from the data store.")
+            dataStore.remove(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY)
+            return
+        }
+
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY, value: url)
     }
 
     ///Retrieves the rules url from the data store
