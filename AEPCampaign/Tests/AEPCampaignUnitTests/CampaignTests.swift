@@ -33,7 +33,8 @@ class CampaignTests: XCTestCase {
         hitProcessor = MockHitProcessor()
         hitProcessor.processResult = true
         hitQueue = PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
-        state = CampaignState(hitQueue: hitQueue)
+        state = CampaignState()
+        state.hitQueue = hitQueue
 
         networking = MockNetworking()
         ServiceProvider.shared.networkService = networking
@@ -264,19 +265,6 @@ class CampaignTests: XCTestCase {
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
-    func testGenericDataOSEventNoNetworkRequestWhenCampaignStateIsNil() {
-
-        //Setup
-        campaign.state = nil
-        let event = Event(name: "Generic Data OS event", type: EventType.genericData, source: EventSource.os, data: [String: Any]())
-
-        //Action
-        extensionRuntime.simulateComingEvents(event)
-
-        //Assert
-        XCTAssertEqual(networking.cachedNetworkRequests.count, 0)
-    }
-
     // MARK: Lifecycle Response event (Registration) tests
     func testLifecycleResponseEventTriggersCampaignRegistrationRequest() {
         // setup
@@ -411,7 +399,7 @@ class CampaignTests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
         // the hit should be queued
-        XCTAssert(state.hitQueue.count() == 1)
+        XCTAssert(hitQueue.count() == 1)
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenThereIsNoECIDInSharedState() {
@@ -429,19 +417,6 @@ class CampaignTests: XCTestCase {
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
 
         state.update(dataMap: sharedStates)
-        extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
-
-        // verify
-        Thread.sleep(forTimeInterval: 0.5)
-        XCTAssert(hitProcessor.processedEntities.count == 0)
-    }
-
-    func testLifecycleResponseEventNoCampaignRegistrationRequestWhenCampaignStateIsNil() {
-        // setup
-        campaign.state = nil
-        // test
-        let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
-
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify

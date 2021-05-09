@@ -68,7 +68,7 @@ struct CampaignView: View {
                         Text("Notification Testing").bold()
 
                         Button(action: {
-                            extensionVersion = Campaign.extensionVersion
+                            self.extensionVersion = Campaign.extensionVersion
                         }
                         ) {
                             Text("Extension Version")
@@ -94,7 +94,12 @@ struct CampaignView: View {
                         }.cornerRadius(5)
 
                         Button(action: {
-                            // trigger local
+                            let localDetailDictionary = ["title": "ACS Local Notification Test", "content": "This is some demo text 🌊☄️", "wait": TimeInterval(3), "userData": ["broadlogId": "h1cbf60",
+                                                                                                                                                                               "deliveryId": "154767c"], "template": "local"] as [String: Any]
+                            let localConsequence = ["id": UUID().uuidString, "type": "iam", "assetsPath": nil, "detail": localDetailDictionary] as [String: Any?]
+                            let data = ["triggeredconsequence": localConsequence]
+                            let event = Event(name: "rules trigger local notification", type: EventType.campaign, source: EventSource.requestContent, data: data)
+                            MobileCore.dispatch(event: event)
                         }
                         ) {
                             Text("Trigger local notification")

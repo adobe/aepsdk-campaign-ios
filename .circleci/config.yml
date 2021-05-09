@@ -16,7 +16,11 @@ jobs:
 
   build-and-test:
     macos:
+<<<<<<< HEAD
       xcode: 11.4.1 # Specify the Xcode version to use
+=======
+      xcode: 11.6.0 # Specify the Xcode version to use
+>>>>>>> 8a0ea2190ac1a879ee83b8471d14f6e95c68363f
 
     steps:
       - checkout

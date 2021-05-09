@@ -13,12 +13,16 @@
 import Foundation
 import AEPServices
 
-/// A Type that downloads and caches the Assets(images) associated with a Fullscreen IAM.
+///A Type that downloads and caches the Assets(images) associated with a Fullscreen IAM.
 struct CampaignMessageAssetsCache {
 
     private let LOG_PREFIX = "CampaignMessageAssetsCache"
     let fileManager = FileManager.default
 
+    ///Download and Caches the Assets for a given messageId.
+    ///- Parameters:
+    ///  - urls: An array of URL of Assets
+    ///  - messageId: The id of the message
     func downloadAssetsForMessage(from urls: [String], messageId: String) {
         var assetsToRetain: [URL] = []
         for urlString in urls {
@@ -34,6 +38,7 @@ struct CampaignMessageAssetsCache {
         downloadAssets(urls: assetsToRetain, messageId: messageId)
     }
 
+    ///Iterate over the URL's array and triggers the download Network request
     private func downloadAssets(urls: [URL], messageId: String) {
         let networking = ServiceProvider.shared.networkService
         for url in urls {
@@ -47,6 +52,11 @@ struct CampaignMessageAssetsCache {
         }
     }
 
+    ///Caches the downloaded `Data` for Assets
+    /// - Parameters:
+    ///  - data: The downloaded `Data`
+    ///  - forKey: The Asset download URL. Used to name cache folder.
+    ///  - messageId: The id of message
     private func cacheAssetData(_ data: Data, forKey url: URL, messageId: String) {
         guard let path = createDirectoryIfNeeded(messageId: messageId) else {
             Log.debug(label: LOG_PREFIX, "Unable to cache Asset for URL: (\(url). Unable to create cache directory.")
@@ -66,6 +76,10 @@ struct CampaignMessageAssetsCache {
         }
     }
 
+    ///Deletes all the files in `pathRelativeToCacheDir` that are not present in `filesToRetain` array. This is used to delete the cached assets that are no longer required.
+    /// - Parameters:
+    ///   - filesToRetain: An array of file names that have to retain.
+    ///   - pathRelativeToCacheDir: The path of cache directory relative to `Library/Cache`
     func clearCachedAssetsForMessagesNotInList(filesToRetain: [String], pathRelativeToCacheDir: String) {
         let fileManager = FileManager.default
         guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
@@ -86,6 +100,7 @@ struct CampaignMessageAssetsCache {
     }
 
     /// Creates the directory to store the cache if it does not exist
+    /// - Parameters messageId: The message Id
     /// - Returns the Path to the Message Cache folder, Returns nil if cache folder does not exist and unable to create
     private func createDirectoryIfNeeded(messageId: String) -> String? {
         guard let pathUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
@@ -108,6 +123,7 @@ struct CampaignMessageAssetsCache {
 
 private extension String {
 
+    ///Removes non alphanumeric character from `String`
     var alphanumeric: String {
         return components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
     }

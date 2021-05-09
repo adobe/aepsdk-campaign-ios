@@ -104,13 +104,15 @@ struct CampaignRulesDownloader {
         }
     }
 
+    ///Called after downloading the Campaign rules. Loads the rules into rules engine and triggers Message Assets download for FullScreen IAM.
     private func onPostRulesDownload(data: Data) {
         if let rules = JSONRulesParser.parse(data) {
             rulesEngine.replaceRules(with: rules)
-            downloadMessageAssets(rules:rules)
+            downloadMessageAssets(rules: rules)
         }
     }
 
+    ///Downloads the Assets for fullscreen IAM
     private func downloadMessageAssets(rules: [LaunchRule]) {
         var messageIdsWithAssets = [String]()
         for rule in rules {
@@ -127,6 +129,7 @@ struct CampaignRulesDownloader {
         clearCachedMessageAssets(except: messageIdsWithAssets)
     }
 
+    ///Triggers removal of existing cached Assets, that are no more required.
     private func clearCachedMessageAssets(except messageIds: [String]) {
         campaignMessageAssetsCache?.clearCachedAssetsForMessagesNotInList(filesToRetain: messageIds, pathRelativeToCacheDir: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)
 
@@ -214,6 +217,8 @@ struct CampaignRulesDownloader {
 
 private extension RuleConsequence {
 
+    ///Determines if the RuleConsequence have assets to download
+    /// - Returns true if there are assets for downloading
     func hasAssetsToDownload() -> Bool {
         guard type == CampaignConstants.Campaign.IAM_CONSEQUENCE_TYPE else {
             return false
@@ -230,6 +235,8 @@ private extension RuleConsequence {
         return true
     }
 
+    ///Parses the value for `assets` key in Rule Consequence and return an array of assets URL that need to be cached.
+    /// - Returns An array of assets URL that need to be downloaded and cached
     func createAssetUrlArray() -> [String]? {
         guard let assetsArray = details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_REMOTE_ASSETS] as? [[String]]  else {
             return nil
