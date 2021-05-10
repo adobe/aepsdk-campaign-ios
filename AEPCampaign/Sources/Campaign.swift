@@ -128,23 +128,6 @@ public class Campaign: NSObject, Extension {
         dispatch(event: event)
     }
 
-    /// Invoked by the `CampaignHitProcessor` each time we successfully send a Campaign network request.
-    /// - Parameter hit: The `CampaignHit` which was successfully sent
-    private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
-        state.updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
-    }
-
-    /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
-    private func setupHitQueue() -> HitQueuing? {
-        guard let dataQueue = ServiceProvider.shared.dataQueueService.getDataQueue(label: name) else {
-            Log.error(label: LOG_TAG, "\(#function) - Failed to create PersistentHitQueue, Campaign could not be initialized")
-            return nil
-        }
-
-        let hitProcessor = CampaignHitProcessor(timeout: TimeInterval(CampaignConstants.Campaign.DEFAULT_TIMEOUT), responseHandler: handleSuccessfulNetworkRequest(hit:))
-        return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
-    }
-
     ///Updates the `CampaignState` with the shared state of other required extensions
     private func updateCampaignState(event: Event) {
         var sharedStates = [String: [String: Any]?]()

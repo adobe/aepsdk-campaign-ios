@@ -46,7 +46,7 @@ struct CampaignMessageAssetsCache {
         for url in urls {
             let networkRequest = NetworkRequest(url: url, httpMethod: .get)
             networking.connectAsync(networkRequest: networkRequest) { httpConnection in
-                dispatchQueue.async {
+                self.dispatchQueue.async {
                     guard httpConnection.responseCode == 200, let data = httpConnection.data else {
                         Log.debug(label: self.LOG_PREFIX, "\(#function) - Failed to download Asset from URL: \(url)")
                         return

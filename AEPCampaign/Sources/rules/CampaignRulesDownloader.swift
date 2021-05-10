@@ -71,7 +71,7 @@ struct CampaignRulesDownloader {
 
         let networkRequest = NetworkRequest(url: rulesUrl, httpMethod: .get, httpHeaders: headers)
         ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) { httpConnection in
-            dispatchQueue?.async {
+            self.dispatchQueue?.async {
                 if httpConnection.responseCode == 304 {
                     Log.debug(label: self.LOG_TAG, "\(#function) - Returning early without loading Campaign rules. Rules hasn't changed on server.")
                     return
