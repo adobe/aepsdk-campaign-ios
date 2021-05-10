@@ -37,8 +37,7 @@ struct CampaignRulesDownloader {
     }
 
     ///Load the Cached Campaign rules into Rules engine.
-    /// - Parameters:
-    ///   - rulesUrlString: The String representation of the URL used for downloading the rules.
+    /// - Parameter rulesUrlString: The String representation of the URL used for downloading the rules.
     func loadRulesFromCache(rulesUrlString: String) {
         guard let cachedRules = getCachedRules(rulesUrl: rulesUrlString) else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to load Campaign cached rules for URL (\(rulesUrlString)")
@@ -47,6 +46,7 @@ struct CampaignRulesDownloader {
 
         if let rules = JSONRulesParser.parse(cachedRules.cacheable) {
             rulesEngine.replaceRules(with: rules)
+            Log.trace(label: LOG_TAG, "\(#function) - Successfully updated Campaign rules in Rules engine after reading from cache")
         }
     }
 
@@ -55,7 +55,7 @@ struct CampaignRulesDownloader {
     ///   - rulesUrl: The `URL` for downloading the Campaign rules.
     ///   - linkageFieldHeaders: The header with `linkageField` value
     ///   - state: Instance of `CampaignState` for storing rules download URL
-    func loadRulesFromUrl(rulesUrl: URL, linkageFieldHeaders: [String: String]?, state: CampaignState?) {
+    func loadRulesFromUrl(rulesUrl: URL, linkageFieldHeaders: [String: String]?, state: CampaignState) {
         /// 304 - Not Modified support
         var headers = [String: String]()
         if let cachedRules = getCachedRules(rulesUrl: rulesUrl.absoluteString) {
@@ -70,17 +70,20 @@ struct CampaignRulesDownloader {
         let networkRequest = NetworkRequest(url: rulesUrl, httpMethod: .get, httpHeaders: headers)
         ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) {httpConnection in
             if httpConnection.responseCode == 304 {
+                Log.debug(label: self.LOG_TAG, "\(#function) - Returning early without loading Campaign rules. Rules hasn't changed on server.")
                 return
             }
 
             guard let data = httpConnection.data else {
+                Log.debug(label: self.LOG_TAG, "\(#function) - Unable to load rules. Data in HTTP response is nil.")
                 return
             }
             // Store Zip file in temp directory for unzipping
             switch self.storeDataInTempDirectory(data: data) {
             case let .success(url):
-                // Unzip the rules.json and assets from the zip file in to the cache directory. Get the rules dict from the rules.json file.
+                // Unzip the rules.json and assets from the zip file in to the cache directory. Get the rules Data from the rules.json file.
                 guard let data = self.unzipRules(at: url) else {
+                    Log.debug(label: self.LOG_TAG, "\(#function) - Failed to unzip downloaded rules.")
                     return
                 }
                 let cachedRules = CampaignCachedRules(cacheable: data,
@@ -91,7 +94,7 @@ struct CampaignRulesDownloader {
                 let hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
 
                 if hasRulesCached {
-                    state?.updateRuleUrlInDataStore(url: url.absoluteString)
+                    state.updateRuleUrlInDataStore(url: url.absoluteString)
                 } else {
                     Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
                 }
@@ -108,6 +111,7 @@ struct CampaignRulesDownloader {
     private func onPostRulesDownload(data: Data) {
         if let rules = JSONRulesParser.parse(data) {
             rulesEngine.replaceRules(with: rules)
+            Log.trace(label: LOG_TAG, "\(#function) - Successfully updated Campaign rules in Rules engine after downloading from remote")
             downloadMessageAssets(rules: rules)
         }
     }
@@ -156,7 +160,7 @@ struct CampaignRulesDownloader {
 
     /// Unzips the rules at the source url to a destination url and returns the rules as a dictionary
     /// - Parameter source: source URL for the zip file
-    /// - Returns: The unzipped rules as a dictionary
+    /// - Returns: The unzipped rules as a `Data`
     private func unzipRules(at source: URL) -> Data? {
         guard let cachedDir = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
             return nil

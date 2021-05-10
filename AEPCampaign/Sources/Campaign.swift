@@ -99,12 +99,11 @@ public class Campaign: NSObject, Extension {
 
     ///Handles events of type `Configuration`
     private func handleConfigurationEvents(event: Event) {
-        var sharedStates = [String: [String: Any]?]()
-        for extensionName in dependencies {
-            sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
+        let oldPrivacyStatus = state.privacyStatus
+        updateCampaignState(event: event)
+        if state.privacyStatus != oldPrivacyStatus {
+            handlePrivacyStatusChange()
         }
-        state.update(dataMap: sharedStates)
-        handlePrivacyStatusChange()
     }
 
     /// Handles `Shared state` update events
@@ -146,7 +145,16 @@ public class Campaign: NSObject, Extension {
         return PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
     }
 
-    ///Handles the privacy status change
+    ///Updates the `CampaignState` with the shared state of other required extensions
+    private func updateCampaignState(event: Event){
+        var sharedStates = [String: [String: Any]?]()
+        for extensionName in dependencies {
+            sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
+        }
+        state.update(dataMap: sharedStates)
+    }
+
+    ///Handles the privacy status
     private func handlePrivacyStatusChange() {
         if state.privacyStatus == .optedOut {
             // handle opt out
@@ -170,7 +178,7 @@ public class Campaign: NSObject, Extension {
                 Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
                 return
             }
-            let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache())            
+            let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache())
             var linkageFieldsHeader: [String: String]?
             if let linkageFields = self.linkageFields {
                 linkageFieldsHeader = [
@@ -186,7 +194,11 @@ public class Campaign: NSObject, Extension {
         if !hasCachedRulesLoaded {
             Log.trace(label: LOG_TAG, "\(#function) - Attempting to load the Cached Campaign Rules.")
             dispatchQueue.async { [weak self] in
-                guard let self = self, let urlString = self.state.getRulesUrlFromDataStore() else {return}
+                guard let self = self else {return}
+                guard let urlString = self.state.getRulesUrlFromDataStore() else {
+                    Log.debug(label: self.LOG_TAG , "\(#function) - Unable to load cached rules. Couldn't get valid rules URL from Datastore")
+                    return
+                }
                 let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
                 campaignRulesDownloader.loadRulesFromCache(rulesUrlString: urlString)
                 self.hasCachedRulesLoaded = true

@@ -24,6 +24,7 @@ struct CampaignMessageAssetsCache {
     ///  - urls: An array of URL of Assets
     ///  - messageId: The id of the message
     func downloadAssetsForMessage(from urls: [String], messageId: String) {
+        Log.trace(label: LOG_PREFIX, "\(#function) - Will attempt to download assets for Message (\(messageId) from URLs: \(urls)")
         var assetsToRetain: [URL] = []
         for urlString in urls {
             guard let url = URL(string: urlString) else {
@@ -44,7 +45,8 @@ struct CampaignMessageAssetsCache {
         for url in urls {
             let networkRequest = NetworkRequest(url: url, httpMethod: .get)
             networking.connectAsync(networkRequest: networkRequest) { httpConnection in
-                guard let data = httpConnection.data else {
+                guard httpConnection.responseCode == 200, let data = httpConnection.data else {
+                    Log.debug(label: self.LOG_PREFIX, "\(#function) - Failed in downloading Asset from URL: \(url)")
                     return
                 }
                 cacheAssetData(data, forKey: url, messageId: messageId)
@@ -70,9 +72,9 @@ struct CampaignMessageAssetsCache {
 
         do {
             try data.write(to: cachedAssetPath)
-            Log.trace(label: LOG_PREFIX, "Successfully cached file from URL: (\(url)")
+            Log.trace(label: LOG_PREFIX, "Successfully cached Asset for URL: (\(url)")
         } catch {
-            Log.debug(label: LOG_PREFIX, "Unable to cache Asset for URL: (\(url). Unable to write data to file Path.")
+            Log.debug(label: LOG_PREFIX, "Unable to cache Asset for URL: (\(url). Unable to write data to file path.")
         }
     }
 
@@ -81,7 +83,7 @@ struct CampaignMessageAssetsCache {
     ///   - filesToRetain: An array of file names that have to retain.
     ///   - pathRelativeToCacheDir: The path of cache directory relative to `Library/Cache`
     func clearCachedAssetsForMessagesNotInList(filesToRetain: [String], pathRelativeToCacheDir: String) {
-        let fileManager = FileManager.default
+        Log.trace(label:LOG_PREFIX, "\(#function) - Attempt to delete the Non required cached assets from directory \(pathRelativeToCacheDir)")
         guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
             return
         }
@@ -93,9 +95,10 @@ struct CampaignMessageAssetsCache {
             !filesToRetain.contains(cachedFile)
         }
 
-        // MARK: Delete non required cached files for message
+        // MARK: Delete non required cached files for the message
         assetsToDelete.forEach { fileName in
             try? fileManager.removeItem(atPath: "\(cacheDir.absoluteString)/\(fileName)")
+            Log.debug(label: LOG_PREFIX, "\(#function) - Deleted the non required cached asset from path: \(cacheDir.absoluteString)/\(fileName)")
         }
     }
 
@@ -103,19 +106,22 @@ struct CampaignMessageAssetsCache {
     /// - Parameters messageId: The message Id
     /// - Returns the Path to the Message Cache folder, Returns nil if cache folder does not exist and unable to create
     private func createDirectoryIfNeeded(messageId: String) -> String? {
-        guard let pathUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
+        guard let cacheUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
+            Log.debug(label: LOG_PREFIX, "\(#function) - \(#function) - Failed to retrieve cache directory URL.")
             return nil
         }
-        let pathString = "\(pathUrl.absoluteString)/\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)"
+        let pathString = "\(cacheUrl.absoluteString)/\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)"
         guard !fileManager.fileExists(atPath: pathString) else {
+            Log.trace(label: LOG_PREFIX, "\(#function) - Assets cache directory for message \(messageId) already exists.")
             return pathString
         }
 
-        Log.trace(label: LOG_PREFIX, "Attempting to create directory at path '\(pathString)'")
+        Log.trace(label: LOG_PREFIX, "\(#function) - Attempting to create Assets cache directory for message \(messageId) at path: \(pathString)")
         do {
             try fileManager.createDirectory(atPath: pathString, withIntermediateDirectories: true,attributes: nil)
             return pathString
         } catch {
+            Log.trace(label: LOG_PREFIX, "\(#function) - Error in creating Assets cache directory for message \(messageId) at path: \(pathString).")
             return nil
         }
     }

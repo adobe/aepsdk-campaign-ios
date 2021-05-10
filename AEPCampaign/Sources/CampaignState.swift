@@ -84,7 +84,7 @@ class CampaignState {
         }
         self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
 
-        if let mciasServer = campaignMciasServer, let campaignServer = campaignServer, let propertyId = campaignPropertyId, let ecid = ecid{
+        if let mciasServer = campaignMciasServer, let campaignServer = campaignServer, let propertyId = campaignPropertyId, let ecid = ecid {
             campaignRulesDownloadUrl = URL.getRulesDownloadUrl(mciasServer: mciasServer, campaignServer: campaignServer, propertyId: propertyId, ecid: ecid)
         } else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to create Campaign Rules download URL. Required Configuration is missing.")
@@ -239,7 +239,7 @@ class CampaignState {
     ///Persist the rules url in data store
     func updateRuleUrlInDataStore(url: String?) {
         guard let url = url else {
-            Log.trace(label: LOG_TAG, "\(#function) - Removing Rules URL from the data store.")
+            Log.trace(label: LOG_TAG, "\(#function) - Updated URL is nil. Removing Rules URL from the data store.")
             dataStore.remove(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY)
             return
         }
