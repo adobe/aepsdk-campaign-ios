@@ -4,29 +4,29 @@ use_frameworks!
 project 'AEPCampaign.xcodeproj'
 
 target 'AEPCampaign' do
-  pod 'AEPCore'
-  pod 'AEPServices'
-  pod 'AEPIdentity'
+  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+  pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
   pod 'AEPRulesEngine'
 end
 
 target 'AEPCampaignUnitTests' do
-  pod 'AEPCore'
-  pod 'AEPServices'
+  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
   pod 'AEPRulesEngine'
 end
 
 target 'AEPCampaignFunctionalTests' do
-  pod 'AEPCore'
-  pod 'AEPServices'
+  pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+  pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
   pod 'AEPRulesEngine'
 end
 
 target 'CampaignTester' do
-   pod 'AEPCore'
-   pod 'AEPServices'
+   pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+   pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
    pod 'AEPRulesEngine'
-   pod 'AEPIdentity'
-   pod 'AEPLifecycle'
+   pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+   pod 'AEPLifecycle', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
 end
 

@@ -52,7 +52,6 @@
 		D6B2F0112634B3F000747CFE /* MockExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F00F2634B3F000747CFE /* MockExtension.swift */; };
 		D6B2F0162634B46200747CFE /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F0152634B46200747CFE /* TestHelper.swift */; };
 		D6B2F0172634B46200747CFE /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F0152634B46200747CFE /* TestHelper.swift */; };
-		D6B2F0292637445D00747CFE /* CampaignRuleConsequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F0282637445D00747CFE /* CampaignRuleConsequence.swift */; };
 		D6B2F02E2637786D00747CFE /* LocalNotificationMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */; };
 		D6B2F04E26386EB100747CFE /* CampaignMessaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B2F04D26386EB100747CFE /* CampaignMessaging.swift */; };
 		D6B405AC263B801B002814FC /* CampaignMessagingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B405AB263B801B002814FC /* CampaignMessagingTests.swift */; };
@@ -68,7 +67,6 @@
 		D6B40610263C99F0002814FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6B4060E263C99EF002814FC /* LaunchScreen.storyboard */; };
 		D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */; };
 		D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */; };
-		D6B406BD264316A7002814FC /* MessageAssetsDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B406BC264316A7002814FC /* MessageAssetsDownloader.swift */; };
 		D6B407102643921E002814FC /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
 		D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823B8262616E90092C7DE /* CampaignState.swift */; };
 		D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823BA262616F80092C7DE /* CampaignStateTests.swift */; };
@@ -185,7 +183,6 @@
 		D6577E32262F6E12008F0528 /* MockNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworking.swift; sourceTree = "<group>"; };
 		D6B2F00F2634B3F000747CFE /* MockExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExtension.swift; sourceTree = "<group>"; };
 		D6B2F0152634B46200747CFE /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
-		D6B2F0282637445D00747CFE /* CampaignRuleConsequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRuleConsequence.swift; sourceTree = "<group>"; };
 		D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessage.swift; sourceTree = "<group>"; };
 		D6B2F04D26386EB100747CFE /* CampaignMessaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMessaging.swift; sourceTree = "<group>"; };
 		D6B405AB263B801B002814FC /* CampaignMessagingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMessagingTests.swift; sourceTree = "<group>"; };
@@ -201,7 +198,6 @@
 		D6B40611263C99F0002814FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessage.swift; sourceTree = "<group>"; };
 		D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessageDelegate.swift; sourceTree = "<group>"; };
-		D6B406BC264316A7002814FC /* MessageAssetsDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAssetsDownloader.swift; sourceTree = "<group>"; };
 		D6B406C3264347C3002814FC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		D6B406D52643638D002814FC /* CampaignTester.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CampaignTester.entitlements; sourceTree = "<group>"; };
 		D6E823B8262616E90092C7DE /* CampaignState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
@@ -401,7 +397,6 @@
 				D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */,
 				D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */,
 				D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */,
-				D6B406BC264316A7002814FC /* MessageAssetsDownloader.swift */,
 			);
 			path = messages;
 			sourceTree = "<group>";
@@ -409,7 +404,6 @@
 		D6B2F0242637444600747CFE /* rules */ = {
 			isa = PBXGroup;
 			children = (
-				D6B2F0282637445D00747CFE /* CampaignRuleConsequence.swift */,
 				D64732142645C7DE0065A992 /* CampaignCachedRules.swift */,
 				D647321B2645C9C60065A992 /* CampaignCacheable.swift */,
 			);
@@ -866,11 +860,9 @@
 				D647321C2645C9C60065A992 /* CampaignCacheable.swift in Sources */,
 				D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */,
 				D6B2F04E26386EB100747CFE /* CampaignMessaging.swift in Sources */,
-				D6B2F0292637445D00747CFE /* CampaignRuleConsequence.swift in Sources */,
 				D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */,
 				D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */,
 				D64732152645C7DF0065A992 /* CampaignCachedRules.swift in Sources */,
-				D6B406BD264316A7002814FC /* MessageAssetsDownloader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

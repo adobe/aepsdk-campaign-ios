@@ -26,16 +26,15 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var html: String?
     private var extractedAssets: [[String]]?
     private var isUsingLocalImage = false
-    private var messageAssetsDownloader: MessageAssetsDownloader?
     private var fullscreenMessage: FullscreenPresentable?
     private let rulesCache = Cache(name: "rules.cache")
 
     /// Campaign Fullscreen Message class initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
-    ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
+    ///    - consequence: `RuleConsequence` containing a Message-defining payload
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
-    private init(consequence: CampaignRuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
+    private init(consequence: RuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
         self.messageId = consequence.id
         self.eventDispatcher = eventDispatcher
         self.state = state
@@ -45,11 +44,11 @@ class CampaignFullscreenMessage: CampaignMessaging {
 
     /// Creates a `CampaignFullscreenMessage` object
     ///  - Parameters:
-    ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
+    ///    - consequence: `RuleConsequence` containing a Message-defining payload
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
+    @discardableResult static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         guard let consequence = consequence else {
             Log.trace(label: LOG_TAG, "\(#function) - Cannot create a Fullscreen Message object, the consequence is nil.")
             return nil
@@ -127,9 +126,10 @@ class CampaignFullscreenMessage: CampaignMessaging {
             }
 
             let messageId = self.messageId ?? ""
-            self.messageAssetsDownloader = MessageAssetsDownloader(assets: currentAssetArray, messageId: messageId)
             Log.debug(label: Self.LOG_TAG, "\(#function) - Downloading assets for message id: \(messageId).")
-            messageAssetsDownloader?.downloadAssetCollection()
+            // TODO: hook up campaignMessageAssetsCache when rules pr merged
+            // init campaignMessageAssetsCache
+            //campaignMessageAssetsCache?.downloadAssetsForMessage()
         }
     }
 
@@ -138,12 +138,13 @@ class CampaignFullscreenMessage: CampaignMessaging {
     ///     * html: A `String` containing html for this message
     /// Optional fields:
     ///     * assets: An array of `[String]`s containing remote assets to prefetch and cache.
-    ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    private func parseFullscreenMessagePayload(consequence: CampaignRuleConsequence) {
-        guard let detail = consequence.detail, !detail.isEmpty else {
+    ///  - Parameter consequence: `RuleConsequence` containing a Message-defining payload
+    private func parseFullscreenMessagePayload(consequence: RuleConsequence) {
+        guard !consequence.details.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The consequence details are nil or empty, dropping the fullscreen message.")
             return
         }
+        let detail = consequence.details
 
         // html is required
         guard let html = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_HTML] as? String, !html.isEmpty else {
@@ -230,26 +231,28 @@ class CampaignFullscreenMessage: CampaignMessaging {
         // first prioritize remote urls that are cached
         for asset in assetArray {
             if let url = URL(string: asset) {
-                if MessageAssetsDownloader.isAssetDownloadable(url: url) {
-                    let cacheService = ServiceProvider.shared.cacheService
-                    let messageId = self.messageId ?? ""
-                    let cacheEntry = cacheService.get(cacheName: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER + CampaignConstants.Campaign.PATH_SEPARATOR + messageId, key: asset)
-                    if let data = cacheEntry?.data {
-                        Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using cached assets.")
-                        return String(decoding: data, as: UTF8.self)
-                    }
-                }
+                // TODO: replace with implementation of campaignMessageAssetsCache
+//                if MessageAssetsDownloader.isAssetDownloadable(url: url) {
+//                    let cacheService = ServiceProvider.shared.cacheService
+//                    let messageId = self.messageId ?? ""
+//                    let cacheEntry = cacheService.get(cacheName: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER + CampaignConstants.Campaign.PATH_SEPARATOR + messageId, key: asset)
+//                    if let data = cacheEntry?.data {
+//                        Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using cached assets.")
+//                        return String(decoding: data, as: UTF8.self)
+//                    }
+//                }
             }
         }
 
         // then fallback to local urls
         for asset in assetArray {
             if let url = URL(string: asset) {
-                if MessageAssetsDownloader.isAssetDownloadable(url: url) {
-                    Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using local url.")
-                    self.isUsingLocalImage = true
-                    return asset
-                }
+                // TODO: replace with implementation of campaignMessageAssetsCache
+//                if MessageAssetsDownloader.isAssetDownloadable(url: url) {
+//                    Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using local url.")
+//                    self.isUsingLocalImage = true
+//                    return asset
+//                }
             }
         }
         return nil

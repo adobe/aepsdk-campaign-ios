@@ -17,18 +17,18 @@ import AEPServices
 /// TestMessage struct for testing the CampaignMessaging Protocol's default implementation
 struct TestMessage: CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher?
-    var consequence: CampaignRuleConsequence?
+    var consequence: RuleConsequence?
     var messageId: String?
     var state: CampaignState?
 
-    private init(consequence: CampaignRuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
+    private init(consequence: RuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
         self.consequence = consequence
         self.messageId = consequence.id
         self.eventDispatcher = eventDispatcher
         self.state = state
     }
 
-    static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
+    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         guard let consequence = consequence else {
             return nil
         }

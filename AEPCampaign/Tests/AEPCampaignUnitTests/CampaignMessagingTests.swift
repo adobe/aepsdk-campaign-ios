@@ -25,7 +25,7 @@ class CampaignMessageTests: XCTestCase {
     }
     var messageObject: CampaignMessaging!
     var dispatchedEvents: [Event] = []
-    var consequence: CampaignRuleConsequence!
+    var consequence: RuleConsequence!
 
     override func setUp() {
         ServiceProvider.shared.urlService = MockUrlService()
@@ -34,7 +34,7 @@ class CampaignMessageTests: XCTestCase {
         state = CampaignState()
         addStateData()
         let details = ["content": "some content"] as [String: Any]
-        consequence = CampaignRuleConsequence(id: "20761932", type: "iam", detail: details)
+        consequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         messageObject = TestMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         })
