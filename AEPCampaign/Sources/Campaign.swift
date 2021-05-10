@@ -24,6 +24,10 @@ public class Campaign: NSObject, Extension {
     public let runtime: ExtensionRuntime
     var state: CampaignState
     typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String: Any]?) -> Void
+    let dispatchQueue: DispatchQueue    
+    private var hasCachedRulesLoaded = false
+    private var rulesEngine: LaunchRulesEngine
+    private var linkageFields: String?
 
     private let dependencies: [String] = [
         CampaignConstants.Configuration.EXTENSION_NAME,
@@ -33,6 +37,8 @@ public class Campaign: NSObject, Extension {
     /// Initializes the Campaign extension
     public required init?(runtime: ExtensionRuntime) {
         self.runtime = runtime
+        dispatchQueue = DispatchQueue(label: "\(CampaignConstants.EXTENSION_NAME).dispatchqueue")
+        rulesEngine = LaunchRulesEngine(name: "\(CampaignConstants.EXTENSION_NAME).rulesengine", extensionRuntime: runtime)
         self.state = CampaignState()
         super.init()
     }
@@ -44,25 +50,23 @@ public class Campaign: NSObject, Extension {
         registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationEvents)
         registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleSharedStateUpdateEvents)
         registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvents)
+        //The wildcard listener for Campaign Rules Engine Processing
+        registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildCardEvents(event:))
     }
 
     /// Invoked when the Campaign extension has been unregistered by the `EventHub`, currently a no-op.
-    public func onUnregistered() {
-
-    }
+    public func onUnregistered() {}
 
     /// Called before each `Event` processed by the Campaign extension
     /// - Parameter event: event that will be processed next
     /// - Returns: *true* if Configuration and Identity shared states are available
     public func readyForEvent(_ event: Event) -> Bool {
-        guard getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set, getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set  else {
-            return false
-        }
-        return true
+        return getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set && getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set
     }
 
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
+        Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
         guard let consequenceDict = event.triggeredConsequence, !consequenceDict.isEmpty else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence is nil or empty.")
             return
@@ -87,16 +91,18 @@ public class Campaign: NSObject, Extension {
         state.queueRegistrationRequest(event: event)
     }
 
-    /// Handles events of type `Configuration`
-    private func handleConfigurationEvents(event: Event) {
-        var sharedStates = [String: [String: Any]?]()
-        for extensionName in dependencies {
-            sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
-        }
-        state.update(dataMap: sharedStates)
+    ///Handles the wild card `Events` for Rules Engine processing.
+    private func handleWildCardEvents(event: Event) {
+        let event = rulesEngine.process(event: event)
+        dispatch(event: event)
+    }
 
-        if state.privacyStatus == .optedOut {
-            // handle opt out
+    ///Handles events of type `Configuration`
+    private func handleConfigurationEvents(event: Event) {
+        let oldPrivacyStatus = state.privacyStatus
+        updateCampaignState(event: event)
+        if state.privacyStatus != oldPrivacyStatus {
+            handlePrivacyStatusChange()
         }
     }
 
@@ -120,5 +126,66 @@ public class Campaign: NSObject, Extension {
 
         let event = Event(name: name, type: type, source: source, data: data)
         dispatch(event: event)
+    }
+
+    ///Updates the `CampaignState` with the shared state of other required extensions
+    private func updateCampaignState(event: Event) {
+        var sharedStates = [String: [String: Any]?]()
+        for extensionName in dependencies {
+            sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
+        }
+        state.update(dataMap: sharedStates)
+    }
+
+    ///Handles the privacy status
+    private func handlePrivacyStatusChange() {
+        if state.privacyStatus == .optedOut {
+            // handle opt out
+            return
+        }
+
+        if state.privacyStatus == PrivacyStatus.optedIn {
+//            let fakeUrl = URL(string: "https://assets.adobedtm.com/94f571f308d5/0d8e122e1a29/launch-dad327eb0536-development-rules.zip")
+//            var campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
+//            campaignRulesDownloader.loadRulesFromUrl(rulesUrl: fakeUrl!, linkageFieldHeaders: nil, state: self.state)
+            triggerRulesDownload()
+        }
+    }
+
+    ///Triggers the rules downloading and caching.
+    private func triggerRulesDownload() {
+        dispatchQueue.async { [weak self] in
+            //Download rules from the remote URL and cache them.
+            guard let self = self else {return}
+            guard let url = self.state.campaignRulesDownloadUrl else {
+                Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
+                return
+            }
+            let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(dispatchQueue: self.dispatchQueue), dispatchQueue: self.dispatchQueue)
+            var linkageFieldsHeader: [String: String]?
+            if let linkageFields = self.linkageFields {
+                linkageFieldsHeader = [
+                    CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
+                ]
+            }
+            campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
+        }
+    }
+
+    ///Loads the Cached Campaign rules on receiving the Configuration event first time.
+    private func loadCachedRules() {
+        if !hasCachedRulesLoaded {
+            Log.trace(label: LOG_TAG, "\(#function) - Attempting to load the Cached Campaign Rules.")
+            dispatchQueue.async { [weak self] in
+                guard let self = self else {return}
+                guard let urlString = self.state.getRulesUrlFromDataStore() else {
+                    Log.debug(label: self.LOG_TAG , "\(#function) - Unable to load cached rules. Couldn't get valid rules URL from Datastore")
+                    return
+                }
+                let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
+                campaignRulesDownloader.loadRulesFromCache(rulesUrlString: urlString)
+                self.hasCachedRulesLoaded = true
+            }
+        }
     }
 }

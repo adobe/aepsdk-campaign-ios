@@ -29,6 +29,7 @@ class CampaignState {
     private(set) var campaignPropertyId: String?
     private(set) var campaignRegistrationDelay: TimeInterval?
     private(set) var campaignRegistrationPaused: Bool?
+    private(set) var campaignRulesDownloadUrl: URL?
 
     // Identity shared state
     private(set) var ecid: String?
@@ -39,8 +40,6 @@ class CampaignState {
     #else
         private(set) var hitQueue: HitQueuing?
     #endif
-
-    private(set) var namedCollectionDataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
 
     /// Creates a new `CampaignState`.
     init() {
@@ -84,6 +83,12 @@ class CampaignState {
             self.campaignRegistrationDelay = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
         }
         self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
+
+        if let mciasServer = campaignMciasServer, let campaignServer = campaignServer, let propertyId = campaignPropertyId, let ecid = ecid {
+            campaignRulesDownloadUrl = URL.getRulesDownloadUrl(mciasServer: mciasServer, campaignServer: campaignServer, propertyId: propertyId, ecid: ecid)
+        } else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to create Campaign Rules download URL. Required Configuration is missing.")
+        }
 
         // create the hitqueue if not yet created. otherwise, update the hitQueue with the latest privacy status.
         if let hitQueue = hitQueue {
@@ -162,13 +167,13 @@ class CampaignState {
             return false
         }
 
-        if namedCollectionDataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY, fallback: "") != ecid {
+        if dataStore.getString(key: CampaignConstants.Campaign.Datastore.ECID_KEY, fallback: "") != ecid {
             Log.debug(label: LOG_TAG, "\(#function) - The current ecid '\(ecid)' is new, sending the registration request.")
-            namedCollectionDataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+            dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
             return true
         }
 
-        let retrievedTimeStamp = namedCollectionDataStore.getLong(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? Int64(CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE)
+        let retrievedTimeStamp = dataStore.getLong(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? Int64(CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE)
 
         if eventTimeStamp - TimeInterval(retrievedTimeStamp) >= registrationDelay {
             Log.debug(label: LOG_TAG, "\(#function) - Registration delay of '\(registrationDelay)' seconds has elapsed. Sending the Campaign registration request.")
@@ -229,6 +234,22 @@ class CampaignState {
         Log.trace(label: LOG_TAG, "\(#function) - Persisting timestamp \(timestamp) in Campaign Datastore.")
         dataStore.set(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY, value: timestamp)
         dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
+    }
+
+    ///Persist the rules url in data store
+    func updateRuleUrlInDataStore(url: String?) {
+        guard let url = url else {
+            Log.trace(label: LOG_TAG, "\(#function) - Updated URL is nil. Removing Rules URL from the data store.")
+            dataStore.remove(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY)
+            return
+        }
+
+        dataStore.set(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY, value: url)
+    }
+
+    ///Retrieves the rules url from the data store
+    func getRulesUrlFromDataStore() -> String? {
+        return dataStore.getString(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY)
     }
 
     /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
