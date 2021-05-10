@@ -150,4 +150,15 @@ enum CampaignConstants {
             static let LOADED_CONSEQUENCES = "loadedconsequences"
         }
     }
+
+    enum RulesDownloaderConstants {
+        static let RULES_CACHE_NAME = "rules.cache"
+        static let RULES_ZIP_FILE_NAME = "rules.zip"
+        static let RULES_TEMP_DIR = "com.adobe.rules.campaign"
+        static let RULES_CACHE_DIRECTORY = "campaignrules" //Folder in cache directory contains  assets.
+        static let ASSETS_DIR_NAME = "assets"
+        enum Keys {
+            static let RULES_CACHE_PREFIX = "cached.campaignrules"
+        }
+    }
 }
