@@ -43,7 +43,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         self.parseFullscreenMessagePayload(consequence: consequence)
     }
 
-    /// Creates a Campaign Fullscreen Message object
+    /// Creates a `CampaignFullscreenMessage` object
     ///  - Parameters:
     ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
     ///    - state: The CampaignState
@@ -62,7 +62,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         return fullscreenMessage
     }
 
-    /// Creates and shows a new Campaign Fullscreen Message object.
+    /// Instantiates  a new `CampaignFullscreenMessage` object then calls `show()` to display the message.
     /// This method reads the html content from the cached html within the rules cache and generates the expanded html by
     /// replacing assets URLs with cached references, before calling the method to display the message.
     func showMessage() {
@@ -82,11 +82,13 @@ class CampaignFullscreenMessage: CampaignMessaging {
         self.fullscreenMessage?.show()
     }
 
-    // Returns true as the Campaign Fullscreen Message class should download assets
+    /// Returns true as the Campaign Fullscreen Message class should download assets
     func shouldDownloadAssets() -> Bool {
         return true
     }
 
+    /// Attempts to handle fullscreen message interaction by inspecting the id field on the clicked message.
+    ///  - Parameter query: A `[String: String]` dictionary containing message interaction details
     func processMessageInteraction(query: [String: String]) {
         guard let id = query[CampaignConstants.Campaign.MessageData.TAG_ID], !id.isEmpty else {
             Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot process message interaction, input query is nil or empty.")
@@ -109,7 +111,8 @@ class CampaignFullscreenMessage: CampaignMessaging {
         }
     }
 
-    func downloadAssets() {
+    /// Downloads any assets previously extracted from the "remoteAssets" array.
+    private func downloadAssets() {
         guard let extractedAssets = extractedAssets, !extractedAssets.isEmpty else {
             Log.debug(label: Self.LOG_TAG, "\(#function) - No assets to be downloaded.")
             return
@@ -130,13 +133,13 @@ class CampaignFullscreenMessage: CampaignMessaging {
         }
     }
 
-    /// Parses a `CampaignRuleConsequence` instance defining message payload for a `FullscreenMessage` object.
+    /// Parses a `CampaignRuleConsequence` instance defining message payload for a `CampaignFullscreenMessage` object.
     /// Required fields:
     ///     * html: A `String` containing html for this message
     /// Optional fields:
-    ///     * assets: An array of `[String]` containing remote assets to prefetch and cache.
+    ///     * assets: An array of `[String]`s containing remote assets to prefetch and cache.
     ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    func parseFullscreenMessagePayload(consequence: CampaignRuleConsequence) {
+    private func parseFullscreenMessagePayload(consequence: CampaignRuleConsequence) {
         guard let detail = consequence.detail, !detail.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The consequence details are nil or empty, dropping the fullscreen message.")
             return
@@ -159,7 +162,9 @@ class CampaignFullscreenMessage: CampaignMessaging {
         }
     }
 
-    func extractAsset(assets: [String]) {
+    /// Extract assets for the HTML message.
+    ///  - Parameter assets: An array of `Strings` containing assets specific for this `CampaignFullscreenMessage`.
+    private func extractAsset(assets: [String]) {
         guard !assets.isEmpty else {
             Log.debug(label: Self.LOG_TAG, "\(#function) - There are no assets to extract.")
             return
@@ -173,6 +178,8 @@ class CampaignFullscreenMessage: CampaignMessaging {
     }
 
     // TODO: update with final rules cache code from rules downloader pr
+    /// Reads a html file from disk and returns its contents as `String`
+    ///  - Returns: A `String` containing the cached html.
     private func readHtmlFromFile() -> String? {
         let cacheEntry = rulesCache.get(key: "test.html")
         guard let data = cacheEntry?.data else {
@@ -181,6 +188,9 @@ class CampaignFullscreenMessage: CampaignMessaging {
         return String(data: data, encoding: .utf8)
     }
 
+    /// Replace the image urls in the HTML with cached URIs for those images. If no cache URIs are found, then use a local image asset, if it has been
+    /// provided in the assets.
+    ///  - Returns: The HTML `String` with image tokens replaced with cached URIs, if available.
     private func generateExpandedHtml(sourceHtml: String) -> String {
         // if we have no extracted assets, return the source html unchanged
         guard let extractedAssets = extractedAssets, !extractedAssets.isEmpty else {
@@ -209,7 +219,9 @@ class CampaignFullscreenMessage: CampaignMessaging {
         return expandTokens(input: sourceHtml, tokens: imageTokens) ?? ""
     }
 
-    func getAssetReplacement(assetArray: [String]) -> String? {
+    /// Returns the remote or local URL to use in asset replacement.
+    ///  - Returns: A `String` containing either a cached URI, or a local asset name, or nil if neither is present.
+    private func getAssetReplacement(assetArray: [String]) -> String? {
         guard !assetArray.isEmpty else { // edge case
             Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace assets, the assets array is empty.")
             return nil
@@ -223,7 +235,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
                     let messageId = self.messageId ?? ""
                     let cacheEntry = cacheService.get(cacheName: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER + CampaignConstants.Campaign.PATH_SEPARATOR + messageId, key: asset)
                     if let data = cacheEntry?.data {
-                        Log.debug(label: Self.LOG_TAG, "\(#function) - Replaced assets using cached assets.")
+                        Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using cached assets.")
                         return String(decoding: data, as: UTF8.self)
                     }
                 }
@@ -234,7 +246,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         for asset in assetArray {
             if let url = URL(string: asset) {
                 if MessageAssetsDownloader.isAssetDownloadable(url: url) {
-                    Log.debug(label: Self.LOG_TAG, "\(#function) - Replaced assets using local url.")
+                    Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using local url.")
                     self.isUsingLocalImage = true
                     return asset
                 }
