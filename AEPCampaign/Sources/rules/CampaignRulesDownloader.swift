@@ -28,12 +28,14 @@ struct CampaignRulesDownloader {
     private let cache: Cache
     private let rulesEngine: LaunchRulesEngine
     private let campaignMessageAssetsCache: CampaignMessageAssetsCache?
+    let dispatchQueue: DispatchQueue?
 
-    init(fileUnzipper: Unzipping, ruleEngine: LaunchRulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache? = nil) {
+    init(fileUnzipper: Unzipping, ruleEngine: LaunchRulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache? = nil, dispatchQueue: DispatchQueue? = nil) {
         self.fileUnzipper = fileUnzipper
         cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
         self.rulesEngine = ruleEngine
         self.campaignMessageAssetsCache = campaignMessageAssetsCache
+        self.dispatchQueue = dispatchQueue
     }
 
     ///Load the Cached Campaign rules into Rules engine.
@@ -68,41 +70,43 @@ struct CampaignRulesDownloader {
         }
 
         let networkRequest = NetworkRequest(url: rulesUrl, httpMethod: .get, httpHeaders: headers)
-        ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) {httpConnection in
-            if httpConnection.responseCode == 304 {
-                Log.debug(label: self.LOG_TAG, "\(#function) - Returning early without loading Campaign rules. Rules hasn't changed on server.")
-                return
-            }
-
-            guard let data = httpConnection.data else {
-                Log.debug(label: self.LOG_TAG, "\(#function) - Unable to load rules. Data in HTTP response is nil.")
-                return
-            }
-            // Store Zip file in temp directory for unzipping
-            switch self.storeDataInTempDirectory(data: data) {
-            case let .success(url):
-                // Unzip the rules.json and assets from the zip file in to the cache directory. Get the rules Data from the rules.json file.
-                guard let data = self.unzipRules(at: url) else {
-                    Log.debug(label: self.LOG_TAG, "\(#function) - Failed to unzip downloaded rules.")
+        ServiceProvider.shared.networkService.connectAsync(networkRequest: networkRequest) { httpConnection in
+            dispatchQueue?.async {
+                if httpConnection.responseCode == 304 {
+                    Log.debug(label: self.LOG_TAG, "\(#function) - Returning early without loading Campaign rules. Rules hasn't changed on server.")
                     return
                 }
-                let cachedRules = CampaignCachedRules(cacheable: data,
-                                                      lastModified: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.LAST_MODIFIED] as? String,
-                                                      eTag: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.ETAG] as? String)
 
-                // Cache the rules, if fails, log message
-                let hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
-
-                if hasRulesCached {
-                    state.updateRuleUrlInDataStore(url: url.absoluteString)
-                } else {
-                    Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
+                guard let data = httpConnection.data else {
+                    Log.debug(label: self.LOG_TAG, "\(#function) - Unable to load rules. Data in HTTP response is nil.")
+                    return
                 }
-                onPostRulesDownload(data: data)
-                return
-            case let .failure(error):
-                Log.warning(label: self.LOG_TAG, error.localizedDescription)
-                return
+                // Store Zip file in temp directory for unzipping
+                switch self.storeDataInTempDirectory(data: data) {
+                case let .success(url):
+                    // Unzip the rules.json and assets from the zip file in to the cache directory. Get the rules Data from the rules.json file.
+                    guard let data = self.unzipRules(at: url) else {
+                        Log.debug(label: self.LOG_TAG, "\(#function) - Failed to unzip downloaded rules.")
+                        return
+                    }
+                    let cachedRules = CampaignCachedRules(cacheable: data,
+                                                          lastModified: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.LAST_MODIFIED] as? String,
+                                                          eTag: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.ETAG] as? String)
+
+                    // Cache the rules, if fails, log message
+                    let hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
+
+                    if hasRulesCached {
+                        state.updateRuleUrlInDataStore(url: url.absoluteString)
+                    } else {
+                        Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
+                    }
+                    self.onPostRulesDownload(data: data)
+                    return
+                case let .failure(error):
+                    Log.warning(label: self.LOG_TAG, error.localizedDescription)
+                    return
+                }
             }
         }
     }

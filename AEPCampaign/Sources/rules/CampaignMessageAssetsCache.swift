@@ -18,6 +18,7 @@ struct CampaignMessageAssetsCache {
 
     private let LOG_PREFIX = "CampaignMessageAssetsCache"
     let fileManager = FileManager.default
+    let dispatchQueue: DispatchQueue
 
     ///Download and Caches the Assets for a given messageId.
     ///- Parameters:
@@ -45,11 +46,13 @@ struct CampaignMessageAssetsCache {
         for url in urls {
             let networkRequest = NetworkRequest(url: url, httpMethod: .get)
             networking.connectAsync(networkRequest: networkRequest) { httpConnection in
-                guard httpConnection.responseCode == 200, let data = httpConnection.data else {
-                    Log.debug(label: self.LOG_PREFIX, "\(#function) - Failed in downloading Asset from URL: \(url)")
-                    return
+                dispatchQueue.async {
+                    guard httpConnection.responseCode == 200, let data = httpConnection.data else {
+                        Log.debug(label: self.LOG_PREFIX, "\(#function) - Failed to download Asset from URL: \(url)")
+                        return
+                    }
+                    self.cacheAssetData(data, forKey: url, messageId: messageId)
                 }
-                cacheAssetData(data, forKey: url, messageId: messageId)
             }
         }
     }
@@ -83,7 +86,7 @@ struct CampaignMessageAssetsCache {
     ///   - filesToRetain: An array of file names that have to retain.
     ///   - pathRelativeToCacheDir: The path of cache directory relative to `Library/Cache`
     func clearCachedAssetsForMessagesNotInList(filesToRetain: [String], pathRelativeToCacheDir: String) {
-        Log.trace(label:LOG_PREFIX, "\(#function) - Attempt to delete the Non required cached assets from directory \(pathRelativeToCacheDir)")
+        Log.trace(label: LOG_PREFIX, "\(#function) - Attempt to delete the Non required cached assets from directory \(pathRelativeToCacheDir)")
         guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
             return
         }
@@ -98,7 +101,7 @@ struct CampaignMessageAssetsCache {
         // MARK: Delete non required cached files for the message
         assetsToDelete.forEach { fileName in
             try? fileManager.removeItem(atPath: "\(cacheDir.absoluteString)/\(fileName)")
-            Log.debug(label: LOG_PREFIX, "\(#function) - Deleted the non required cached asset from path: \(cacheDir.absoluteString)/\(fileName)")
+            Log.debug(label: LOG_PREFIX, "\(#function) - Deleted the non required cached asset at path: \(cacheDir.absoluteString)/\(fileName)")
         }
     }
 

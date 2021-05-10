@@ -146,7 +146,7 @@ public class Campaign: NSObject, Extension {
     }
 
     ///Updates the `CampaignState` with the shared state of other required extensions
-    private func updateCampaignState(event: Event){
+    private func updateCampaignState(event: Event) {
         var sharedStates = [String: [String: Any]?]()
         for extensionName in dependencies {
             sharedStates[extensionName] = runtime.getSharedState(extensionName: extensionName, event: event, barrier: true)?.value
@@ -178,7 +178,7 @@ public class Campaign: NSObject, Extension {
                 Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
                 return
             }
-            let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache())
+            let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(dispatchQueue: self.dispatchQueue), dispatchQueue: self.dispatchQueue)
             var linkageFieldsHeader: [String: String]?
             if let linkageFields = self.linkageFields {
                 linkageFieldsHeader = [
