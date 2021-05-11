@@ -864,6 +864,7 @@
 				D6577DFA2628F48A008F0528 /* URL+Campaign.swift in Sources */,
 				3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */,
 				D6E823E22627617F0092C7DE /* CampaignHit.swift in Sources */,
+				D6D9B2AD2649EE4200BAF249 /* CampaignMessageAssetsCache.swift in Sources */,
 				3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */,
 				D6B2F02E2637786D00747CFE /* LocalNotificationMessage.swift in Sources */,
 				D6577E1A262DFFA9008F0528 /* HitQueuing+Campaign.swift in Sources */,
