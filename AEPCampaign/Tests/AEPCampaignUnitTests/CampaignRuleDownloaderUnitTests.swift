@@ -16,5 +16,4 @@ import XCTest
 
 class CampaignRuleDownloaderUnitTests: XCTestCase {
 
-
 }

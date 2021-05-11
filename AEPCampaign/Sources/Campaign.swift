@@ -24,7 +24,7 @@ public class Campaign: NSObject, Extension {
     public let runtime: ExtensionRuntime
     var state: CampaignState
     typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String: Any]?) -> Void
-    let dispatchQueue: DispatchQueue    
+    let dispatchQueue: DispatchQueue
     private var hasCachedRulesLoaded = false
     private var rulesEngine: LaunchRulesEngine
     private var linkageFields: String?
@@ -185,7 +185,7 @@ public class Campaign: NSObject, Extension {
             dispatchQueue.async { [weak self] in
                 guard let self = self else {return}
                 guard let urlString = self.state.getRulesUrlFromDataStore() else {
-                    Log.debug(label: self.LOG_TAG , "\(#function) - Unable to load cached rules. Couldn't get valid rules URL from Datastore")
+                    Log.debug(label: self.LOG_TAG, "\(#function) - Unable to load cached rules. Couldn't get valid rules URL from Datastore")
                     return
                 }
                 let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)

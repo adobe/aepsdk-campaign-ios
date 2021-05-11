@@ -93,7 +93,7 @@ struct CampaignRulesDownloader {
                                                           lastModified: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.LAST_MODIFIED] as? String,
                                                           eTag: httpConnection.response?.allHeaderFields[NetworkServiceConstants.Headers.ETAG] as? String)
 
-                    // Cache the rules, if fails, log message
+                    // Cache the rules, if it fails, log message
                     let hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
 
                     if hasRulesCached {

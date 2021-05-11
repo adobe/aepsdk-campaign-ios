@@ -161,7 +161,7 @@ func addTestHtmlToCache() {
     let rulesCache = Cache(name: "rules.cache")
     if let data = htmlString.data(using: .utf8) {
         let cacheEntry = CacheEntry(data: data, expiry: .never, metadata: nil)
-        try? rulesCache.set(key: "test.html", entry: cacheEntry)
+        try? rulesCache.set(key: "campaignrules/assets/test.html", entry: cacheEntry)
     }
 }
 

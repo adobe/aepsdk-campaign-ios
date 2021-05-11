@@ -27,7 +27,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var extractedAssets: [[String]]?
     private var isUsingLocalImage = false
     private var fullscreenMessage: FullscreenPresentable?
-    private let rulesCache = Cache(name: "rules.cache")
+    private let cache: Cache
 
     /// Campaign Fullscreen Message class initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
@@ -39,6 +39,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         self.eventDispatcher = eventDispatcher
         self.state = state
         self.isUsingLocalImage = false
+        self.cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
         self.parseFullscreenMessagePayload(consequence: consequence)
     }
 
@@ -110,6 +111,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         }
     }
 
+    // TODO: see if still needed as caching  is occurring within CampaignMessageAssetsCache
     /// Downloads any assets previously extracted from the "remoteAssets" array.
     private func downloadAssets() {
         guard let extractedAssets = extractedAssets, !extractedAssets.isEmpty else {
@@ -178,15 +180,13 @@ class CampaignFullscreenMessage: CampaignMessaging {
         extractedAssets?.append(currentAsset)
     }
 
-    // TODO: update with final rules cache code from rules downloader pr
     /// Reads a html file from disk and returns its contents as `String`
     ///  - Returns: A `String` containing the cached html.
     private func readHtmlFromFile() -> String? {
-        let cacheEntry = rulesCache.get(key: "test.html")
-        guard let data = cacheEntry?.data else {
+        guard let html = html, let cachedEntry = cache.get(key: "campaignrules/assets/"+html) else {
             return nil
         }
-        return String(data: data, encoding: .utf8)
+        return String(data: cachedEntry.data, encoding: .utf8)
     }
 
     /// Replace the image urls in the HTML with cached URIs for those images. If no cache URIs are found, then use a local image asset, if it has been
@@ -231,7 +231,6 @@ class CampaignFullscreenMessage: CampaignMessaging {
         // first prioritize remote urls that are cached
         for asset in assetArray {
             if let url = URL(string: asset) {
-                // TODO: replace with implementation of campaignMessageAssetsCache
 //                if MessageAssetsDownloader.isAssetDownloadable(url: url) {
 //                    let cacheService = ServiceProvider.shared.cacheService
 //                    let messageId = self.messageId ?? ""
