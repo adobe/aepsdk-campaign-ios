@@ -67,16 +67,12 @@ public class Campaign: NSObject, Extension {
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
         Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
-        guard let consequenceDict = event.triggeredConsequence, !consequenceDict.isEmpty else {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence is nil or empty.")
-            return
-        }
-        guard let detail = consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL] as? [String: Any], !detail.isEmpty else {
+        guard let details = event.consequenceDetails, !details.isEmpty else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, detail dictionary is nil or empty.")
             return
         }
-        let consequence = RuleConsequence(id: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ID] as? String ?? "", type: consequenceDict[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_TYPE] as? String ?? "", details: detail)
-        let template = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TEMPLATE] as? String
+        let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
+        let template = details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TEMPLATE] as? String
         if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
             Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a local notification. Scheduling the received local notification.")
             guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
