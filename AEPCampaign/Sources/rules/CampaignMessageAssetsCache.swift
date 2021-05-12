@@ -121,7 +121,7 @@ struct CampaignMessageAssetsCache {
 
         Log.trace(label: LOG_PREFIX, "\(#function) - Attempting to create Assets cache directory for message \(messageId) at path: \(pathString)")
         do {
-            try fileManager.createDirectory(atPath: pathString, withIntermediateDirectories: true,attributes: nil)
+            try fileManager.createDirectory(atPath: pathString, withIntermediateDirectories: true, attributes: nil)
             return pathString
         } catch {
             Log.trace(label: LOG_PREFIX, "\(#function) - Error in creating Assets cache directory for message \(messageId) at path: \(pathString).")

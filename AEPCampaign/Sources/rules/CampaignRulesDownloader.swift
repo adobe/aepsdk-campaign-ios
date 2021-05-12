@@ -25,7 +25,7 @@ struct CampaignRulesDownloader {
 
     private let LOG_TAG = "CampaignRulesDownloader"
     private let fileUnzipper: Unzipping
-    private let cache: Cache
+    private let cache: Cache    
     private let rulesEngine: LaunchRulesEngine
     private let campaignMessageAssetsCache: CampaignMessageAssetsCache?
     let dispatchQueue: DispatchQueue?
@@ -122,24 +122,28 @@ struct CampaignRulesDownloader {
 
     ///Downloads the Assets for fullscreen IAM
     private func downloadMessageAssets(rules: [LaunchRule]) {
+        guard let campaignMessageAssetsCache = campaignMessageAssetsCache else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to cache Message Assets. CampaignMessageAssetsCache is nil.")
+            return
+        }
         var messageIdsWithAssets = [String]()
         for rule in rules {
             for consequence in rule.consequences {
                 if consequence.hasAssetsToDownload() {
                     messageIdsWithAssets.append(consequence.id)
                     if let assetsUrl = consequence.createAssetUrlArray(), !assetsUrl.isEmpty {
-                        campaignMessageAssetsCache?.downloadAssetsForMessage(from: assetsUrl, messageId: consequence.id)
+                        campaignMessageAssetsCache.downloadAssetsForMessage(from: assetsUrl, messageId: consequence.id)
                     }
                 }
             }
         }
 
-        clearCachedMessageAssets(except: messageIdsWithAssets)
+        clearCachedMessageAssets(except: messageIdsWithAssets, campaignMessageAssetsCache: campaignMessageAssetsCache)
     }
 
     ///Triggers removal of existing cached Assets, that are no more required.
-    private func clearCachedMessageAssets(except messageIds: [String]) {
-        campaignMessageAssetsCache?.clearCachedAssetsForMessagesNotInList(filesToRetain: messageIds, pathRelativeToCacheDir: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)
+    private func clearCachedMessageAssets(except messageIds: [String], campaignMessageAssetsCache: CampaignMessageAssetsCache) {
+        campaignMessageAssetsCache.clearCachedAssetsForMessagesNotInList(filesToRetain: messageIds, pathRelativeToCacheDir: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)
 
     }
 
@@ -258,3 +262,13 @@ private extension RuleConsequence {
         return assetsToDownload
     }
 }
+
+#if DEBUG
+    extension CampaignRulesDownloader {
+
+        ///A Proxy function for calling `setCachedRules` from Unit Tests
+        @discardableResult func setCachedRulesProxy(rulesUrl: String, cachedRules: CampaignCachedRules ) -> Bool {
+            return setCachedRules(rulesUrl: rulesUrl, cachedRules: cachedRules)
+        }
+    }
+#endif
