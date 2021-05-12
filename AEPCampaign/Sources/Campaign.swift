@@ -96,7 +96,7 @@ public class Campaign: NSObject, Extension {
     ///Handles the wild card `Events` for Rules Engine processing.
     private func handleWildCardEvents(event: Event) {
         let event = rulesEngine.process(event: event)
-        dispatch(event: event)
+        //dispatch(event: event)
     }
 
     ///Handles events of type `Configuration`
