@@ -25,7 +25,7 @@ struct CampaignRulesDownloader {
 
     private let LOG_TAG = "CampaignRulesDownloader"
     private let fileUnzipper: Unzipping
-    private let cache: Cache    
+    private let cache: Cache
     private let rulesEngine: LaunchRulesEngine
     private let campaignMessageAssetsCache: CampaignMessageAssetsCache?
     let dispatchQueue: DispatchQueue?
@@ -236,11 +236,11 @@ private extension RuleConsequence {
             return false
         }
 
-        guard details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TEMPLATE] as? String == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN else {
+        guard details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN else {
             return false
         }
 
-        guard details.keys.contains(CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_REMOTE_ASSETS) else {
+        guard details.keys.contains(CampaignConstants.EventDataKeys.RulesEngine.Detail.REMOTE_ASSETS) else {
             return false
         }
 
@@ -250,7 +250,7 @@ private extension RuleConsequence {
     ///Parses the value for `assets` key in Rule Consequence and return an array of assets URL that need to be cached.
     /// - Returns An array of assets URL that need to be downloaded and cached
     func createAssetUrlArray() -> [String]? {
-        guard let assetsArray = details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_REMOTE_ASSETS] as? [[String]]  else {
+        guard let assetsArray = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.REMOTE_ASSETS] as? [[String]]  else {
             return nil
         }
         var assetsToDownload: [String] = []

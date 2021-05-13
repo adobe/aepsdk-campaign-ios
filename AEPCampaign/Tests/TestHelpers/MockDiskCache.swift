@@ -18,21 +18,21 @@ class MockDiskCache: Caching {
     var isSetCacheCalled = false
     var isGetCacheCalled = false
     var isRemoveCacheCalled = false
-    
+
     func set(cacheName: String, key: String, entry: CacheEntry) throws {
         isSetCacheCalled = true
         cache[key] = entry
     }
-    
+
     func get(cacheName: String, key: String) -> CacheEntry? {
         isGetCacheCalled = true
         return cache[key]
     }
-    
+
     func remove(cacheName: String, key: String) throws {
         isRemoveCacheCalled = true
     }
-    
+
     func reset() {
         cache = [String: CacheEntry]()
         isSetCacheCalled = false

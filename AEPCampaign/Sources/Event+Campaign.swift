@@ -20,17 +20,17 @@ extension Event {
 
     /// Reads the consequence details from an Event's triggered consequences
     var consequenceDetails: [String: Any]? {
-        return self.triggeredConsequence?[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL] as? [String: Any]
+        return self.triggeredConsequence?[CampaignConstants.EventDataKeys.RulesEngine.DETAIL] as? [String: Any]
     }
 
     /// Reads the consequence id from an Event's triggered consequences
     var consequenceId: String? {
-        return self.triggeredConsequence?[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_ID] as? String
+        return self.triggeredConsequence?[CampaignConstants.EventDataKeys.RulesEngine.ID] as? String
     }
 
     /// Reads the consequence type from an Event's triggered consequences
     var consequenceType: String? {
-        return self.triggeredConsequence?[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_TYPE] as? String
+        return self.triggeredConsequence?[CampaignConstants.EventDataKeys.RulesEngine.TYPE] as? String
     }
 
     /// Reads the broadlog id from the Event
