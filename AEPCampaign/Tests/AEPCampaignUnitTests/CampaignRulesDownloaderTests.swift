@@ -44,7 +44,6 @@ class CampaignRulesDownloaderTests: XCTestCase {
     }
 
     func testLoadRulesFromCacheSuccess() {
-        //Setup
         guard let rulesJsonUrl = Self.campaignRulesJsonUrl else {
             XCTFail("rules.json URL is nil")
             return
@@ -59,7 +58,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let campaignCachedRules = CampaignCachedRules(cacheable: data, lastModified: nil, eTag: nil)
         campaignRulesDownloader.setCachedRulesProxy(rulesUrl: rulesJsonUrl.absoluteString, cachedRules: campaignCachedRules)
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromCache(rulesUrlString: rulesJsonUrl.absoluteString)
 
         //Verify
@@ -83,28 +82,35 @@ class CampaignRulesDownloaderTests: XCTestCase {
     }
 
     func testLoadRulesFromUrlNetworkRequestContainsLinkageField() {
-        ///Setup
+        //Setup
         guard let url = URL(string: "https://testurl.com") else {
             XCTFail("Unable to form test URL")
             return
         }
+
         let linkageField = "testLinkageField"
+        //Encode Linkage field String to Base64
+        let data = linkageField.data(using: .utf8)
+        guard let linkageFieldBase64Encoded = data?.base64EncodedString() else {
+            XCTFail("Unable to encode linkage filed to Base64")
+            return
+        }
         campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
         let linkageFields = [
-            CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageField
+            CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFieldBase64Encoded
         ]
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFields, state: CampaignState())
 
-        ///Assert
+        //Assert
         XCTAssertTrue(mockNetworking.connectAsyncCalled)
-        let linkageFiledHeaderReceived = mockNetworking.cachedNetworkRequests[mockNetworking.cachedNetworkRequests.count - 1].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER]
-        XCTAssertEqual(linkageFiledHeaderReceived, linkageField)
+        let linkageFieldHeaderReceived = mockNetworking.cachedNetworkRequests[mockNetworking.cachedNetworkRequests.count - 1].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER]
+        XCTAssertEqual(linkageFieldHeaderReceived, linkageFieldBase64Encoded)
     }
 
     func testLoadRulesFromUrlNetworkRequestContainsLastModifiedAndETagHeaders() {
-        ///Setup
+        //Setup
         guard let url = URL(string: "https://testurl.com") else {
             XCTFail("Unable to form test URL")
             return
@@ -125,10 +131,10 @@ class CampaignRulesDownloaderTests: XCTestCase {
         campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
         campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
 
-        ///Assert
+        //Assert
         XCTAssertTrue(mockNetworking.connectAsyncCalled)
         let headers = mockNetworking.cachedNetworkRequests[mockNetworking.cachedNetworkRequests.count - 1].httpHeaders
         XCTAssertEqual(headers[NetworkServiceConstants.Headers.IF_NONE_MATCH], eTag)
@@ -150,7 +156,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
 
         campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
 
         //Assert
@@ -159,7 +165,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
     }
 
     func testLoadRulesFromUrlResponseDataIsNil() {
-        ///Setup
+        //Setup
         guard let url = URL(string: "https://testurl.com") else {
             XCTFail("Unable to form test URL")
             return
@@ -182,16 +188,16 @@ class CampaignRulesDownloaderTests: XCTestCase {
         campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: nil, error: nil)
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
 
-        ///Assert
+        //Assert
         XCTAssertTrue(mockNetworking.connectAsyncCalled)
         XCTAssertFalse(ruleEngine.isReplaceRulesCalled)
     }
 
-    func testLoadRulesFromUrlSuccessRulesHaveCached() {
-        ///Setup
+    func testLoadRulesFromUrlSuccessTriggersRulesCaching() {
+        //Setup
         guard let url = URL(string: "https://testurl.com") else {
             XCTFail("Unable to form test URL")
             return
@@ -226,18 +232,18 @@ class CampaignRulesDownloaderTests: XCTestCase {
 
         mockDiskCache.reset()
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
 
         Thread.sleep(forTimeInterval: 2)
 
-        ///Assert
+        //Assert
         XCTAssertTrue(mockDiskCache.isSetCacheCalled)
         XCTAssertEqual(mockDiskCache.cache.count, 1)
     }
 
-    func testLoadRulesFromUrlSuccessRulesHaveLoaded() {
-        ///Setup
+    func testLoadRulesFromUrlSuccessTriggersRulesLoadingInRulesEngine() {
+        //Setup
         guard let url = URL(string: "https://testurl.com") else {
             XCTFail("Unable to form test URL")
             return
@@ -270,19 +276,19 @@ class CampaignRulesDownloaderTests: XCTestCase {
         campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
 
         Thread.sleep(forTimeInterval: 2)
 
-        ///Assert
+        //Assert
         XCTAssertTrue(mockNetworking.connectAsyncCalled)
         XCTAssertTrue(ruleEngine.isReplaceRulesCalled)
         XCTAssertEqual(ruleEngine.rules?.count, 5)
     }
 
-    func testLoadRulesFromUrlSuccessUrlHaveCached() {
-        ///Setup
+    func testLoadRulesFromUrlSuccessTriggersUrlCachingInDataStore() {
+        //Setup
         guard let url = URL(string: "https://testurl.com") else {
             XCTFail("Unable to form test URL")
             return
@@ -316,17 +322,17 @@ class CampaignRulesDownloaderTests: XCTestCase {
         campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: campaignState)
 
         Thread.sleep(forTimeInterval: 2)
 
-        ///Assert
+        //Assert
         XCTAssertTrue(campaignState.getRulesUrlFromDataStore()?.contains("rules.zip") ?? false)
     }
 
     func testLoadRulesFromUrlSuccessTriggersAssetsDownload() {
-        ///Setup
+        //Setup
         guard let url = URL(string: "https://testurl.com") else {
             XCTFail("Unable to form test URL")
             return
@@ -362,12 +368,12 @@ class CampaignRulesDownloaderTests: XCTestCase {
         campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
-        ///Action
+        //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: campaignState)
 
         Thread.sleep(forTimeInterval: 2)
 
-        ///Assert
+        //Assert
         let networkRequests = mockNetworking.cachedNetworkRequests
         let imageDownloadRequest = networkRequests[networkRequests.count - 1]
         XCTAssertEqual(networkRequests.count, 2)
@@ -375,7 +381,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
     }
 }
 
-// MARK:- Helper functions
+//MARK:- Helper functions
 extension CampaignRulesDownloaderTests {
 
     private func createHttpConnection(statusCode: Int, url: URL, httpVersion: String? = nil, headerFields: [String: String]? = nil, data: Data? = nil, error: Error? = nil) -> HttpConnection {
