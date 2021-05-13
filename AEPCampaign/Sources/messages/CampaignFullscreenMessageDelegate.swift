@@ -65,7 +65,7 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
         }
 
         // cancel or confirm
-        guard let host = components.host, (host == CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CONFIRM || host == CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CANCEL) else {
+        guard let host = components.host, (host == CampaignConstants.EventDataKeys.RulesEngine.Detail.CONFIRM || host == CampaignConstants.EventDataKeys.RulesEngine.Detail.CANCEL) else {
             Log.error(label: CampaignConstants.LOG_TAG, "\(#function) - Unsupported URI host found, neither confirm nor cancel found in URI: \(urlString).")
             return false
         }

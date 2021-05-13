@@ -130,14 +130,14 @@ class CampaignFullscreenMessage: CampaignMessaging {
         let detail = consequence.details
 
         // html is required
-        guard let html = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_HTML] as? String, !html.isEmpty else {
+        guard let html = detail[CampaignConstants.EventDataKeys.RulesEngine.Detail.HTML] as? String, !html.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The html filename for a fullscreen message is required, dropping the notification.")
             return
         }
         self.html = html
 
         // assets are optional
-        if let assetsArray = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_REMOTE_ASSETS] as? [[String]], !assetsArray.isEmpty {
+        if let assetsArray = detail[CampaignConstants.EventDataKeys.RulesEngine.Detail.REMOTE_ASSETS] as? [[String]], !assetsArray.isEmpty {
             for assets in assetsArray {
                 extractAsset(assets: assets)
             }

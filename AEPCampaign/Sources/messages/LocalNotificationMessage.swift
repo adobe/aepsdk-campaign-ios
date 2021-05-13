@@ -115,7 +115,7 @@ struct LocalNotificationMessage: CampaignMessaging {
         }
         var userInfo: [String: Any] = [:]
         if let deeplink = deeplink, !deeplink.isEmpty {
-            userInfo[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DEEPLINK] = deeplink
+            userInfo[CampaignConstants.EventDataKeys.RulesEngine.Detail.DEEPLINK] = deeplink
         }
         if let userData = userData, !userData.isEmpty {
             userInfo.merge(userData) { _, new in new }
@@ -156,50 +156,50 @@ struct LocalNotificationMessage: CampaignMessaging {
         }
 
         // content is required
-        guard let content = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CONTENT] as? String, !content.isEmpty else {
+        guard let content = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.CONTENT] as? String, !content.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The content for a local notification is required, dropping the notification.")
             return
         }
         self.content = content
 
         // prefer the date specified by fire date, otherwise use provided delay. both are optional.
-        let fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DATE] as? TimeInterval ?? TimeInterval(0)
+        let fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.DATE] as? TimeInterval ?? TimeInterval(0)
         if fireDate <= TimeInterval(0) {
-            self.fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_WAIT] as? TimeInterval ?? TimeInterval(0.1)
+            self.fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? TimeInterval ?? TimeInterval(0.1)
         } else {
             self.fireDate = fireDate
         }
 
         // deeplink is optional
-        if let deeplink = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DEEPLINK] as? String, !deeplink.isEmpty {
+        if let deeplink = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.DEEPLINK] as? String, !deeplink.isEmpty {
             self.deeplink = deeplink
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read adb_deeplink for local notification but found none. This is not a required field.")
         }
 
         // user info is optional
-        if let userData = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_USER_INFO] as? [String: Any], !userData.isEmpty {
+        if let userData = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.USER_INFO] as? [String: Any], !userData.isEmpty {
             self.userData = userData
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read userData for local notification but found none. This is not a required field.")
         }
 
         // sound is optional
-        if let sound = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_SOUND] as? String, !sound.isEmpty {
+        if let sound = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.SOUND] as? String, !sound.isEmpty {
             self.sound = sound
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read sound for local notification but found none. This is not a required field.")
         }
 
         // category is optional
-        if let category = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CATEGORY] as? String, !category.isEmpty {
+        if let category = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.CATEGORY] as? String, !category.isEmpty {
             self.category = category
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read category for local notification but found none. This is not a required field.")
         }
 
         // title is optional
-        if let title = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TITLE] as? String, !title.isEmpty {
+        if let title = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TITLE] as? String, !title.isEmpty {
             self.title = title
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read title for local notification but found none. This is not a required field.")
