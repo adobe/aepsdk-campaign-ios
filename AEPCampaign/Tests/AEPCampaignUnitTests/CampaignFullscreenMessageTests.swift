@@ -21,18 +21,14 @@ class CampaignFullscreenMessageTests: XCTestCase {
 
     var state: CampaignState!
     let fileManager = FileManager.default
-    var hitProcessor: MockHitProcessor!
-    var dataQueue: MockDataQueue!
     var dispatchedEvents: [Event] = []
     var cache: MockCache!
     var mockFullscreenMessage: MockFullscreenMessage!
     var uiService: MockUIService!
     var rootViewController: UIViewController!
-    var mockHtmlString = "mock html content with image from: https://images.com/image.jpg"
+    let mockHtmlString = "mock html content with image from: https://images.com/image.jpg"
 
     override func setUp() {
-        dataQueue = MockDataQueue()
-        hitProcessor = MockHitProcessor()
         cache = MockCache(name: "rules.cache")
         uiService = MockUIService()
         ServiceProvider.shared.uiService = uiService

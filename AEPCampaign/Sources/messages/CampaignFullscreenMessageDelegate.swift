@@ -55,7 +55,7 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
             return false
         }
 
-        // check adbinapp scheme. if it's a cache file url the AEPSDK will handle it. otherwise check for an adb deeplink scheme.
+        // check adbinapp scheme. if it's a cache file url the AEPSDK will handle it. otherwise check for an adobe deeplink scheme.
         let scheme = components.scheme
         if scheme == CampaignConstants.Campaign.Scheme.FILE {
             return true
@@ -71,8 +71,8 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
         }
 
         // extract query parameters, eg: id=h11901a,86f10d,3&url=https://www.adobe.com
-        guard let queryParameters = components.queryItems else {
-            Log.error(label: CampaignConstants.LOG_TAG, "\(#function) - Invalid query parameters found in URI: \(urlString).")
+        guard let queryParameters = components.queryItems, !queryParameters.isEmpty else {
+            Log.error(label: CampaignConstants.LOG_TAG, "\(#function) - No query parameters found in URI: \(urlString).")
             return false
         }
 

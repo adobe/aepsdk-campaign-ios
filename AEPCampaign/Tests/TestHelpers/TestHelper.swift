@@ -63,6 +63,11 @@ extension XCTest {
                 XCTAssertEqual(data[key], value)
             }
         }
+        if data.count == 4 { // check for id and type fields
+            let urlComponents = expectedParameters["expectedComponents"] as? [String] ?? []
+            XCTAssertEqual(data["type"], urlComponents[0])
+            XCTAssertEqual(data["id"], urlComponents[1])
+        }
     }
 
     func verifyGenericDataOsEvent(event: Event?) {
