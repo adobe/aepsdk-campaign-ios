@@ -10,10 +10,17 @@
  governing permissions and limitations under the License.
  */
 
+
 import Foundation
-import XCTest
-@testable import AEPCampaign
+@testable import AEPCore
 
-class CampaignRuleDownloaderUnitTests: XCTestCase {
+class MockRulesEngine: LaunchRulesEngine {
 
+    var isReplaceRulesCalled = false
+    var rules: [LaunchRule]?
+
+    override func replaceRules(with rules: [LaunchRule]) {
+        isReplaceRulesCalled = true
+        self.rules = rules
+    }
 }

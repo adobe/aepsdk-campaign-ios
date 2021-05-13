@@ -33,8 +33,15 @@
 		3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4656A8262F510D00BFC421 /* CampaignTests.swift */; };
 		3D4657362637521700BFC421 /* CampaignRulesDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */; };
 		3D46573F2637739D00BFC421 /* CampaignCachedRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */; };
-		3D4657A2263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657A1263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift */; };
+		3D4657402637739D00BFC421 /* CampaignCacheable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46573E2637739D00BFC421 /* CampaignCacheable.swift */; };
+		3D4657A2263CB19600BFC421 /* CampaignRulesDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657A1263CB19600BFC421 /* CampaignRulesDownloaderTests.swift */; };
 		3D4657D426449FA900BFC421 /* CampaignMessageAssetsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */; };
+		3D46582C264B005700BFC421 /* MockDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46582B264B005600BFC421 /* MockDiskCache.swift */; };
+		3D465838264B0B3B00BFC421 /* MockRulesEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */; };
+		3D46585D264B0F1B00BFC421 /* rules.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3D46585C264B0F1A00BFC421 /* rules.zip */; };
+		3D46585E264B0F1B00BFC421 /* rules.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3D46585C264B0F1A00BFC421 /* rules.zip */; };
+		3D46586A264B0F3000BFC421 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D465869264B0F3000BFC421 /* rules.json */; };
+		3D46586B264B0F3000BFC421 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D465869264B0F3000BFC421 /* rules.json */; };
 		9C45F90B11EB2103A1BB8AB3 /* Pods_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374428386226D10931057570 /* Pods_AEPCampaignUnitTests.framework */; };
 		CA7090B0230966F0E39740C6 /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA739EA6395FC06CCA2D8E84 /* Pods_CampaignTester.framework */; };
 		CC5CD838C90CBE5CF7F50374 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB375DC15B9F10E504C14968 /* Pods_AEPCampaignFunctionalTests.framework */; };
@@ -165,8 +172,13 @@
 		3D4656A8262F510D00BFC421 /* CampaignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignTests.swift; sourceTree = "<group>"; };
 		3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignRulesDownloader.swift; sourceTree = "<group>"; };
 		3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCachedRules.swift; sourceTree = "<group>"; };
-		3D4657A1263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRuleDownloaderUnitTests.swift; sourceTree = "<group>"; };
+		3D46573E2637739D00BFC421 /* CampaignCacheable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCacheable.swift; sourceTree = "<group>"; };
+		3D4657A1263CB19600BFC421 /* CampaignRulesDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRulesDownloaderTests.swift; sourceTree = "<group>"; };
 		3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMessageAssetsCache.swift; sourceTree = "<group>"; };
+		3D46582B264B005600BFC421 /* MockDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDiskCache.swift; sourceTree = "<group>"; };
+		3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRulesEngine.swift; sourceTree = "<group>"; };
+		3D46585C264B0F1A00BFC421 /* rules.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = rules.zip; sourceTree = "<group>"; };
+		3D465869264B0F3000BFC421 /* rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rules.json; sourceTree = "<group>"; };
 		521FFDAA97F062FEB893AFDC /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
 		5D175890156889E2CF12FFB9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7BF5C3BDD4347DCA119A9115 /* Pods-CampaignTester.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.debug.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.debug.xcconfig"; sourceTree = "<group>"; };
@@ -358,6 +370,7 @@
 		3D10A61C262581DA0049BDA1 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				3D46585B264B0EDC00BFC421 /* TestResources */,
 				D6E824392628A9640092C7DE /* TestHelpers */,
 				3D10A6252625826D0049BDA1 /* AEPCampaignFunctionalTests */,
 				3D10A63B262582A60049BDA1 /* AEPCampaignUnitTests */,
@@ -380,7 +393,7 @@
 				D6E824272628A6700092C7DE /* CampaignHitQueuingTests.swift */,
 				D6577E2D262F44EB008F0528 /* CampaignHitProcessorTests.swift */,
 				3D4656A8262F510D00BFC421 /* CampaignTests.swift */,
-				3D4657A1263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift */,
+				3D4657A1263CB19600BFC421 /* CampaignRulesDownloaderTests.swift */,
 				D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */,
 				D6B405AB263B801B002814FC /* CampaignMessagingTests.swift */,
 			);
@@ -451,6 +464,8 @@
 				D6B405C8263C6057002814FC /* MockUrlService.swift */,
 				D6B2F0152634B46200747CFE /* TestHelper.swift */,
 				D6B405C2263C58F7002814FC /* TestMessage.swift */,
+				3D46582B264B005600BFC421 /* MockDiskCache.swift */,
+				3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -658,6 +673,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D46585D264B0F1B00BFC421 /* rules.zip in Resources */,
+				3D46586A264B0F3000BFC421 /* rules.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -665,6 +682,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D46585E264B0F1B00BFC421 /* rules.zip in Resources */,
+				3D46586B264B0F3000BFC421 /* rules.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,7 +921,8 @@
 				D6B2F0172634B46200747CFE /* TestHelper.swift in Sources */,
 				3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */,
 				3D465693262F4C9800BFC421 /* TestableExtensionRuntime.swift in Sources */,
-				3D4657A2263CB19600BFC421 /* CampaignRuleDownloaderUnitTests.swift in Sources */,
+				3D46582C264B005700BFC421 /* MockDiskCache.swift in Sources */,
+				3D4657A2263CB19600BFC421 /* CampaignRulesDownloaderTests.swift in Sources */,
 				D6577DEF2628DAC7008F0528 /* MockDataQueuing.swift in Sources */,
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
 				D6B405AC263B801B002814FC /* CampaignMessagingTests.swift in Sources */,
@@ -910,6 +930,7 @@
 				D6B405C3263C58F7002814FC /* TestMessage.swift in Sources */,
 				D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */,
 				D6B2F0112634B3F000747CFE /* MockExtension.swift in Sources */,
+				3D465838264B0B3B00BFC421 /* MockRulesEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
