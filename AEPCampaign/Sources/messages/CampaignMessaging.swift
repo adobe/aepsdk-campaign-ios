@@ -25,7 +25,7 @@ protocol CampaignMessaging {
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Campaign message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging?
+    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging?
 
     /// Implemented by the Message subclass to display the message.
     func showMessage()

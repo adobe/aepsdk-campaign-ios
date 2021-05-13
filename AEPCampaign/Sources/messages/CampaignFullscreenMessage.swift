@@ -30,12 +30,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var fullscreenMessage: FullscreenPresentable?
 
     #if DEBUG
-        var cache: Cache
-        var replacementAsset: String?
         var htmlPayload: String?
-    #else
-        private let cache: Cache
-
     #endif
 
     /// Campaign Fullscreen Message class initializer. It is accessed via the `createMessageObject` method.
@@ -48,7 +43,6 @@ class CampaignFullscreenMessage: CampaignMessaging {
         self.eventDispatcher = eventDispatcher
         self.state = state
         self.isUsingLocalImage = false
-        self.cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
         self.extractedAssets = []
         self.parseFullscreenMessagePayload(consequence: consequence)
     }
@@ -59,7 +53,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
+    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         guard let consequence = consequence else {
             Log.trace(label: LOG_TAG, "\(#function) - Cannot create a Fullscreen Message object, the consequence is nil.")
             return nil
@@ -76,7 +70,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     /// This method reads the html content from the cached html within the rules cache and generates the expanded html by
     /// replacing assets URLs with cached references, before calling the method to display the message.
     func showMessage() {
-        guard let htmlContent = readHtmlFromFile(), !htmlContent.isEmpty else {
+        guard let html = html, let htmlContent = getHtmlFromCache(fileName: html), !htmlContent.isEmpty else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Failed to read html content from the Campaign rules cache.")
             return
         }
@@ -167,17 +161,9 @@ class CampaignFullscreenMessage: CampaignMessaging {
         extractedAssets?.append(currentAsset)
     }
 
-    /// Reads a html file from disk and returns its contents as `String`
-    ///  - Returns: A `String` containing the cached html.
-    private func readHtmlFromFile() -> String? {
-        guard let html = html, let cachedEntry = cache.get(key: "campaignrules/assets/"+html) else {
-            return nil
-        }
-        return String(data: cachedEntry.data, encoding: .utf8)
-    }
-
     /// Replace the image urls in the HTML with cached URIs for those images. If no cache URIs are found, then use a local image asset, if it has been
     /// provided in the assets.
+    ///  - Parameter sourceHtml: A `String` containing the HTML payload of the fullscreen message.
     ///  - Returns: The HTML `String` with image tokens replaced with cached URIs, if available.
     private func generateExpandedHtml(sourceHtml: String) -> String {
         // if we have no extracted assets, return the source html unchanged
@@ -186,7 +172,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
             return sourceHtml
         }
         var imageTokens: [String: String] = [:]
-        // the first element in assets is a url
+        // the first element in asset is a url
         // the remaining elements in the are urls or file paths to assets that should replace that asset in the resulting html if they are already cached
         for asset in extractedAssets {
             // the url to replace
@@ -208,6 +194,8 @@ class CampaignFullscreenMessage: CampaignMessaging {
     }
 
     /// Returns the remote or local URL to use in asset replacement.
+    ///  - Parameter assetArray: An array of `Strings`containing the an asset url and the cached remote or local assets that
+    ///   should be used to replace them.
     ///  - Returns: A `String` containing either a cached URI, or a local asset name, or nil if neither is present.
     private func getAssetReplacement(assetArray: [String]) -> String? {
         guard !assetArray.isEmpty else { // edge case
@@ -223,11 +211,8 @@ class CampaignFullscreenMessage: CampaignMessaging {
                     return nil
                 }
                 cacheDir.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)/\(url.absoluteString.alphanumeric)")
-                if let cacheEntry = cache.get(key: cacheDir.absoluteString) {
-                    Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from \(asset).")
-                    self.replacementAsset = String(data: cacheEntry.data, encoding: .utf8)
-                    return cacheDir.path
-                }
+                Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from \(asset).")
+                return cacheDir.path
             }
         }
 
@@ -238,5 +223,19 @@ class CampaignFullscreenMessage: CampaignMessaging {
             return asset
         }
         return nil
+    }
+
+    /// Returns the html as a `String` from the download rule.zip's assets directory (/campaignrules/assets/)
+    ///  - Parameter fileName: A `String` containing the HTML filename.
+    ///  - Returns: A `String` containing the HTML file contents for this message.
+    private func getHtmlFromCache(fileName: String) -> String? {
+        guard let cacheDir = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+            return nil
+        }
+        let htmlInAssets = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY).appendingPathComponent(CampaignConstants.RulesDownloaderConstants.ASSETS_DIR_NAME).appendingPathComponent(fileName)
+        guard let htmlFile = try? String(contentsOf: htmlInAssets) else {
+            return nil
+        }
+        return htmlFile
     }
 }
