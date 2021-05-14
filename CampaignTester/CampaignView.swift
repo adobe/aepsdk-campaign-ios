@@ -80,6 +80,21 @@ struct CampaignView: View {
                         }.cornerRadius(5)
                         TextField("Retrieved Extension Version", text: $extensionVersion)
                             .autocapitalization(.none)
+                    Button(action: {
+                        let alertDetailDictionary = ["title": "ACS Alert Message Test", "content": "⚠️ Alert! ⚠️", "confirm": "Take me to adobe.com", "cancel": "Dimiss alert", "url": "https://www.adobe.com", "template": "alert"] as [String: Any]
+                        let alertConsequence = ["id": UUID().uuidString, "type": "iam", "detail": alertDetailDictionary] as [String: Any?]
+                        let data = ["triggeredconsequence": alertConsequence]
+                        let event = Event(name: "rules trigger alert message", type: EventType.campaign, source: EventSource.requestContent, data: data)
+                        MobileCore.dispatch(event: event)
+                    }
+                    ) {
+                        Text("Trigger alert message")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
 
                         Button(action: {
                             // trigger alert

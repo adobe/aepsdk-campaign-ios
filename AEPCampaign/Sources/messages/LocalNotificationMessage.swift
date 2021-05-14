@@ -29,35 +29,35 @@ struct LocalNotificationMessage: CampaignMessaging {
     private var fireDate: TimeInterval?
     private var title: String?
 
-    /// LocalNotification class initializer. It is accessed via the `createMessageObject` method.
+    /// LocalNotification struct initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
-    ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
+    ///    - consequence: `RuleConsequence` containing a Message-defining payload
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
-    private init(consequence: CampaignRuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
+    private init(consequence: RuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) {
         self.messageId = consequence.id
         self.eventDispatcher = eventDispatcher
         self.state = state
         self.parseLocalNotificationMessagePayload(consequence: consequence)
     }
 
-    /// Creates a Local Notification Message object
+    /// Creates a `LocalNotificationMessage` object
     ///  - Parameters:
-    ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
+    ///    - consequence: `RuleConsequence` containing a Message-defining payload
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
+    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         guard let consequence = consequence else {
             Log.trace(label: LOG_TAG, "\(#function) - Cannot create a Local Notification Message object, the consequence is nil.")
             return nil
         }
-        let messageObject = LocalNotificationMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
+        let localNotificationMessage = LocalNotificationMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
         // content is required so no message object is returned if it is nil
-        guard messageObject.content != nil else {
+        guard localNotificationMessage.content != nil else {
             return nil
         }
-        return messageObject
+        return localNotificationMessage
     }
 
     /// Validates the parsed Local Notification message payload and if valid, attempts to send message tracking events.
@@ -92,7 +92,7 @@ struct LocalNotificationMessage: CampaignMessaging {
     private func scheduleLocalNotification() {
         // content (message body) is required, bail early if we don't have it
         guard let localNotificationBody = self.content else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message detail is nil.")
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message body is nil.")
             return
         }
 
@@ -115,7 +115,7 @@ struct LocalNotificationMessage: CampaignMessaging {
         }
         var userInfo: [String: Any] = [:]
         if let deeplink = deeplink, !deeplink.isEmpty {
-            userInfo[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DEEPLINK] = deeplink
+            userInfo[CampaignConstants.EventDataKeys.RulesEngine.Detail.DEEPLINK] = deeplink
         }
         if let userData = userData, !userData.isEmpty {
             userInfo.merge(userData) { _, new in new }
@@ -148,57 +148,58 @@ struct LocalNotificationMessage: CampaignMessaging {
     ///     * sound: A `String` containing the name of a bundled sound file to use when the notification is triggered.
     ///     * category: A `String` containing an app defined category for the notification.
     ///     * title: A `String` containing the title for this message.
-    ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
-    private mutating func parseLocalNotificationMessagePayload(consequence: CampaignRuleConsequence) {
-        guard let detail = consequence.detail, !detail.isEmpty else {
+    ///  - Parameter consequence: `RuleConsequence` containing a Message-defining payload
+    private mutating func parseLocalNotificationMessagePayload(consequence: RuleConsequence) {
+        guard !consequence.details.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The consequence details are nil or empty, dropping the local notification.")
             return
         }
+
         // content is required
-        guard let content = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CONTENT] as? String, !content.isEmpty else {
+        guard let content = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.CONTENT] as? String, !content.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The content for a local notification is required, dropping the notification.")
             return
         }
         self.content = content
 
         // prefer the date specified by fire date, otherwise use provided delay. both are optional.
-        let fireDate = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DATE] as? TimeInterval ?? TimeInterval(0)
+        let fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.DATE] as? TimeInterval ?? TimeInterval(0)
         if fireDate <= TimeInterval(0) {
-            self.fireDate = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_WAIT] as? TimeInterval ?? TimeInterval(0.1)
+            self.fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? TimeInterval ?? TimeInterval(0.1)
         } else {
             self.fireDate = fireDate
         }
 
         // deeplink is optional
-        if let deeplink = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_DEEPLINK] as? String, !deeplink.isEmpty {
+        if let deeplink = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.DEEPLINK] as? String, !deeplink.isEmpty {
             self.deeplink = deeplink
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read adb_deeplink for local notification but found none. This is not a required field.")
         }
 
         // user info is optional
-        if let userData = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_USER_INFO] as? [String: Any], !userData.isEmpty {
+        if let userData = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.USER_INFO] as? [String: Any], !userData.isEmpty {
             self.userData = userData
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read userData for local notification but found none. This is not a required field.")
         }
 
         // sound is optional
-        if let sound = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_SOUND] as? String, !sound.isEmpty {
+        if let sound = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.SOUND] as? String, !sound.isEmpty {
             self.sound = sound
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read sound for local notification but found none. This is not a required field.")
         }
 
         // category is optional
-        if let category = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_CATEGORY] as? String, !category.isEmpty {
+        if let category = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.CATEGORY] as? String, !category.isEmpty {
             self.category = category
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read category for local notification but found none. This is not a required field.")
         }
 
         // title is optional
-        if let title = detail[CampaignConstants.EventDataKeys.RulesEngine.CONSEQUENCE_DETAIL_KEY_TITLE] as? String, !title.isEmpty {
+        if let title = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TITLE] as? String, !title.isEmpty {
             self.title = title
         } else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Tried to read title for local notification but found none. This is not a required field.")
