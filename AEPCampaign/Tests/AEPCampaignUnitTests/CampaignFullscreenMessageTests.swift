@@ -24,7 +24,6 @@ class CampaignFullscreenMessageTests: XCTestCase {
     var dispatchedEvents: [Event] = []
     var mockFullscreenMessage: MockFullscreenMessage!
     var uiService: MockUIService!
-    var cache: MockDiskCache!
 
     var rootViewController: UIViewController!
     let mockHtmlString = "mock html content with image from: https://images.com/image.jpg"
@@ -34,7 +33,6 @@ class CampaignFullscreenMessageTests: XCTestCase {
         ServiceProvider.shared.uiService = uiService
         state = CampaignState()
         addStateData()
-        cache = MockDiskCache()
     }
 
     func addStateData(customConfig: [String: Any]? = nil) {
@@ -58,9 +56,10 @@ class CampaignFullscreenMessageTests: XCTestCase {
         guard let cachedDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }
-        let htmlDir = cachedDir.appendingPathComponent("campaignrules").appendingPathComponent("assets")
         // clear cached html first
+        let htmlDir = cachedDir.appendingPathComponent("campaignrules").appendingPathComponent("assets")
         clearContentsOf(htmlDir)
+        // write html file to assets directory
         let file = htmlDir.appendingPathComponent("fullscreenIam").appendingPathExtension("html")
         do {
             try fileManager.createDirectory(atPath: htmlDir.path, withIntermediateDirectories: true, attributes: nil)
@@ -74,9 +73,10 @@ class CampaignFullscreenMessageTests: XCTestCase {
         guard let cacheUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
             return
         }
-        let messageAssetCacheUrl = cacheUrl.appendingPathComponent("messages").appendingPathComponent("20761932")
         // clear cached message assets first
+        let messageAssetCacheUrl = cacheUrl.appendingPathComponent("messages").appendingPathComponent("20761932")
         clearContentsOf(messageAssetCacheUrl)
+        // write mock image data to messages/messageId directory
         if let mockData = "remote image data".data(using: .utf8) {
             do {
                 try mockData.write(to: messageAssetCacheUrl)

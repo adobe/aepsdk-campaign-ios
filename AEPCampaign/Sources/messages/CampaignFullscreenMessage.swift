@@ -30,6 +30,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var fullscreenMessage: FullscreenPresentable?
 
     #if DEBUG
+        // var for unit testing
         var htmlPayload: String?
     #endif
 
