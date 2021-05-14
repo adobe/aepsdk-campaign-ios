@@ -21,7 +21,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher?
     var messageId: String?
 
-    public weak var fullscreenMessageDelegate: FullscreenMessageDelegate?
+    weak var fullscreenMessageDelegate: FullscreenMessageDelegate?
 
     private var state: CampaignState?
     private var html: String?
