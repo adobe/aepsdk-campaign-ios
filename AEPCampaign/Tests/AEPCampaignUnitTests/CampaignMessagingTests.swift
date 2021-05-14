@@ -12,7 +12,7 @@
 
 import XCTest
 import Foundation
-import AEPServices
+@testable import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 

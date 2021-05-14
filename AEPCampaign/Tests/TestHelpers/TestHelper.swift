@@ -63,7 +63,7 @@ extension XCTest {
                 XCTAssertEqual(data[key], value)
             }
         }
-        if data.count == 4 { // check for id and type fields
+        if data["type"] != nil && data["id"] != nil { // check for id and type fields if present
             let urlComponents = expectedParameters["expectedComponents"] as? [String] ?? []
             XCTAssertEqual(data["type"], urlComponents[0])
             XCTAssertEqual(data["id"], urlComponents[1])

@@ -22,18 +22,19 @@ class CampaignFullscreenMessageTests: XCTestCase {
     var state: CampaignState!
     let fileManager = FileManager.default
     var dispatchedEvents: [Event] = []
-    var cache: MockCache!
     var mockFullscreenMessage: MockFullscreenMessage!
     var uiService: MockUIService!
+    var cache: MockDiskCache!
+
     var rootViewController: UIViewController!
     let mockHtmlString = "mock html content with image from: https://images.com/image.jpg"
 
     override func setUp() {
-        cache = MockCache(name: "rules.cache")
         uiService = MockUIService()
         ServiceProvider.shared.uiService = uiService
         state = CampaignState()
         addStateData()
+        cache = MockDiskCache()
     }
 
     func addStateData(customConfig: [String: Any]? = nil) {
@@ -52,20 +53,49 @@ class CampaignFullscreenMessageTests: XCTestCase {
     }
 
     func setupMockCache() {
-        // clear cache
-        cache.reset()
-
         // add fullscreen html to cache
-        if let data = mockHtmlString.data(using: .utf8) {
-            let cacheEntry = CacheEntry(data: data, expiry: .never, metadata: nil)
-            try? cache.set(key: "campaignrules/assets/fullscreenIam.html", entry: cacheEntry)
+        let data = Data(mockHtmlString.utf8)
+        guard let cachedDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+            return
+        }
+        let htmlDir = cachedDir.appendingPathComponent("campaignrules").appendingPathComponent("assets")
+        // clear cached html first
+        clearContentsOf(htmlDir)
+        let file = htmlDir.appendingPathComponent("fullscreenIam").appendingPathExtension("html")
+        do {
+            try fileManager.createDirectory(atPath: htmlDir.path, withIntermediateDirectories: true, attributes: nil)
+            try data.write(to: file, options: .atomic)
+        } catch {
+            print(error)
         }
     }
 
     func addRemoteAssetToCache() {
+        guard let cacheUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
+            return
+        }
+        let messageAssetCacheUrl = cacheUrl.appendingPathComponent("messages").appendingPathComponent("20761932")
+        // clear cached message assets first
+        clearContentsOf(messageAssetCacheUrl)
         if let mockData = "remote image data".data(using: .utf8) {
-            let asset = CacheEntry(data: mockData, expiry: .never, metadata: nil)
-            cache.setCachedAssets(messageId: "20761932", url: "https://images.com/anotherimage.jpg".alphanumeric, entry: asset)
+            do {
+                try mockData.write(to: messageAssetCacheUrl)
+            } catch {
+                print(error)
+            }
+        }
+    }
+
+    func clearContentsOf(_ url: URL) {
+        do {
+            let contents = try fileManager.contentsOfDirectory(atPath: url.path)
+            print("before  \(contents)")
+            let urls = contents.map { URL(string: "\(url.appendingPathComponent("\($0)"))")! }
+            urls.forEach {
+                try? FileManager.default.removeItem(at: $0)
+            }
+        } catch {
+            print(error)
         }
     }
 
@@ -115,7 +145,6 @@ class CampaignFullscreenMessageTests: XCTestCase {
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
-        messageObject?.cache = self.cache
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
         // test
@@ -129,12 +158,17 @@ class CampaignFullscreenMessageTests: XCTestCase {
 
     func testFullscreenShowMessageWithEmptyCache() {
         // setup
+        guard let cachedDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+            return
+        }
+        let htmlDir = cachedDir.appendingPathComponent("campaignrules").appendingPathComponent("assets")
+        // clear cached html
+        clearContentsOf(htmlDir)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen"] as [String: Any]
         let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
-        messageObject?.cache = self.cache
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
         // test
@@ -152,7 +186,6 @@ class CampaignFullscreenMessageTests: XCTestCase {
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
-        messageObject?.cache = self.cache
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
         // test
@@ -170,7 +203,6 @@ class CampaignFullscreenMessageTests: XCTestCase {
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
-        messageObject?.cache = self.cache
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
         // test
@@ -195,24 +227,17 @@ class CampaignFullscreenMessageTests: XCTestCase {
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
-        messageObject?.cache = self.cache
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
         // test
         messageObject?.showMessage()
         // verify
         XCTAssertTrue(uiService.createFullscreenMessageCalled)
-        // verify asset replaced with cached asset
-        guard let replacementAsset = messageObject?.replacementAsset else {
-            XCTFail("no replacement asset found")
-            return
-        }
         guard let payload = messageObject?.htmlPayload else {
             XCTFail("no html payload found")
             return
         }
         XCTAssertTrue(payload.contains("/Caches/messages/20761932/httpsimagescomanotherimagejpg"))
-        XCTAssertEqual(replacementAsset, "remote image data")
         let messageTriggeredEvent = dispatchedEvents[0]
         let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)
@@ -231,7 +256,6 @@ class CampaignFullscreenMessageTests: XCTestCase {
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
-        messageObject?.cache = self.cache
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
         // test
@@ -257,7 +281,6 @@ class CampaignFullscreenMessageTests: XCTestCase {
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
-        messageObject?.cache = self.cache
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
         // test

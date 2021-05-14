@@ -71,18 +71,16 @@
 		D6B407102643921E002814FC /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
 		D6D9B2582645F34600BAF249 /* CampaignFullscreenMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D9B24C2645F2D400BAF249 /* CampaignFullscreenMessageTests.swift */; };
 		D6D9B2EE264A002E00BAF249 /* CampaignCacheable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D9B2ED264A002E00BAF249 /* CampaignCacheable.swift */; };
-		D6E3148A264AFEC5007A22BA /* MockCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E31489264AFEC5007A22BA /* MockCache.swift */; };
-		D6E3148B264AFEC5007A22BA /* MockCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E31489264AFEC5007A22BA /* MockCache.swift */; };
-		D6E314D0264B3EA3007A22BA /* MockFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314CF264B3EA3007A22BA /* MockFullscreenMessage.swift */; };
-		D6E314D1264B3EA3007A22BA /* MockFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314CF264B3EA3007A22BA /* MockFullscreenMessage.swift */; };
-		D6E314DC264B5026007A22BA /* MockUIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314C8264B0FC4007A22BA /* MockUIService.swift */; };
-		D6E314E2264B5026007A22BA /* MockUIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314C8264B0FC4007A22BA /* MockUIService.swift */; };
-		D6E31544264C9478007A22BA /* CampaignFullscreenMessageDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E31543264C9478007A22BA /* CampaignFullscreenMessageDelegateTests.swift */; };
 		D6E29BA4264DE12F001FEAF6 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = D6E29BA2264DE12F001FEAF6 /* rules.json */; };
 		D6E29BA5264DE12F001FEAF6 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = D6E29BA2264DE12F001FEAF6 /* rules.json */; };
 		D6E29BA6264DE12F001FEAF6 /* rules.zip in Resources */ = {isa = PBXBuildFile; fileRef = D6E29BA3264DE12F001FEAF6 /* rules.zip */; };
 		D6E29BA7264DE12F001FEAF6 /* rules.zip in Resources */ = {isa = PBXBuildFile; fileRef = D6E29BA3264DE12F001FEAF6 /* rules.zip */; };
 		D6E29BD5264DE70F001FEAF6 /* CampaignMessagingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B405AB263B801B002814FC /* CampaignMessagingTests.swift */; };
+		D6E314D0264B3EA3007A22BA /* MockFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314CF264B3EA3007A22BA /* MockFullscreenMessage.swift */; };
+		D6E314D1264B3EA3007A22BA /* MockFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314CF264B3EA3007A22BA /* MockFullscreenMessage.swift */; };
+		D6E314DC264B5026007A22BA /* MockUIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314C8264B0FC4007A22BA /* MockUIService.swift */; };
+		D6E314E2264B5026007A22BA /* MockUIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E314C8264B0FC4007A22BA /* MockUIService.swift */; };
+		D6E31544264C9478007A22BA /* CampaignFullscreenMessageDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E31543264C9478007A22BA /* CampaignFullscreenMessageDelegateTests.swift */; };
 		D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823B8262616E90092C7DE /* CampaignState.swift */; };
 		D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823BA262616F80092C7DE /* CampaignStateTests.swift */; };
 		D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */; };
@@ -208,14 +206,13 @@
 		D6B406D52643638D002814FC /* CampaignTester.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CampaignTester.entitlements; sourceTree = "<group>"; };
 		D6D9B24C2645F2D400BAF249 /* CampaignFullscreenMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessageTests.swift; sourceTree = "<group>"; };
 		D6D9B2ED264A002E00BAF249 /* CampaignCacheable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCacheable.swift; sourceTree = "<group>"; };
-		D6E31489264AFEC5007A22BA /* MockCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCache.swift; sourceTree = "<group>"; };
+		D6E29BA2264DE12F001FEAF6 /* rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rules.json; sourceTree = "<group>"; };
+		D6E29BA3264DE12F001FEAF6 /* rules.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = rules.zip; sourceTree = "<group>"; };
 		D6E314B5264B0BA5007A22BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D6E314BC264B0C2D007A22BA /* AEPServices.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AEPServices.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6E314C8264B0FC4007A22BA /* MockUIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUIService.swift; sourceTree = "<group>"; };
 		D6E314CF264B3EA3007A22BA /* MockFullscreenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFullscreenMessage.swift; sourceTree = "<group>"; };
 		D6E31543264C9478007A22BA /* CampaignFullscreenMessageDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFullscreenMessageDelegateTests.swift; sourceTree = "<group>"; };
-		D6E29BA2264DE12F001FEAF6 /* rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rules.json; sourceTree = "<group>"; };
-		D6E29BA3264DE12F001FEAF6 /* rules.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = rules.zip; sourceTree = "<group>"; };
 		D6E823B8262616E90092C7DE /* CampaignState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignState.swift; sourceTree = "<group>"; };
 		D6E823BA262616F80092C7DE /* CampaignStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignStateTests.swift; sourceTree = "<group>"; };
 		D6E823DC262761130092C7DE /* CampaignHitProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignHitProcessor.swift; sourceTree = "<group>"; };
@@ -466,7 +463,6 @@
 			children = (
 				3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */,
 				D6E8243A2628A9830092C7DE /* MockHitProcessor.swift */,
-				D6E31489264AFEC5007A22BA /* MockCache.swift */,
 				D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */,
 				D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */,
 				D6E314CF264B3EA3007A22BA /* MockFullscreenMessage.swift */,
@@ -912,7 +908,6 @@
 				D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */,
 				D6B405CF263C605A002814FC /* TestMessage.swift in Sources */,
 				D6577E33262F6E12008F0528 /* MockNetworking.swift in Sources */,
-				D6E3148A264AFEC5007A22BA /* MockCache.swift in Sources */,
 				D6E314DC264B5026007A22BA /* MockUIService.swift in Sources */,
 				D6B405C9263C6057002814FC /* MockUrlService.swift in Sources */,
 				D6E8243B2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
@@ -942,8 +937,6 @@
 				D6577DEF2628DAC7008F0528 /* MockDataQueuing.swift in Sources */,
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
 				D6D9B2582645F34600BAF249 /* CampaignFullscreenMessageTests.swift in Sources */,
-				D6E3148B264AFEC5007A22BA /* MockCache.swift in Sources */,
-				D6B405AC263B801B002814FC /* CampaignMessagingTests.swift in Sources */,
 				D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */,
 				D6B405C3263C58F7002814FC /* TestMessage.swift in Sources */,
 				D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */,
