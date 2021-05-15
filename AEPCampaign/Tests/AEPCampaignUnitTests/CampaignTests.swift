@@ -24,6 +24,8 @@ class CampaignTests: XCTestCase {
     var hitProcessor: MockHitProcessor!
     var dataQueue: DataQueue!
     var networking: MockNetworking!
+    var mockDiskCache: MockDiskCache!
+    var mockRulesEngine: MockRulesEngine!
 
     override func setUp() {
         extensionRuntime = TestableExtensionRuntime()
@@ -41,6 +43,13 @@ class CampaignTests: XCTestCase {
 
         campaign.onRegistered()
         campaign.state = state
+
+        mockDiskCache = MockDiskCache()
+        ServiceProvider.shared.cacheService = mockDiskCache
+
+        mockRulesEngine = MockRulesEngine(name: "\(CampaignConstants.EXTENSION_NAME).rulesengine", extensionRuntime: extensionRuntime)
+        campaign.rulesEngine = mockRulesEngine
+
     }
 
     // MARK: Generic Data event tests
@@ -422,5 +431,133 @@ class CampaignTests: XCTestCase {
         // verify
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
+    }
+
+    //MARK:- Unit tests for CampaignRequestIdentity and CampaignRequestReset Events handling.
+
+    func testCampaignRequestIdentityEventSuccess() {
+        let campaignServer = "campaign.com"
+        let ecid = "ecid"
+        let propertId = "propertId"
+        let mciasServer = "mciasServer"
+        //Setup
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mciasServer,
+            CampaignConstants.Configuration.PROPERTY_ID: propertId
+        ]
+        let linkageFields = ["key1": "value1", "key2": "value2"]
+        guard let linkageFieldsData = try? JSONEncoder().encode(linkageFields) else {
+            XCTFail("Error in JSON encoding Linkage fields")
+            return
+        }
+        let jsonEncodedLinkageFields = String.init(data: linkageFieldsData, encoding: .utf8)
+        let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
+
+        let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
+
+        //Action
+        state.update(dataMap: sharedStates)
+        extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
+        Thread.sleep(forTimeInterval: 1)
+
+        //Assert
+
+        XCTAssertTrue(mockDiskCache.isRemoveCacheCalled)
+        XCTAssertEqual(networking.cachedNetworkRequests.count, 1)
+        let networkRequest = networking.cachedNetworkRequests[0]
+        XCTAssertNotNil(networkRequest.httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
+        guard let linkageFieldHeaderBase64 = networkRequest.httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER] else {
+            XCTFail("Expected value Linkage Field is missing in network request headers.")
+            return
+        }
+        guard let data = Data(base64Encoded: linkageFieldHeaderBase64) else {
+            XCTFail("Unable to convert Linkage fields header to Data Type.")
+            return
+        }
+        let linkageFieldHeader = String.init(data: data, encoding: .utf8)
+        XCTAssertEqual(linkageFieldHeader, jsonEncodedLinkageFields)
+    }
+
+    func testCampaignRequestIdentityEventFailure() {
+        let campaignServer = "campaign.com"
+        let ecid = "ecid"
+        let propertId = "propertId"
+        let mciasServer = "mciasServer"
+        //Setup
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mciasServer,
+            CampaignConstants.Configuration.PROPERTY_ID: propertId
+        ]
+
+        let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: nil)
+
+        //Action
+        state.update(dataMap: sharedStates)
+        extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
+
+        //Assert
+        XCTAssertFalse(mockDiskCache.isRemoveCacheCalled)
+        XCTAssertEqual(networking.cachedNetworkRequests.count, 0)
+    }
+
+    func testCampaignRequestResetEvent() {
+        let campaignServer = "campaign.com"
+        let ecid = "ecid"
+        let propertId = "propertId"
+        let mciasServer = "mciasServer"
+        //Setup
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
+
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mciasServer,
+            CampaignConstants.Configuration.PROPERTY_ID: propertId
+        ]
+
+        let linkageFields = ["key1": "value1", "key2": "value2"]
+        guard let linkageFieldsData = try? JSONEncoder().encode(linkageFields) else {
+            XCTFail("Error in JSON encoding Linkage fields")
+            return
+        }
+        let jsonEncodedLinkageFields = String.init(data: linkageFieldsData, encoding: .utf8)
+        let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
+
+        let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
+
+        //Action
+        state.update(dataMap: sharedStates)
+        extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
+
+        //Ensure that Linkage Field is not nil
+
+        Thread.sleep(forTimeInterval: 1)
+        XCTAssertNotNil(networking.cachedNetworkRequests[0].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
+
+        let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)
+        state.update(dataMap: sharedStates)
+        extensionRuntime.simulateComingEvents(campaignRequestResetEvent)
+        Thread.sleep(forTimeInterval: 1)
+
+        //Assert
+        XCTAssertTrue(mockDiskCache.isRemoveCacheCalled)
+        XCTAssertEqual(networking.cachedNetworkRequests.count, 2)
+        XCTAssertNil(networking.cachedNetworkRequests[1].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
+        XCTAssertTrue(mockRulesEngine.isReplaceRulesCalled)
+        XCTAssertEqual(mockRulesEngine.rules?.count, 0)
     }
 }

@@ -28,6 +28,7 @@
 		3D46585E264B0F1B00BFC421 /* rules.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3D46585C264B0F1A00BFC421 /* rules.zip */; };
 		3D46586A264B0F3000BFC421 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D465869264B0F3000BFC421 /* rules.json */; };
 		3D46586B264B0F3000BFC421 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D465869264B0F3000BFC421 /* rules.json */; };
+		3D46589C264DF98900BFC421 /* FileManager+Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */; };
 		9C45F90B11EB2103A1BB8AB3 /* Pods_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374428386226D10931057570 /* Pods_AEPCampaignUnitTests.framework */; };
 		CA7090B0230966F0E39740C6 /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA739EA6395FC06CCA2D8E84 /* Pods_CampaignTester.framework */; };
 		CC5CD838C90CBE5CF7F50374 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB375DC15B9F10E504C14968 /* Pods_AEPCampaignFunctionalTests.framework */; };
@@ -142,6 +143,7 @@
 		3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRulesEngine.swift; sourceTree = "<group>"; };
 		3D46585C264B0F1A00BFC421 /* rules.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = rules.zip; sourceTree = "<group>"; };
 		3D465869264B0F3000BFC421 /* rules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rules.json; sourceTree = "<group>"; };
+		3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Campaign.swift"; sourceTree = "<group>"; };
 		521FFDAA97F062FEB893AFDC /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
 		5D175890156889E2CF12FFB9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7BF5C3BDD4347DCA119A9115 /* Pods-CampaignTester.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.debug.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.debug.xcconfig"; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 				D6577E19262DFFA9008F0528 /* HitQueuing+Campaign.swift */,
 				3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */,
 				D6577DF92628F48A008F0528 /* URL+Campaign.swift */,
+				3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -841,6 +844,7 @@
 				D6B2F04E26386EB100747CFE /* CampaignMessaging.swift in Sources */,
 				D6B2F0292637445D00747CFE /* CampaignRuleConsequence.swift in Sources */,
 				D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */,
+				3D46589C264DF98900BFC421 /* FileManager+Campaign.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -101,6 +101,7 @@ struct CampaignRulesDownloader {
                     } else {
                         Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
                     }
+                    cacheDownloadedAssets()
                     self.onPostRulesDownload(data: data)
                     return
                 case let .failure(error):
@@ -143,7 +144,7 @@ struct CampaignRulesDownloader {
 
     ///Triggers removal of existing cached Assets, that are no more required.
     private func clearCachedMessageAssets(except messageIds: [String], campaignMessageAssetsCache: CampaignMessageAssetsCache) {
-        campaignMessageAssetsCache.clearCachedAssetsForMessagesNotInList(filesToRetain: messageIds, pathRelativeToCacheDir: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)
+        campaignMessageAssetsCache.clearCachedAssetsNotInList(filesToRetain: messageIds, pathRelativeToCacheDir: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)
 
     }
 
@@ -170,10 +171,8 @@ struct CampaignRulesDownloader {
     /// - Parameter source: source URL for the zip file
     /// - Returns: The unzipped rules as a `Data`
     private func unzipRules(at source: URL) -> Data? {
-        guard let cachedDir = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
-            return nil
-        }
-        let destination = cachedDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY, isDirectory: true)
+        let tempDir = FileManager.default.temporaryDirectory
+        let destination = tempDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_TEMP_DIR, isDirectory: true)
         let unzippedItems = fileUnzipper.unzipItem(at: source, to: destination)
         // Find the unzipped item rules.json
         guard let _ = unzippedItems.firstIndex(of: "rules.json") else {
@@ -186,6 +185,37 @@ struct CampaignRulesDownloader {
             return nil
         }
     }
+
+    private func cacheDownloadedAssets() {
+        let fileManager = FileManager.default
+        let assetsDir = FileManager.default.temporaryDirectory.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_TEMP_DIR).appendingPathComponent(CampaignConstants.RulesDownloaderConstants.ASSETS_DIR_NAME)
+        guard fileManager.fileExists(atPath: assetsDir.absoluteString) else {
+            Log.trace(label: LOG_TAG, "\(#function) - No assets for caching.")
+            return
+        }
+        guard let assets = try? fileManager.contentsOfDirectory(atPath: assetsDir.absoluteString) else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to cache Assets for rules. Not able read file names in Assets folder.")
+            return
+        }
+
+        for assetName in assets {
+            cacheAsset(fileName: assetName, filePath: assetsDir.appendingPathComponent(assetName))
+        }
+    }
+
+    private func cacheAsset(fileName: String, filePath: URL) {
+        guard let data = try? Data(contentsOf: filePath) else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to cache Asset '\(fileName)'. Not able read file.")
+            return
+        }
+        let cacheEntry = CacheEntry(data: data, expiry: .never, metadata: nil)
+        do{
+            try cache.set(key: fileName, entry: cacheEntry)
+        } catch {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to cache Asset '\(fileName)'. Error in saving cache in disk.")
+        }
+    }
+
 
     /// Builds the cache key from the rules url and the rules cache prefix
     /// - Parameter rulesUrl: The rules url
@@ -267,7 +297,7 @@ private extension RuleConsequence {
     extension CampaignRulesDownloader {
 
         ///A Proxy function for calling `setCachedRules` from Unit Tests
-        @discardableResult func setCachedRulesProxy(rulesUrl: String, cachedRules: CampaignCachedRules ) -> Bool {
+        @discardableResult func setCachedRulesProxy(rulesUrl: String, cachedRules: CampaignCachedRules) -> Bool {
             return setCachedRules(rulesUrl: rulesUrl, cachedRules: cachedRules)
         }
     }

@@ -26,7 +26,7 @@ public class Campaign: NSObject, Extension {
     typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String: Any]?) -> Void
     let dispatchQueue: DispatchQueue
     private var hasCachedRulesLoaded = false
-    private var rulesEngine: LaunchRulesEngine
+    var rulesEngine: LaunchRulesEngine
     private var linkageFields: String?
 
     private let dependencies: [String] = [
@@ -46,6 +46,8 @@ public class Campaign: NSObject, Extension {
     /// Invoked when the Campaign extension has been registered by the `EventHub`
     public func onRegistered() {
         registerListener(type: EventType.campaign, source: EventSource.requestContent, listener: handleCampaignEvents)
+        registerListener(type: EventType.campaign, source: EventSource.requestIdentity, listener: handleCampaignEvents)
+        registerListener(type: EventType.campaign, source: EventSource.requestReset, listener: handleCampaignEvents)
         registerListener(type: EventType.lifecycle, source: EventSource.responseContent, listener: handleLifecycleEvents)
         registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationEvents)
         registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleSharedStateUpdateEvents)
@@ -66,6 +68,27 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
+        switch event.source {
+        case EventSource.requestContent:
+            handleCampaignRequestContent(event: event)
+        case EventSource.requestIdentity:
+            let isSuccessFull = extractLinkageFields(event: event)
+            if isSuccessFull {
+                clearCachedRules()
+                updateCampaignState(event: event)
+                triggerRulesDownload()
+            } else {
+                Log.debug(label: LOG_TAG, "\(#function) - Dropping Campaign RequestIdentity event '\(event.name)'. Unable to extract Linkage fields.")
+            }
+        case EventSource.requestReset:
+            resetRules()
+            updateCampaignState(event: event)
+            triggerRulesDownload()
+        default: Log.debug(label: LOG_TAG, "\(#function) - Dropping event \(event.id). The event source '\(event.source)' is unknown.")
+        }
+    }
+
+    private func handleCampaignRequestContent(event: Event) {
         Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
         guard let consequenceDict = event.triggeredConsequence, !consequenceDict.isEmpty else {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence is nil or empty.")
@@ -186,6 +209,33 @@ public class Campaign: NSObject, Extension {
                 campaignRulesDownloader.loadRulesFromCache(rulesUrlString: urlString)
                 self.hasCachedRulesLoaded = true
             }
+        }
+    }
+
+    ///Extracts the Linkage Fields from the event Data
+    private func extractLinkageFields(event: Event) -> Bool {
+        guard let linkageFields = event.linkageFields else {
+            return false
+        }
+        self.linkageFields = linkageFields
+        return true
+    }
+
+    ///Reset the Campaign Extension and download rules again
+    private func resetRules() {
+        Log.debug(label: LOG_TAG, "\(#function) - Cleared linkageFields, Loaded Campaign Rules and Cached Campaign Rules file")
+        linkageFields = nil
+        rulesEngine.replaceRules(with: [LaunchRule]())
+        clearCachedRules()
+    }
+
+    ///Clears the cached `Campaign rules`
+    private func clearCachedRules() {
+        let cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
+        do {
+            try cache.deleteCache()
+        } catch {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to clear cached Campaign Rules and Assets.")
         }
     }
 }

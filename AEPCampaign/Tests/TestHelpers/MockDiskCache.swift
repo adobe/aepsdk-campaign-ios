@@ -14,9 +14,11 @@ import Foundation
 import AEPServices
 
 class MockDiskCache: Caching {
+    
     var cache = [String: CacheEntry]()
     var isSetCacheCalled = false
     var isGetCacheCalled = false
+    var isRemoveCacheItemCalled = false
     var isRemoveCacheCalled = false
     
     func set(cacheName: String, key: String, entry: CacheEntry) throws {
@@ -30,6 +32,10 @@ class MockDiskCache: Caching {
     }
     
     func remove(cacheName: String, key: String) throws {
+        isRemoveCacheItemCalled = true
+    }
+    
+    func removeCache(cacheName: String) throws {
         isRemoveCacheCalled = true
     }
     
@@ -37,6 +43,7 @@ class MockDiskCache: Caching {
         cache = [String: CacheEntry]()
         isSetCacheCalled = false
         isGetCacheCalled = false
+        isRemoveCacheItemCalled = false
         isRemoveCacheCalled = false
     }
 }
