@@ -184,7 +184,7 @@ public class Campaign: NSObject, Extension {
                 Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
                 return
             }
-            let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(dispatchQueue: self.dispatchQueue), dispatchQueue: self.dispatchQueue)
+            let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(dispatchQueue: self.dispatchQueue), dispatchQueue: self.dispatchQueue)
             var linkageFieldsHeader: [String: String]?
             if let linkageFields = self.linkageFields {
                 linkageFieldsHeader = [
@@ -205,7 +205,7 @@ public class Campaign: NSObject, Extension {
                     Log.debug(label: self.LOG_TAG, "\(#function) - Unable to load cached rules. Couldn't get valid rules URL from Datastore")
                     return
                 }
-                let campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
+                let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine)
                 campaignRulesDownloader.loadRulesFromCache(rulesUrlString: urlString)
                 self.hasCachedRulesLoaded = true
             }
@@ -231,11 +231,12 @@ public class Campaign: NSObject, Extension {
 
     ///Clears the cached `Campaign rules`
     private func clearCachedRules() {
-        let cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
-        do {
-            try cache.deleteCache()
-        } catch {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to clear cached Campaign Rules and Assets.")
+        let campaignRulesCache = CampaignRulesCache()
+        campaignRulesCache.deleteCachedAssets()
+        guard let storedRulesUrl = state.getRulesUrlFromDataStore() else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to remove cached rules from Cache Service. No rules url is found in Data store.")
+            return
         }
+        campaignRulesCache.deleteCachedRules(url: storedRulesUrl)
     }
 }

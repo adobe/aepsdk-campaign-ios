@@ -139,7 +139,8 @@ enum CampaignConstants {
     enum RulesDownloaderConstants {
         static let RULES_CACHE_NAME = "campaign.rules.cache"
         static let RULES_ZIP_FILE_NAME = "rules.zip"
-        static let RULES_TEMP_DIR = "com.adobe.rules.campaign" //A temp folder to contain rules.zip and unzipped rules and assets before caching them.
+        static let RULES_TEMP_DIR = "com.adobe.rules.campaign" //A temp folder where Campaign rules.zip is downloaded
+        static let RULES_CACHE_DIRECTORY = "campaignrules" //Cache folder contains Campaign rules assets
         static let ASSETS_DIR_NAME = "assets"
         enum Keys {
             static let RULES_CACHE_PREFIX = "cached.campaignrules"
