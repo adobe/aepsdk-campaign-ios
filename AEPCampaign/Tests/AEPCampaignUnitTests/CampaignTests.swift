@@ -536,11 +536,6 @@ class CampaignTests: XCTestCase {
         ]
 
         let linkageFields = ["key1": "value1", "key2": "value2"]
-        guard let linkageFieldsData = try? JSONEncoder().encode(linkageFields) else {
-            XCTFail("Error in JSON encoding Linkage fields")
-            return
-        }
-        let jsonEncodedLinkageFields = String.init(data: linkageFieldsData, encoding: .utf8)
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
@@ -556,7 +551,7 @@ class CampaignTests: XCTestCase {
         Thread.sleep(forTimeInterval: 1)
         XCTAssertNotNil(networking.cachedNetworkRequests[0].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
 
-        let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)        
+        let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)
         extensionRuntime.simulateComingEvents(campaignRequestResetEvent)
         Thread.sleep(forTimeInterval: 1)
 

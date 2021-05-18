@@ -118,7 +118,7 @@ public class Campaign: NSObject, Extension {
     private func handleWildCardEvents(event: Event) {
         _ = rulesEngine.process(event: event)
     }
-    
+
     /// Handles the `Rules engine response` event, when a rule matches
     private func handleRulesEngineResponseEvent(event: Event) {
         //TODO: If the consequence is of type IAM show the correct IAM

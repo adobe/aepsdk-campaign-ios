@@ -13,7 +13,7 @@ import Foundation
 import XCTest
 @testable import AEPCampaign
 
-class CampaignRulesCache: XCTestCase {
+class CampaignRulesCacheUnitTests: XCTestCase {
 
 
 }
