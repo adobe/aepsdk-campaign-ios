@@ -41,7 +41,7 @@ struct CampaignRulesCache {
             try cache.set(key: buildCacheKey(rulesUrl: rulesUrl), entry: cacheEntry)
             return true
         } catch {
-            // Handle Error
+            Log.warning(label: LOG_TAG, "\(#function) - Error thrown during caching Campaign rules.")
             return false
         }
     }

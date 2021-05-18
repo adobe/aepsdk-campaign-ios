@@ -73,8 +73,8 @@ public class Campaign: NSObject, Extension {
         case EventSource.requestContent:
             handleCampaignRequestContent(event: event)
         case EventSource.requestIdentity:
-            let isSuccessFull = extractLinkageFields(event: event)
-            if isSuccessFull {
+            let isSuccessfull = extractLinkageFields(event: event)
+            if isSuccessfull {
                 clearCachedRules()
                 updateCampaignState(event: event)
                 triggerRulesDownload()

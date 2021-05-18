@@ -26,6 +26,15 @@ class CampaignTests: XCTestCase {
     var networking: MockNetworking!
     var mockDiskCache: MockDiskCache!
     var mockRulesEngine: MockRulesEngine!
+    let ecid = "ecid"
+    let campaignServer = "campaign.com"
+    let mcias = "mciasServer"
+    let propertyId = "propertId"
+    let pkey = "pkey"
+
+    ///Shared states
+    var identitySharedState: [String: Any]!
+    var configurationSharedState: [String: Any]!
 
     override func setUp() {
         extensionRuntime = TestableExtensionRuntime()
@@ -49,7 +58,24 @@ class CampaignTests: XCTestCase {
 
         mockRulesEngine = MockRulesEngine(name: "\(CampaignConstants.EXTENSION_NAME).rulesengine", extensionRuntime: extensionRuntime)
         campaign.rulesEngine = mockRulesEngine
+        setUpSharedStates()
+    }
 
+    private func setUpSharedStates() {
+        identitySharedState = [
+            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid
+        ]
+        configurationSharedState = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
+            CampaignConstants.Configuration.PROPERTY_ID: propertyId,
+            CampaignConstants.Configuration.CAMPAIGN_PKEY: pkey
+        ]
+
+        extensionRuntime.simulateSharedState(for: CampaignConstants.Identity.EXTENSION_NAME, data: (identitySharedState, .set))
+
+        extensionRuntime.simulateSharedState(for: CampaignConstants.Configuration.EXTENSION_NAME, data: (configurationSharedState, .set))
     }
 
     // MARK: Generic Data event tests
@@ -60,15 +86,6 @@ class CampaignTests: XCTestCase {
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
-
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue
-        ]
-
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -77,7 +94,6 @@ class CampaignTests: XCTestCase {
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
         //Action
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         //Assertion
@@ -94,20 +110,9 @@ class CampaignTests: XCTestCase {
     }
 
     func testGenericDataOSEventFailsWhenNoBroadLogId() {
-        let campaignServer = "campaign.com"
-        let ecid = "ecid"
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
-
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue
-        ]
-
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION: action
@@ -115,7 +120,6 @@ class CampaignTests: XCTestCase {
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
         //Action
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         //Assertion
@@ -124,20 +128,9 @@ class CampaignTests: XCTestCase {
     }
 
     func testGenericDataOSEventFailsWhenNoAction() {
-        let campaignServer = "campaign.com"
-        let ecid = "ecid"
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         //Setup
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
-
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue
-        ]
-
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId
@@ -145,7 +138,6 @@ class CampaignTests: XCTestCase {
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
         //Action
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         //Assertion
@@ -154,20 +146,9 @@ class CampaignTests: XCTestCase {
     }
 
     func testGenericDataOSEventFailsWhenNoDeliveryId() {
-        let campaignServer = "campaign.com"
-        let ecid = "ecid"
         let broadLogId = "broadlogId"
         let action = "1"
         //Setup
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
-
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue
-        ]
-
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION: action
@@ -175,7 +156,6 @@ class CampaignTests: XCTestCase {
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
         //Action
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         //Assertion
@@ -184,19 +164,10 @@ class CampaignTests: XCTestCase {
     }
 
     func testGenericDataOSEventFailsWhenNoCampaignServer() {
-        let ecid = "ecid"
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
-
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue
-        ]
-
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -205,7 +176,6 @@ class CampaignTests: XCTestCase {
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
         //Action
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         //Assertion
@@ -214,18 +184,10 @@ class CampaignTests: XCTestCase {
     }
 
     func testGenericDataOSEventFailsWhenNoEcid() {
-        let campaignServer = "campaign.com"
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
-        var sharedStates = [String: [String: Any]]()
-
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue
-        ]
-
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -234,7 +196,6 @@ class CampaignTests: XCTestCase {
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
         //Action
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         //Assertion
@@ -243,21 +204,10 @@ class CampaignTests: XCTestCase {
     }
 
     func testGenericDataOSEventFailsWhenOptedOut() {
-        let campaignServer = "campaign.com"
-        let ecid = "ecid"
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid]
-
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue
-        ]
-
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -266,7 +216,6 @@ class CampaignTests: XCTestCase {
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
         //Action
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         //Assertion
@@ -276,24 +225,8 @@ class CampaignTests: XCTestCase {
 
     // MARK: Lifecycle Response event (Registration) tests
     func testLifecycleResponseEventTriggersCampaignRegistrationRequest() {
-        // setup
-        let campaignServer = "campaign.com"
-        let pkey = "pkey"
-        var configurationData = [String: Any]()
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = campaignServer
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
-        let ecid = "ecid"
-        var identityData = [String: Any]()
-        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
-
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
-
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
@@ -310,22 +243,8 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenCampaignServerIsNil() {
-        // setup
-        let pkey = "pkey"
-        var configurationData = [String: Any]()
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
-        let ecid = "ecid"
-        var identityData = [String: Any]()
-        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
-
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
-
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
@@ -334,22 +253,8 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenCampaignPkeyIsNil() {
-        // setup
-        let campaignServer = "campaign.com"
-        var configurationData = [String: Any]()
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = campaignServer
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
-        let ecid = "ecid"
-        var identityData = [String: Any]()
-        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
-
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
-
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
@@ -358,24 +263,8 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenPrivacyIsOptedOut() {
-        // setup
-        let campaignServer = "campaign.com"
-        let pkey = "pkey"
-        var configurationData = [String: Any]()
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = campaignServer
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedOut.rawValue
-        let ecid = "ecid"
-        var identityData = [String: Any]()
-        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
-
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
-
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
@@ -384,24 +273,8 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventQueuedCampaignRegistrationRequestWhenPrivacyIsUnknown() {
-        // setup
-        let campaignServer = "campaign.com"
-        let pkey = "pkey"
-        var configurationData = [String: Any]()
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = campaignServer
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.unknown.rawValue
-        let ecid = "ecid"
-        var identityData = [String: Any]()
-        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
-
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
-        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
-
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
@@ -412,20 +285,8 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenThereIsNoECIDInSharedState() {
-        // setup
-        let campaignServer = "campaign.com"
-        let pkey = "pkey"
-        var configurationData = [String: Any]()
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
-        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = campaignServer
-        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
-
-        var sharedStates = [String: [String: Any]]()
-        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
-
-        state.update(dataMap: sharedStates)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
@@ -436,21 +297,6 @@ class CampaignTests: XCTestCase {
     //MARK:- Unit tests for CampaignRequestIdentity and CampaignRequestReset Events handling.
 
     func testCampaignRequestIdentityEventSuccess() {
-        let campaignServer = "campaign.com"
-        let ecid = "ecid"
-        let propertId = "propertId"
-        let mciasServer = "mciasServer"
-        //Setup
-        let identitySharedState = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid
-        ]
-
-        let configurationSharedState = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
-            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mciasServer,
-            CampaignConstants.Configuration.PROPERTY_ID: propertId
-        ]
 
         let linkageFields = ["key1": "value1", "key2": "value2"]
         guard let linkageFieldsData = try? JSONEncoder().encode(linkageFields) else {
@@ -462,16 +308,11 @@ class CampaignTests: XCTestCase {
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
 
-        extensionRuntime.simulateSharedState(for: CampaignConstants.Identity.EXTENSION_NAME, data: (identitySharedState, .set))
-
-        extensionRuntime.simulateSharedState(for: CampaignConstants.Configuration.EXTENSION_NAME, data: (configurationSharedState, .set))
-
         //Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
         Thread.sleep(forTimeInterval: 1)
 
         //Assert
-
         XCTAssertTrue(mockDiskCache.isRemoveCacheItemCalled)
         XCTAssertEqual(networking.cachedNetworkRequests.count, 1)
         let networkRequest = networking.cachedNetworkRequests[0]
@@ -489,26 +330,7 @@ class CampaignTests: XCTestCase {
     }
 
     func testCampaignRequestIdentityEventFailure() {
-        let campaignServer = "campaign.com"
-        let ecid = "ecid"
-        let propertId = "propertId"
-        let mciasServer = "mciasServer"
-        //Setup
-        let identitySharedState = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid
-        ]
-
-        let configurationSharedState = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
-            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mciasServer,
-            CampaignConstants.Configuration.PROPERTY_ID: propertId
-        ]
-
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: nil)
-        extensionRuntime.simulateSharedState(for: CampaignConstants.Identity.EXTENSION_NAME, data: (identitySharedState, .set))
-
-        extensionRuntime.simulateSharedState(for: CampaignConstants.Configuration.EXTENSION_NAME, data: (configurationSharedState, .set))
 
         //Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
@@ -519,45 +341,25 @@ class CampaignTests: XCTestCase {
     }
 
     func testCampaignRequestResetEvent() {
-        let campaignServer = "campaign.com"
-        let ecid = "ecid"
-        let propertId = "propertId"
-        let mciasServer = "mciasServer"
-        //Setup
-        let identitySharedState = [
-            CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid
-        ]
-
-        let configurationSharedState = [
-            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
-            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mciasServer,
-            CampaignConstants.Configuration.PROPERTY_ID: propertId
-        ]
+        //setup
+        let httpConnection = HttpConnection(data: nil, response: nil, error: nil)
+        networking.expectedResponse = httpConnection
 
         let linkageFields = ["key1": "value1", "key2": "value2"]
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
-        extensionRuntime.simulateSharedState(for: CampaignConstants.Identity.EXTENSION_NAME, data: (identitySharedState, .set))
-
-        extensionRuntime.simulateSharedState(for: CampaignConstants.Configuration.EXTENSION_NAME, data: (configurationSharedState, .set))
-
         //Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
-
-        //Ensure that Linkage Field is not nil
-
         Thread.sleep(forTimeInterval: 1)
-        XCTAssertNotNil(networking.cachedNetworkRequests[0].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
-
         let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)
         extensionRuntime.simulateComingEvents(campaignRequestResetEvent)
-        Thread.sleep(forTimeInterval: 1)
+        Thread.sleep(forTimeInterval: 10)
 
         //Assert
-        XCTAssertTrue(mockDiskCache.isRemoveCacheItemCalled)
         XCTAssertEqual(networking.cachedNetworkRequests.count, 2)
+        XCTAssertNotNil(networking.cachedNetworkRequests[0].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
+        XCTAssertTrue(mockDiskCache.isRemoveCacheItemCalled)
         XCTAssertNil(networking.cachedNetworkRequests[1].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
         XCTAssertTrue(mockRulesEngine.isReplaceRulesCalled)
         XCTAssertEqual(mockRulesEngine.rules?.count, 0)
