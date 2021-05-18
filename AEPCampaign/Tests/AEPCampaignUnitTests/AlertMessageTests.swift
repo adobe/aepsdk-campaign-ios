@@ -22,6 +22,9 @@ class AlertMessageTests: XCTestCase {
     var state: CampaignState!
     let fileManager = FileManager.default
     var dispatchedEvents: [Event] = []
+    var mockUrlService: MockUrlService? {
+        return ServiceProvider.shared.urlService as? MockUrlService
+    }
     var title = "Alert Title"
     var content = "Alert Content"
     var cancel = "Cancel"
@@ -29,6 +32,7 @@ class AlertMessageTests: XCTestCase {
     var url = "https://www.adobe.com"
 
     override func setUp() {
+        ServiceProvider.shared.urlService = MockUrlService()
         state = CampaignState()
         addStateData()
     }
@@ -153,7 +157,7 @@ class AlertMessageTests: XCTestCase {
 
     func testAlertShowMessageCancelPressed() {
         // setup
-        let details = ["title": title, "content": content, "cancel": cancel, "confirm": confirm, "url": url] as [String: Any]
+        let details = ["title": title, "content": content, "cancel": cancel, "confirm": confirm] as [String: Any]
         let alertConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = AlertMessage.createMessageObject(consequence: alertConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
@@ -169,6 +173,70 @@ class AlertMessageTests: XCTestCase {
         let messageViewedEvent = dispatchedEvents[1]
         let messageViewedParameters = ["event": messageViewedEvent as Any, "actionType": "viewed", "size": 2] as [String: Any]
         verifyCampaignResponseEvent(expectedParameters: messageViewedParameters)
+    }
+
+    func testAlertShowMessageConfirmPressed() {
+        // setup
+        let details = ["title": title, "content": content, "cancel": cancel, "confirm": confirm] as [String: Any]
+        let alertConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let messageObject = AlertMessage.createMessageObject(consequence: alertConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        }) as? AlertMessage
+        // test
+        messageObject?.showMessage()
+        let alertController = try? XCTUnwrap(messageObject?.getAlertController())
+        alertController?.tapButton(atIndex: 1) // button 1 is "confirm"
+        // verify triggered then clicked event is sent
+        let messageTriggeredEvent = dispatchedEvents[0]
+        let messageTriggeredParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageTriggeredParameters)
+        let messageClickedEvent = dispatchedEvents[1]
+        let messageClickedParameters = ["event": messageClickedEvent as Any, "actionType": "clicked", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageClickedParameters)
+    }
+
+    func testAlertShowMessageConfirmPressedWithClickthroughUrlPresent() {
+        // setup
+        let details = ["title": title, "content": content, "cancel": cancel, "confirm": confirm, "url": url] as [String: Any]
+        let alertConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let messageObject = AlertMessage.createMessageObject(consequence: alertConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        }) as? AlertMessage
+        // test
+        messageObject?.showMessage()
+        let alertController = try? XCTUnwrap(messageObject?.getAlertController())
+        alertController?.tapButton(atIndex: 1) // button 1 is "confirm"
+        // verify triggered then clicked event is sent
+        let messageTriggeredEvent = dispatchedEvents[0]
+        let messageTriggeredParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageTriggeredParameters)
+        let messageClickedEvent = dispatchedEvents[1]
+        let messageClickedParameters = ["event": messageClickedEvent as Any, "actionType": "clicked", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageClickedParameters)
+        // verify clickthrough url was opened
+        XCTAssertEqual(mockUrlService?.openedUrl, url)
+    }
+
+    func testAlertShowMessageConfirmPressedWithEmptyClickthroughUrlPresent() {
+        // setup
+        let details = ["title": title, "content": content, "cancel": cancel, "confirm": confirm, "url": ""] as [String: Any]
+        let alertConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let messageObject = AlertMessage.createMessageObject(consequence: alertConsequence, state: state, eventDispatcher: { name, type, source, data in
+            self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
+        }) as? AlertMessage
+        // test
+        messageObject?.showMessage()
+        let alertController = try? XCTUnwrap(messageObject?.getAlertController())
+        alertController?.tapButton(atIndex: 1) // button 1 is "confirm"
+        // verify triggered then clicked event is sent
+        let messageTriggeredEvent = dispatchedEvents[0]
+        let messageTriggeredParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageTriggeredParameters)
+        let messageClickedEvent = dispatchedEvents[1]
+        let messageClickedParameters = ["event": messageClickedEvent as Any, "actionType": "clicked", "size": 2] as [String: Any]
+        verifyCampaignResponseEvent(expectedParameters: messageClickedParameters)
+        // verify no clickthrough url was opened
+        XCTAssertTrue(mockUrlService?.openedUrl.isEmpty ?? false)
     }
 }
 

@@ -353,6 +353,7 @@
 		3D10A63B262582A60049BDA1 /* AEPCampaignUnitTests */ = {
 			isa = PBXGroup;
 			children = (
+				D61AA760265325BE00D44D12 /* AlertMessageTests.swift */,
 				D6E823BA262616F80092C7DE /* CampaignStateTests.swift */,
 				D6E824272628A6700092C7DE /* CampaignHitQueuingTests.swift */,
 				D6577E2D262F44EB008F0528 /* CampaignHitProcessorTests.swift */,
@@ -362,6 +363,12 @@
 				D6B405AB263B801B002814FC /* CampaignMessagingTests.swift */,
 				D69B4E29264EE015005CF7FB /* CampaignMessagingTests.swift */,
 				D61AA760265325BE00D44D12 /* AlertMessageTests.swift */,
+				D6D9B24C2645F2D400BAF249 /* CampaignFullscreenMessageTests.swift */,
+				D6E31543264C9478007A22BA /* CampaignFullscreenMessageDelegateTests.swift */,
+				D69B4E29264EE015005CF7FB /* CampaignMessagingTests.swift */,
+				3D4656A8262F510D00BFC421 /* CampaignTests.swift */,
+				3D4657A1263CB19600BFC421 /* CampaignRulesDownloaderTests.swift */,
+				D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */,
 			);
 			path = AEPCampaignUnitTests;
 			sourceTree = "<group>";
