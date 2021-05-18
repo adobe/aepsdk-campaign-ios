@@ -30,4 +30,3 @@ target 'CampaignTester' do
    pod 'AEPIdentity', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
    pod 'AEPLifecycle', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
 end
-

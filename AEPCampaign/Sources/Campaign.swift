@@ -79,12 +79,6 @@ public class Campaign: NSObject, Extension {
                 return
             }
             message.showMessage()
-        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
-            Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a fullscreen message.")
-            guard let message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
-                return
-            }
-            message.showMessage()
         } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
             Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing an alert message.")
             guard let message = AlertMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {

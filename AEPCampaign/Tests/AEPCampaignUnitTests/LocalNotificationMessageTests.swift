@@ -50,7 +50,7 @@ class LocalNotificationMessageTests: XCTestCase {
         // setup
         let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": ["broadlogId": "h1bd500",
                                                                                                                                                                            "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         // test
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
@@ -61,7 +61,7 @@ class LocalNotificationMessageTests: XCTestCase {
         // setup
         let details = ["title": "local", "wait": 0, "userData": ["broadlogId": "h1bd500",
                                                                  "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         // test
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
@@ -75,9 +75,9 @@ class LocalNotificationMessageTests: XCTestCase {
         XCTAssertNil(messageObject)
     }
 
-    func testCreateLocalNotificationMessageWithNilDetailDictionary() {
+    func testCreateLocalNotificationMessageWithEmptyDetailDictionary() {
         // setup
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: nil)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: [:])
         // test
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
@@ -87,7 +87,7 @@ class LocalNotificationMessageTests: XCTestCase {
     func testCreateLocalNotificationMessageWithContentOnly() {
         // setup
         let details = ["content": "some content"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         // test
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
@@ -99,7 +99,7 @@ class LocalNotificationMessageTests: XCTestCase {
         // setup
         let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": ["broadlogId": "h1bd500",
                                                                                                                                                                            "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         })
@@ -117,7 +117,7 @@ class LocalNotificationMessageTests: XCTestCase {
         // setup
         let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": [
             "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         })
@@ -135,7 +135,7 @@ class LocalNotificationMessageTests: XCTestCase {
         // setup
         let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "some content", "wait": 0, "userData": [
             "broadlogId": "h1bd500"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         })
@@ -153,7 +153,7 @@ class LocalNotificationMessageTests: XCTestCase {
         // setup
         let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "wait": 0, "userData": ["broadlogId": "h1bd500",
                                                                                                                                                 "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         })
@@ -167,7 +167,7 @@ class LocalNotificationMessageTests: XCTestCase {
         // setup
         let details = ["title": "local", "sound": "bell", "category": "appStart", "date": Date().timeIntervalSince1970, "content": "", "wait": 0, "userData": ["broadlogId": "h1bd500",
                                                                                                                                                                "deliveryId": "13ccd4c"], "template": "local", "adb_deeplink": "http://mcias-mkt-dev1-t.adobedemo.com/r/?id=d1bd500,13ccd4c,13ccd88"] as [String: Any]
-        let localNotificationConsequence = CampaignRuleConsequence(id: "20761932", type: "iam", assetsPath: nil, detail: details)
+        let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = LocalNotificationMessage.createMessageObject(consequence: localNotificationConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         })

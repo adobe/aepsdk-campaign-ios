@@ -381,7 +381,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
     }
 }
 
-//MARK:- Helper functions
+// MARK: Helper functions
 extension CampaignRulesDownloaderTests {
 
     private func createHttpConnection(statusCode: Int, url: URL, httpVersion: String? = nil, headerFields: [String: String]? = nil, data: Data? = nil, error: Error? = nil) -> HttpConnection {

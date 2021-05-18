@@ -24,9 +24,10 @@ enum CampaignConstants {
         static let IAM_CONSEQUENCE_TYPE = "iam"
         static let LINKAGE_FIELD_NETWORK_HEADER = "X-InApp-Auth"
         static let DEFAULT_TIMEOUT = 5
-        static let PUSH_PLATFORM = "pushPlatform"
+        static let PROFILE_REQUEST_PUSH_PLATFORM = "pushPlatform"
+        static let PROFILE_REQUEST_EXPERIENCE_CLOUD_ID = "marketingCloudId"
         static let DEFAULT_REGISTRATION_DELAY = TimeInterval(60 * 60 * 24 * 7) // 7 days
-        static let DEFAULT_TIMESTAMP_VALUE = -1
+        static let DEFAULT_TIMESTAMP_VALUE = TimeInterval(-1)
         static let SECONDS_IN_A_DAY = 86400
         static let MILLISECONDS_IN_A_SECOND = 1000 // check if still needed
         static let SERVER_TOKEN =
@@ -36,9 +37,17 @@ enum CampaignConstants {
         static let IDENTITY_ECID_TOKEN = "{%~state.com.adobe.module.identity/mid%}"
         static let MESSAGE_ID_TOKEN = "messageId"
         static let PROFILE_URL_PATH = "/rest/head/mobileAppV5/%@/subscriptions/%@"
-        static let RULES_DOWNLOAD_PATH = "/%@/%@/%@/rules.zip"
+        static let RULES_DOWNLOAD_PATH = "/mcias/%@/%@/%@/rules.zip"
         static let TRACKING_URL = "https://%@/r/?id=%@,%@,%s&mcId=%@"
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%@__"
+        static let PATH_SEPARATOR = "/"
+        static let CONTENT_TYPE_APPLICATION = "application/json"
+        static let HEADER_KEY_ACCEPT = "Accept"
+
+        enum Scheme {
+            static let FILE = "file"
+            static let HTTPS = "https"
+        }
 
         enum Datastore {
             static let NAME = "CampaignDataStore"
@@ -54,6 +63,15 @@ enum CampaignConstants {
             static let DEEPLINK_SCHEME = "adbinapp"
             static let INTERACTION_URL  = "url"
             static let INTERACTION_TYPE  = "type"
+        }
+
+        enum MessageData {
+            static let ID_TOKENS_LEN = 3
+            static let TAG_ID = "id"
+            static let TAG_ID_DELIMITER = ","
+            static let TAG_ID_BUTTON_1 = "3"
+            static let TAG_ID_BUTTON_2 = "4"
+            static let TAG_ID_BUTTON_X = "5"
         }
 
         enum AppEnvironment {
@@ -113,26 +131,28 @@ enum CampaignConstants {
         static let TRACK_INFO_KEY_ACTION = "action"
 
         enum RulesEngine {
-            static let CONSEQUENCE_ID = "id"
-            static let CONSEQUENCE_TYPE = "type"
-            static let CONSEQUENCE_DETAIL = "detail"
-            static let CONSEQUENCE_DETAIL_KEY_TEMPLATE = "template"
-            static let CONSEQUENCE_DETAIL_KEY_TITLE = "title"
-            static let CONSEQUENCE_DETAIL_KEY_CONTENT = "content"
-            static let CONSEQUENCE_DETAIL_KEY_URL = "url"
-            static let CONSEQUENCE_DETAIL_KEY_CONFIRM = "confirm"
-            static let CONSEQUENCE_DETAIL_KEY_CANCEL = "cancel"
-            static let CONSEQUENCE_DETAIL_KEY_HTML = "html"
-            static let CONSEQUENCE_DETAIL_KEY_REMOTE_ASSETS = "remoteAssets"
-            static let CONSEQUENCE_DETAIL_KEY_WAIT = "wait"
-            static let CONSEQUENCE_DETAIL_KEY_SOUND = "sound"
-            static let CONSEQUENCE_DETAIL_KEY_CATEGORY = "category"
-            static let CONSEQUENCE_DETAIL_KEY_DEEPLINK = "adb_deeplink"
-            static let CONSEQUENCE_DETAIL_KEY_USER_INFO = "userData"
-            static let CONSEQUENCE_DETAIL_KEY_DATE = "date"
-            static let CONSEQUENCE_ASSETS_PATH = "assetsPath"
+            static let ID = "id"
+            static let TYPE = "type"
+            static let ASSETS_PATH = "assetsPath"
             static let TRIGGERED_CONSEQUENCES = "triggeredconsequence"
             static let LOADED_CONSEQUENCES = "loadedconsequences"
+            static let DETAIL = "detail"
+            enum Detail {
+                static let TEMPLATE = "template"
+                static let TITLE = "title"
+                static let CONTENT = "content"
+                static let URL = "url"
+                static let CONFIRM = "confirm"
+                static let CANCEL = "cancel"
+                static let HTML = "html"
+                static let REMOTE_ASSETS = "remoteAssets"
+                static let WAIT = "wait"
+                static let SOUND = "sound"
+                static let CATEGORY = "category"
+                static let DEEPLINK = "adb_deeplink"
+                static let USER_INFO = "userData"
+                static let DATE = "date"
+            }
         }
     }
 
@@ -143,7 +163,7 @@ enum CampaignConstants {
         static let RULES_CACHE_DIRECTORY = "campaignrules" //Folder in cache directory contains  assets.
         static let ASSETS_DIR_NAME = "assets"
         enum Keys {
-            static let RULES_CACHE_PREFIX = "cached.campaignrules"
+            static let RULES_CACHE_PREFIX = "cached.campaignrules."
         }
     }
 }
