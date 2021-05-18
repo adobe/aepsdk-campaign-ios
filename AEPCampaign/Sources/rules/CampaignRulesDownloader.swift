@@ -46,7 +46,7 @@ struct CampaignRulesDownloader {
             return
         }
 
-        if let rules = pareRulesFileAndLoadRules(data: cachedRules.cacheable){
+        if let _ = parseRulesDataAndLoadRules(data: cachedRules.cacheable) {
             Log.trace(label: LOG_TAG, "\(#function) - Successfully updated Campaign rules in Rules engine after reading from cache")
         } else {
             Log.warning(label: self.LOG_TAG, "\(#function) - Failed to parse cached rules.json file.")
@@ -102,7 +102,7 @@ struct CampaignRulesDownloader {
                     } else {
                         Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
                     }
-                    if let rules = self.pareRulesFileAndLoadRules(data: data) {
+                    if let rules = self.parseRulesDataAndLoadRules(data: data) {
                         Log.trace(label: self.LOG_TAG, "\(#function) - Successfully updated Campaign rules in Rules engine after downloading from remote")
                         self.downloadFullscreenIAMAssets(rules: rules)
                     } else {
@@ -117,8 +117,8 @@ struct CampaignRulesDownloader {
         }
     }
 
-    ///Called after downloading the Campaign rules. Loads the rules into rules engine.
-    private func pareRulesFileAndLoadRules(data: Data) -> [LaunchRule]? {
+    ///Called after downloading the Campaign rules or reading cached rules. Loads the rules into rules engine.
+    private func parseRulesDataAndLoadRules(data: Data) -> [LaunchRule]? {
         if let rules = JSONRulesParser.parse(data) {
             rulesEngine.replaceRules(with: rules)
             return rules

@@ -52,8 +52,9 @@ public class Campaign: NSObject, Extension {
         registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationEvents)
         registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleSharedStateUpdateEvents)
         registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvents)
-        //The wildcard listener for Campaign Rules Engine Processing
-        registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildCardEvents(event:))
+        //The wildcard listener for Rules Engine Processing
+        registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildCardEvents)
+        registerListener(type: EventType.rulesEngine, source: EventSource.responseContent, listener: handleRulesEngineResponseEvent)
     }
 
     /// Invoked when the Campaign extension has been unregistered by the `EventHub`, currently a no-op.
@@ -114,10 +115,13 @@ public class Campaign: NSObject, Extension {
         state.queueRegistrationRequest(event: event)
     }
 
-    ///Handles the wild card `Events` for Rules Engine processing.
     private func handleWildCardEvents(event: Event) {
-        let event = rulesEngine.process(event: event)
-        dispatch(event: event)
+        _ = rulesEngine.process(event: event)
+    }
+    
+    /// Handles the `Rules engine response` event, when a rule matches
+    private func handleRulesEngineResponseEvent(event: Event) {
+        //TODO: If the consequence is of type IAM show the correct IAM
     }
 
     ///Handles events of type `Configuration`
