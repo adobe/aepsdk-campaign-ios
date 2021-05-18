@@ -26,6 +26,10 @@ struct AlertMessage: CampaignMessaging {
     private var cancel: String?
     private var confirm: String?
     private var url: String?
+    #if DEBUG
+        // added for unit tests
+        static var uiAlertController: UIAlertController?
+    #endif
 
     /// AlertMessage struct initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
@@ -52,7 +56,7 @@ struct AlertMessage: CampaignMessaging {
         }
         let alertMessage = AlertMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
         // title, content, and cancel text are required so no message object is returned if any of these are nil
-        guard alertMessage.title != nil || alertMessage.content != nil || alertMessage.cancel != nil else {
+        guard alertMessage.title != nil, alertMessage.content != nil, alertMessage.cancel != nil else {
             return nil
         }
         return alertMessage
@@ -60,40 +64,38 @@ struct AlertMessage: CampaignMessaging {
 
     /// Validates the alert message and if valid, displays the alert message using the `UIAlertController`.
     func showMessage() {
-        guard let title = self.title, !title.isEmpty else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot show alert message, the message title is nil.")
-            return
-        }
-        guard let content = self.content, !content.isEmpty else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot show alert message, the message content is nil.")
-            return
-        }
-        guard let cancelText = self.cancel, !cancelText.isEmpty else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot show alert message, the cancel button text is nil.")
+        guard let title = self.title, let content = self.content, let cancelText = self.cancel else {
             return
         }
 
         let uiAlert = UIAlertController(title: title, message: content, preferredStyle: .alert)
-        uiAlert.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: { _ in
-            viewed()
-        }))
+        uiAlert.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: handleTracking(action:)))
 
         if let confirmText = self.confirm, !confirmText.isEmpty {
-            uiAlert.addAction(UIAlertAction(title: confirmText, style: .default, handler: { _ in
-                clickedThrough()
-                if let url = self.url, !url.isEmpty {
-                    openUrl(url: URL(string: url))
-                }
-            }))
+            uiAlert.addAction(UIAlertAction(title: confirmText, style: .default, handler: handleTracking(action:)))
         }
 
         let messageId = self.messageId ?? ""
         Log.trace(label: Self.LOG_TAG, "\(#function) - Showing alert for message id \(messageId).")
+        // store alert controller for unit tests
+        Self.uiAlertController = uiAlert
+        // Dispatch message triggered event
+        triggered()
         DispatchQueue.main.async {
             if let viewController = UIApplication.getCurrentViewController() {
-                viewController.present(uiAlert, animated: true) {
-                    triggered()
-                }
+                viewController.present(uiAlert, animated: true)
+            }
+        }
+    }
+
+    /// Dispatches the alert message tracking events
+    private func handleTracking(action: UIAlertAction) {
+        if action.style == .cancel {
+            viewed()
+        } else { // clicked through
+            clickedThrough()
+            if let url = self.url, !url.isEmpty {
+                openUrl(url: URL(string: url))
             }
         }
     }
@@ -171,3 +173,11 @@ extension UIApplication {
         return viewController
     }
 }
+
+#if DEBUG
+    extension AlertMessage {
+        func getAlertController() -> UIAlertController? {
+            return Self.uiAlertController
+        }
+    }
+#endif
