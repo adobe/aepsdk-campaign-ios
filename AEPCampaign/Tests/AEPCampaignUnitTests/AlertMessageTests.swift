@@ -132,9 +132,9 @@ class AlertMessageTests: XCTestCase {
 
     func testCreateAlertMessageWithEmptyDetailDictionary() {
         // setup
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: [:])
+        let alertConsequence = RuleConsequence(id: "20761932", type: "iam", details: [:])
         // test
-        let messageObject = AlertMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { _, _, _, _ in })
+        let messageObject = AlertMessage.createMessageObject(consequence: alertConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
         XCTAssertNil(messageObject)
     }
