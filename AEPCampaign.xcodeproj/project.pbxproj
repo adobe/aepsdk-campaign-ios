@@ -307,7 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				3D4657162633813800BFC421 /* rules */,
-				D6B2F01E2637326800747CFE /* Messages */,
+				D6B2F01E2637326800747CFE /* messages */,
 				3D10A5F8262581650049BDA1 /* AEPCampaign.h */,
 				3D10A5F9262581650049BDA1 /* Info.plist */,
 				3D10A652262583C70049BDA1 /* Campaign.swift */,
@@ -378,13 +378,13 @@
 			path = TestResources;
 			sourceTree = "<group>";
 		};
-		D6B2F01E2637326800747CFE /* Messages */ = {
+		D6B2F01E2637326800747CFE /* messages */ = {
 			isa = PBXGroup;
 			children = (
 				D6B2F04D26386EB100747CFE /* CampaignMessaging.swift */,
 				D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */,
 			);
-			path = Messages;
+			path = messages;
 			sourceTree = "<group>";
 		};
 		D6B40602263C99EE002814FC /* UnitTestApp */ = {
