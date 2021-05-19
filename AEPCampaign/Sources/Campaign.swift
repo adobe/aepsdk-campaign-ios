@@ -67,11 +67,12 @@ public class Campaign: NSObject, Extension {
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
         Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
-        guard let details = event.consequenceDetails, !details.isEmpty else {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, detail dictionary is nil or empty.")
+        guard let details = event.consequenceDetails, let consequenceId = event.consequenceId, let consequenceType = event.consequenceType, !details.isEmpty, !consequenceId.isEmpty, !consequenceType.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence data was nil or empty.")
             return
         }
-        let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
+
+        let consequence = RuleConsequence(id: consequenceId, type: consequenceType, details: details)
         let template = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String
         if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
             Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a local notification. Scheduling the received local notification.")
