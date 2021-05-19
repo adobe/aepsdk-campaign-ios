@@ -21,11 +21,11 @@ protocol CampaignMessaging {
 
     /// Implemented by the Message subclass to create a Campaign Message object.
     ///  - Parameters:
-    ///    - consequence: CampaignRuleConsequence containing a Message-defining payload
+    ///    - consequence: `RuleConsequence` containing a Message-defining payload
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Campaign message object or nil if the message object creation failed.
-    @discardableResult static func createMessageObject(consequence: CampaignRuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging?
+    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging?
 
     /// Implemented by the Message subclass to display the message.
     func showMessage()
@@ -153,6 +153,5 @@ extension CampaignMessaging {
     func downloadAssets() {}
 
     /// Optional method which creates an instance of the Message subclass and invokes a method within the class to handle asset downloading.
-    ///  - Parameter consequence: CampaignRuleConsequence containing a Message-defining payload
     func downloadRemoteAssets() {}
 }

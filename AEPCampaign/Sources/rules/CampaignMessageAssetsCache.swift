@@ -130,7 +130,7 @@ struct CampaignMessageAssetsCache {
     }
 }
 
-private extension String {
+extension String {
 
     ///Removes non alphanumeric character from `String`
     var alphanumeric: String {
