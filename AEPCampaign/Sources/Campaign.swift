@@ -64,7 +64,6 @@ public class Campaign: NSObject, Extension {
     /// - Returns: *true* if Configuration and Identity shared states are available
     public func readyForEvent(_ event: Event) -> Bool {
         return getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set && getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set
-        triggerRulesDownload()
     }
 
     /// Handles events of type `Campaign`
