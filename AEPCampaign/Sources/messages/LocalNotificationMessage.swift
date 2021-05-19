@@ -41,7 +41,7 @@ struct LocalNotificationMessage: CampaignMessaging {
         self.parseLocalNotificationMessagePayload(consequence: consequence)
     }
 
-    /// Creates a Local Notification Message object
+    /// Creates a `LocalNotificationMessage` object
     ///  - Parameters:
     ///    - consequence: `RuleConsequence` containing a Message-defining payload
     ///    - state: The CampaignState
@@ -92,7 +92,7 @@ struct LocalNotificationMessage: CampaignMessaging {
     private func scheduleLocalNotification() {
         // content (message body) is required, bail early if we don't have it
         guard let localNotificationBody = self.content else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message consequence.details is nil.")
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message body is nil.")
             return
         }
 
@@ -165,7 +165,9 @@ struct LocalNotificationMessage: CampaignMessaging {
         // prefer the date specified by fire date, otherwise use provided delay. both are optional.
         let fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.DATE] as? TimeInterval ?? TimeInterval(0)
         if fireDate <= TimeInterval(0) {
-            self.fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? TimeInterval ?? TimeInterval(0.1)
+            // default to showing the local notification immediately
+            let wait = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? Int ?? 0
+            self.fireDate = TimeInterval(wait)
         } else {
             self.fireDate = fireDate
         }

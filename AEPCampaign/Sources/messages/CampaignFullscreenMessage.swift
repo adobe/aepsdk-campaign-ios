@@ -27,7 +27,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var html: String?
     private var extractedAssets: [[String]]?
     private var isUsingLocalImage = false
-    private var fullscreenMessage: FullscreenPresentable?
+    private var fullscreenMessaagePresentable: FullscreenPresentable?
 
     #if DEBUG
         // var for unit testing
@@ -84,8 +84,8 @@ class CampaignFullscreenMessage: CampaignMessaging {
             finalHtml = htmlContent
         }
         self.htmlPayload = finalHtml
-        self.fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
-        self.fullscreenMessage?.show()
+        self.fullscreenMessaagePresentable = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
+        self.fullscreenMessaagePresentable?.show()
     }
 
     /// Returns true as the Campaign Fullscreen Message class should download assets

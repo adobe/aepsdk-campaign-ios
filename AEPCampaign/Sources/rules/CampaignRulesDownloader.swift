@@ -97,7 +97,7 @@ struct CampaignRulesDownloader {
                     let hasRulesCached = self.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: cachedRules)
 
                     if hasRulesCached {
-                        state.updateRuleUrlInDataStore(url: url.absoluteString)
+                        state.updateRuleUrlInDataStore(url: rulesUrl.absoluteString)
                     } else {
                         Log.warning(label: self.LOG_TAG, "Unable to cache Campaign rules")
                     }

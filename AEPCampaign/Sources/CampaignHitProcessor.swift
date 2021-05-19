@@ -19,7 +19,7 @@ class CampaignHitProcessor: HitProcessing {
     private let timeout: TimeInterval
     private let dispatchQueue: DispatchQueue
     private let responseHandler: (CampaignHit) -> Void
-    private let headers = [NetworkServiceConstants.Headers.CONTENT_TYPE: NetworkServiceConstants.HeaderValues.CONTENT_TYPE_URL_ENCODED]
+    private let headers = [NetworkServiceConstants.Headers.CONTENT_TYPE: CampaignConstants.Campaign.CONTENT_TYPE_APPLICATION, CampaignConstants.Campaign.HEADER_KEY_ACCEPT: "*/*"]
 
     /// Creates a new `CampaignHitProcessor` where the `responseHandler` will be invoked after the successful sending of a hit
     /// - Parameters:
@@ -84,7 +84,7 @@ class CampaignHitProcessor: HitProcessing {
                 Log.warning(label: LOG_TAG, "\(#function) - Retrying Campaign hit, there is currently no network connectivity")
                 completion(false)
             } else {
-                Log.warning(label: LOG_TAG, "\(#function) - Dropping Campaign hit, request with url \(hit.url.absoluteString) failed with error \(error)")
+                Log.warning(label: LOG_TAG, "\(#function) - Dropping Campaign hit, request with url \(hit.url.absoluteString) failed with error \(error.localizedDescription)")
                 completion(true)
             }
         } else {

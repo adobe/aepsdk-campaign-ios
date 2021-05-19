@@ -41,6 +41,7 @@ public class Campaign: NSObject, Extension {
         rulesEngine = LaunchRulesEngine(name: "\(CampaignConstants.EXTENSION_NAME).rulesengine", extensionRuntime: runtime)
         self.state = CampaignState()
         super.init()
+        self.loadCachedRules()
     }
 
     /// Invoked when the Campaign extension has been registered by the `EventHub`
@@ -52,6 +53,7 @@ public class Campaign: NSObject, Extension {
         registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvents)
         //The wildcard listener for Campaign Rules Engine Processing
         registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildCardEvents(event:))
+        registerListener(type: EventType.rulesEngine, source: EventSource.responseContent, listener: handleRulesEngineResponseEvent)
     }
 
     /// Invoked when the Campaign extension has been unregistered by the `EventHub`, currently a no-op.
@@ -62,31 +64,12 @@ public class Campaign: NSObject, Extension {
     /// - Returns: *true* if Configuration and Identity shared states are available
     public func readyForEvent(_ event: Event) -> Bool {
         return getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set && getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set
+        triggerRulesDownload()
     }
 
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
-        Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
-        guard let details = event.consequenceDetails, let consequenceId = event.consequenceId, let consequenceType = event.consequenceType, !details.isEmpty, !consequenceId.isEmpty, !consequenceType.isEmpty else {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, consequence data was nil or empty.")
-            return
-        }
-
-        let consequence = RuleConsequence(id: consequenceId, type: consequenceType, details: details)
-        let template = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String
-        if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
-            Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a local notification. Scheduling the received local notification.")
-            guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
-                return
-            }
-            message.showMessage()
-        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
-            Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a fullscreen message.")
-            guard let message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
-                return
-            }
-            message.showMessage()
-        }
+        // remove this?
     }
 
     /// Handles events of type `Lifecycle`
@@ -98,6 +81,31 @@ public class Campaign: NSObject, Extension {
     private func handleWildCardEvents(event: Event) {
         let event = rulesEngine.process(event: event)
         //dispatch(event: event)
+    }
+
+    /// Handles the `Rules engine response` event, when a rule matches
+    private func handleRulesEngineResponseEvent(event: Event) {
+        Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
+        guard let details = event.consequenceDetails, !details.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Rules Response event, detail dictionary is nil or empty.")
+            return
+        }
+        let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
+        let template = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String
+        var message: CampaignMessaging?
+        if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing a local notification. Scheduling the received local notification.")
+            message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing a fullscreen message.")
+            message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+        }
+//        else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
+//            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
+//            message = AlertMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+//        }
+        guard let builtMessage = message else { return }
+        builtMessage.showMessage()
     }
 
     ///Handles events of type `Configuration`
