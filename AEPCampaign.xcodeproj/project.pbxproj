@@ -40,6 +40,8 @@
 		9C45F90B11EB2103A1BB8AB3 /* Pods_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374428386226D10931057570 /* Pods_AEPCampaignUnitTests.framework */; };
 		CA7090B0230966F0E39740C6 /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA739EA6395FC06CCA2D8E84 /* Pods_CampaignTester.framework */; };
 		CC5CD838C90CBE5CF7F50374 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB375DC15B9F10E504C14968 /* Pods_AEPCampaignFunctionalTests.framework */; };
+		D61AA903265622A900D44D12 /* honk.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D61AA901265622A800D44D12 /* honk.aiff */; };
+		D61AA904265622A900D44D12 /* local.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D61AA902265622A800D44D12 /* local.jpg */; };
 		D64731D02644D3370065A992 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
@@ -179,6 +181,8 @@
 		7BF5C3BDD4347DCA119A9115 /* Pods-CampaignTester.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.debug.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.debug.xcconfig"; sourceTree = "<group>"; };
 		8025CEBEA95DC90CDBADB1FE /* Pods-AEPCampaign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.release.xcconfig"; sourceTree = "<group>"; };
 		C4B4AA96C4249A68B45D411A /* Pods-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
+		D61AA901265622A800D44D12 /* honk.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = honk.aiff; sourceTree = "<group>"; };
+		D61AA902265622A800D44D12 /* local.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = local.jpg; sourceTree = "<group>"; };
 		D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueueService.swift; sourceTree = "<group>"; };
 		D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueuing.swift; sourceTree = "<group>"; };
 		D6577DF92628F48A008F0528 /* URL+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Campaign.swift"; sourceTree = "<group>"; };
@@ -481,6 +485,8 @@
 		D6E9787E2639D197003F3372 /* CampaignTester */ = {
 			isa = PBXGroup;
 			children = (
+				D61AA901265622A800D44D12 /* honk.aiff */,
+				D61AA902265622A800D44D12 /* local.jpg */,
 				D6B406D52643638D002814FC /* CampaignTester.entitlements */,
 				D6E979012639DFE6003F3372 /* Assets.xcassets */,
 				D6E9787F2639D197003F3372 /* AppDelegate.swift */,
@@ -708,7 +714,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D61AA904265622A900D44D12 /* local.jpg in Resources */,
 				D6E9788C2639D199003F3372 /* LaunchScreen.storyboard in Resources */,
+				D61AA903265622A900D44D12 /* honk.aiff in Resources */,
 				D6E979022639DFE6003F3372 /* Assets.xcassets in Resources */,
 				D6E978892639D199003F3372 /* Preview Assets.xcassets in Resources */,
 			);

@@ -27,7 +27,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var html: String?
     private var extractedAssets: [[String]]?
     private var isUsingLocalImage = false
-    private var fullscreenMessaagePresentable: FullscreenPresentable?
+    private var fullscreenMessagePresentable: FullscreenPresentable?
 
     #if DEBUG
         // var for unit testing
@@ -84,8 +84,8 @@ class CampaignFullscreenMessage: CampaignMessaging {
             finalHtml = htmlContent
         }
         self.htmlPayload = finalHtml
-        self.fullscreenMessaagePresentable = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
-        self.fullscreenMessaagePresentable?.show()
+        self.fullscreenMessagePresentable = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
+        self.fullscreenMessagePresentable?.show()
     }
 
     /// Returns true as the Campaign Fullscreen Message class should download assets
@@ -212,16 +212,20 @@ class CampaignFullscreenMessage: CampaignMessaging {
                     return nil
                 }
                 cacheDir.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)/\(url.absoluteString.alphanumeric)")
-                Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from \(asset).")
+                Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from: \(asset).")
                 return cacheDir.path
             }
         }
 
         // then fallback to local urls
         for asset in assetArray.dropFirst() {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using local file \(asset).")
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using local file: \(asset).")
             self.isUsingLocalImage = true
-            return asset
+            let assetComponents = asset.split(separator: ".")
+            let assetName = String(assetComponents[0])
+            let assetType = String(assetComponents[1])
+            let pathToBundledAsset = Bundle.main.path(forResource: assetName, ofType: assetType)
+            return pathToBundledAsset
         }
         return nil
     }
