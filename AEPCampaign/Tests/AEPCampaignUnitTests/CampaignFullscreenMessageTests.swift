@@ -249,7 +249,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
         let details = ["html": "fullscreenIam.html", "template": "fullscreen", "remoteAssets": [
             [
                 "https://images.com/image.jpg",
-                "test.jpg"
+                "local.jpg"
             ]
         ]] as [String: Any]
         let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
@@ -262,12 +262,13 @@ class CampaignFullscreenMessageTests: XCTestCase {
         messageObject?.showMessage()
         // verify
         XCTAssertTrue(uiService.createFullscreenMessageCalled)
-        // verify asset replaced with cached asset
+        // verify asset replaced with bundled asset
         guard let payload = messageObject?.htmlPayload else {
             XCTFail("no html payload found")
             return
         }
-        XCTAssertEqual(payload, "mock html content with image from: test.jpg")
+        // verify https://images.com/image.jpg is replaced with local.jpg from the UnitTestApp bundle
+        XCTAssertTrue(payload.contains("UnitTestApp.app/local.jpg"))
         let messageTriggeredEvent = dispatchedEvents[0]
         let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)

@@ -42,6 +42,7 @@
 		CC5CD838C90CBE5CF7F50374 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB375DC15B9F10E504C14968 /* Pods_AEPCampaignFunctionalTests.framework */; };
 		D61AA903265622A900D44D12 /* honk.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D61AA901265622A800D44D12 /* honk.aiff */; };
 		D61AA904265622A900D44D12 /* local.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D61AA902265622A800D44D12 /* local.jpg */; };
+		D61AA91A2656B7AC00D44D12 /* local.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D61AA9192656B7AC00D44D12 /* local.jpg */; };
 		D64731D02644D3370065A992 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
@@ -183,6 +184,7 @@
 		C4B4AA96C4249A68B45D411A /* Pods-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
 		D61AA901265622A800D44D12 /* honk.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = honk.aiff; sourceTree = "<group>"; };
 		D61AA902265622A800D44D12 /* local.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = local.jpg; sourceTree = "<group>"; };
+		D61AA9192656B7AC00D44D12 /* local.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = local.jpg; sourceTree = "<group>"; };
 		D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueueService.swift; sourceTree = "<group>"; };
 		D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueuing.swift; sourceTree = "<group>"; };
 		D6577DF92628F48A008F0528 /* URL+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Campaign.swift"; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 		D6B40602263C99EE002814FC /* UnitTestApp */ = {
 			isa = PBXGroup;
 			children = (
+				D61AA9192656B7AC00D44D12 /* local.jpg */,
 				D6B40603263C99EE002814FC /* AppDelegate.swift */,
 				D6B40605263C99EE002814FC /* SceneDelegate.swift */,
 				D6B40607263C99EE002814FC /* ContentView.swift */,
@@ -707,6 +710,7 @@
 				D6B40610263C99F0002814FC /* LaunchScreen.storyboard in Resources */,
 				D6B4060D263C99EF002814FC /* Preview Assets.xcassets in Resources */,
 				D6B4060A263C99EF002814FC /* Assets.xcassets in Resources */,
+				D61AA91A2656B7AC00D44D12 /* local.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
