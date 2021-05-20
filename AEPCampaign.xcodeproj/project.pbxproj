@@ -401,18 +401,11 @@
 				D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */,
 				D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */,
 				D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */,
+				D69B4E35264EE936005CF7FB /* AlertMessage.swift */,
 			);
 			path = messages;
 			sourceTree = "<group>";
 		};
-		D6B2F01E2637326800747CFE /* messages */ = {
-			isa = PBXGroup;
-			children = (
-				D6B2F04D26386EB100747CFE /* CampaignMessaging.swift */,
-				D6B2F02D2637786D00747CFE /* LocalNotificationMessage.swift */,
-				D69B4E35264EE936005CF7FB /* AlertMessage.swift */,
-			);
-			path = messages;
 		D6B2F0242637444600747CFE /* rules */ = {
 			isa = PBXGroup;
 			children = (

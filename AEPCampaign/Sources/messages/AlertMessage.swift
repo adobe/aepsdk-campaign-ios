@@ -49,11 +49,7 @@ struct AlertMessage: CampaignMessaging {
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
-        guard let consequence = consequence else {
-            Log.trace(label: LOG_TAG, "\(#function) - Cannot create an Alert Message object, the consequence is nil.")
-            return nil
-        }
+    static func createMessageObject(consequence: RuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         let alertMessage = AlertMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
         // title, content, and cancel text are required so no message object is returned if any of these are nil
         guard alertMessage.title != nil, alertMessage.content != nil, alertMessage.cancel != nil else {
@@ -64,19 +60,11 @@ struct AlertMessage: CampaignMessaging {
 
     /// Validates the alert message and if valid, displays the alert message using the `UIAlertController`.
     func showMessage() {
-        guard let title = self.title, let content = self.content, let cancelText = self.cancel else {
+        guard let uiAlert = createUIAlertController() else {
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Failed to create alert message for message id \(messageId ?? "") as some of the required parameters are nil.")
             return
         }
-
-        let uiAlert = UIAlertController(title: title, message: content, preferredStyle: .alert)
-        uiAlert.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: handleTracking(action:)))
-
-        if let confirmText = self.confirm, !confirmText.isEmpty {
-            uiAlert.addAction(UIAlertAction(title: confirmText, style: .default, handler: handleTracking(action:)))
-        }
-
-        let messageId = self.messageId ?? ""
-        Log.trace(label: Self.LOG_TAG, "\(#function) - Showing alert for message id \(messageId).")
+        Log.trace(label: Self.LOG_TAG, "\(#function) - Showing alert for message id \(messageId ?? "").")
         // store alert controller for unit tests
         Self.uiAlertController = uiAlert
         // Dispatch message triggered event
@@ -88,14 +76,29 @@ struct AlertMessage: CampaignMessaging {
         }
     }
 
+    /// Creates the `UIAlertController` object to be presented
+    private func createUIAlertController() -> UIAlertController? {
+        guard let title = self.title, let content = self.content, let cancelText = self.cancel else {
+            return nil
+        }
+        let alertController = UIAlertController(title: title, message: content, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: handleTracking(action:)))
+
+        if let confirmText = self.confirm, !confirmText.isEmpty {
+            alertController.addAction(UIAlertAction(title: confirmText, style: .default, handler: handleTracking(action:)))
+        }
+
+        return alertController
+    }
+
     /// Dispatches the alert message tracking events
     private func handleTracking(action: UIAlertAction) {
         if action.style == .cancel {
             viewed()
         } else { // clicked through
             clickedThrough()
-            if let url = self.url, !url.isEmpty {
-                openUrl(url: URL(string: url))
+            if let url = URL(string: url ?? "") {
+                openUrl(url: url)
             }
         }
     }
@@ -119,20 +122,20 @@ struct AlertMessage: CampaignMessaging {
             Log.error(label: Self.LOG_TAG, "\(#function) - The title for an alert message is required, dropping the notification.")
             return
         }
-        self.title = title
 
         // content is required
         guard let content = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.CONTENT] as? String, !content.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The content for an alert message is required, dropping the notification.")
             return
         }
-        self.content = content
 
         // cancel button text is required
         guard let cancelText = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.CANCEL] as? String, !cancelText.isEmpty else {
             Log.error(label: Self.LOG_TAG, "\(#function) - The cancel button text for an alert message is required, dropping the notification.")
             return
         }
+        self.title = title
+        self.content = content
         self.cancel = cancelText
 
         // confirm button text is optional
@@ -151,7 +154,7 @@ struct AlertMessage: CampaignMessaging {
     }
 
     // no-op for alert messages
-    internal func shouldDownloadAssets() -> Bool {
+    func shouldDownloadAssets() -> Bool {
         return false
     }
 }

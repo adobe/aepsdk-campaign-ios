@@ -41,10 +41,6 @@ public class Campaign: NSObject, Extension {
         rulesEngine = LaunchRulesEngine(name: "\(CampaignConstants.EXTENSION_NAME).rulesengine", extensionRuntime: runtime)
         self.state = CampaignState()
         super.init()
-        // trigger rules download on init as ACS rules may have been updated.
-        // this will receive a 304 response if the rules have not changed.
-        triggerRulesDownload()
-        self.loadCachedRules()
     }
 
     /// Invoked when the Campaign extension has been registered by the `EventHub`
@@ -101,8 +97,7 @@ public class Campaign: NSObject, Extension {
         } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
             Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing a fullscreen message.")
             message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
-        }
-        else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
+        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
             Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
             message = AlertMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
         }
