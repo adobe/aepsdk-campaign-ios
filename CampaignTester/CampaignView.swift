@@ -10,10 +10,10 @@
  governing permissions and limitations under the License.
  */
 
-import UIKit
 import SwiftUI
 import AEPCampaign
 import AEPCore
+import AEPServices
 
 struct CampaignView: View {
     let LOG_TAG = "CampaignTester::CampaignView"
@@ -24,136 +24,125 @@ struct CampaignView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: HorizontalAlignment.leading, spacing: 12) {
-                VStack {
-                    Group {
-                        /// Core Privacy API
-                        Text("Core Privacy API").bold()
+            VStack(alignment: .center, spacing: nil, content: {
+                Group {
+                    /// Core Privacy API
+                    Text("Core Privacy API").bold()
 
-                        Button(action: {
-                            MobileCore.setPrivacyStatus(PrivacyStatus.optedOut)
-                        }) {
-                            Text("OptOut")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
+                    Button(action: {
+                        MobileCore.setPrivacyStatus(PrivacyStatus.optedOut)
+                    }) {
+                        Text("OptOut")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
 
-                        Button(action: {
-                            MobileCore.setPrivacyStatus(PrivacyStatus.optedIn)
-                        }) {
-                            Text("OptIn")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
+                    Button(action: {
+                        MobileCore.setPrivacyStatus(PrivacyStatus.optedIn)
+                    }) {
+                        Text("OptIn")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
 
-                        Button(action: {
-                            MobileCore.setPrivacyStatus(PrivacyStatus.unknown)
-                        }) {
-                            Text("Unknown")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
+                    Button(action: {
+                        MobileCore.setPrivacyStatus(PrivacyStatus.unknown)
+                    }) {
+                        Text("Unknown")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+                }
+                Group {
+                    /// Campaign Testing buttons
+                    Text("Notification Testing").bold()
+
+                    Button(action: {
+                        self.extensionVersion = Campaign.extensionVersion
                     }
-                    Group {
-                        /// Campaign Testing buttons
-                        Text("Notification Testing").bold()
+                    ) {
+                        Text("Extension Version")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+                    TextField("Retrieved Extension Version", text: $extensionVersion)
+                        .autocapitalization(.none)
 
-                        Button(action: {
-                            self.extensionVersion = Campaign.extensionVersion
-                        }
-                        ) {
-                            Text("Extension Version")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
-                        TextField("Retrieved Extension Version", text: $extensionVersion)
-                            .autocapitalization(.none)
-                        Button(action: {
-                            let alertDetailDictionary = ["title": "ACS Alert Message Test", "content": "⚠️ Alert! ⚠️", "confirm": "Take me to adobe.com", "cancel": "Dimiss alert", "url": "https://www.adobe.com", "template": "alert"] as [String: Any]
-                            let alertConsequence = ["id": UUID().uuidString, "type": "iam", "detail": alertDetailDictionary] as [String: Any?]
-                            let data = ["triggeredconsequence": alertConsequence]
-                            let event = Event(name: "rules trigger alert message", type: EventType.campaign, source: EventSource.requestContent, data: data)
-                            MobileCore.dispatch(event: event)
-                        }
-                        ) {
-                            Text("Trigger alert message")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
-
-                        Button(action: {
-                            let localDetailDictionary = ["title": "ACS Local Notification Test", "content": "This is some demo text 🌊☄️", "wait": TimeInterval(3), "userData": ["broadlogId": "h1cbf60",
-                                                                                                                                                                               "deliveryId": "154767c"], "template": "local"] as [String: Any]
-                            let localConsequence = ["id": UUID().uuidString, "type": "iam", "assetsPath": nil, "detail": localDetailDictionary] as [String: Any?]
-                            let data = ["triggeredconsequence": localConsequence]
-                            let event = Event(name: "rules trigger local notification", type: EventType.campaign, source: EventSource.requestContent, data: data)
-                            MobileCore.dispatch(event: event)
-                        }
-                        ) {
-                            Text("Trigger local notification")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
+                    Button(action: {
+                        MobileCore.track(action: "alert", data: nil)
                     }
-                    Group {
-                        /// Analytics Queue API
-                        Button(action: {
-                            // trigger fullscreen
-                        }
-                        ) {
-                            Text("Trigger fullscreen message")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
+                    ) {
+                        Text("Trigger alert message")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
 
-                        Button(action: {
-                            // set linkage fields
-                        }
-                        ) {
-                            Text("Set Linkage Fields")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
-
-                        Button(action: {
-                            // reset linkage fields
-                        }
-                        ) {
-                            Text("Reset Linkage Fields")
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(.white)
-                                .font(.caption)
-                        }.cornerRadius(5)
+                    Button(action: {
+                        MobileCore.track(action: "local", data: nil)
                     }
+                    ) {
+                        Text("Trigger local notification")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+                }
+                Group {
+                    Button(action: {
+                        MobileCore.track(action: "fullscreen", data: nil)
+                    }
+                    ) {
+                        Text("Trigger fullscreen message")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+
+                    Button(action: {
+                        // set linkage fields
+                    }
+                    ) {
+                        Text("Set Linkage Fields")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+
+                    Button(action: {
+                        // reset linkage fields
+                    }
+                    ) {
+                        Text("Reset Linkage Fields")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
                 }
             }
-        }
+            )}
     }
 }
 
