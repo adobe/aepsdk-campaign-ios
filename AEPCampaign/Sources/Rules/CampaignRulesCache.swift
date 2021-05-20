@@ -68,8 +68,7 @@ struct CampaignRulesCache {
     }
     
     /// Deletes the cached campaign assets.
-    func deleteCachedAssets() {
-        let fileManager = FileManager.default
+    func deleteCachedAssets(fileManager: FileManager) {        
         guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }

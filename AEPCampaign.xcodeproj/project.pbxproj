@@ -13,6 +13,7 @@
 		3D10A653262583C70049BDA1 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A652262583C70049BDA1 /* Campaign.swift */; };
 		3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A6572625841C0049BDA1 /* CampaignConstants.swift */; };
 		3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */; };
+		3D1157A8265713B700B55AF6 /* MockFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1157A7265713B700B55AF6 /* MockFileManager.swift */; };
 		3D46568B262A1DBE00BFC421 /* MessageInteractionTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */; };
 		3D465693262F4C9800BFC421 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */; };
 		3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4656A8262F510D00BFC421 /* CampaignTests.swift */; };
@@ -133,6 +134,7 @@
 		3D10A652262583C70049BDA1 /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Campaign.swift; path = AEPCampaign/Sources/Campaign.swift; sourceTree = SOURCE_ROOT; };
 		3D10A6572625841C0049BDA1 /* CampaignConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignConstants.swift; sourceTree = "<group>"; };
 		3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Campaign+PublicAPI.swift"; sourceTree = "<group>"; };
+		3D1157A7265713B700B55AF6 /* MockFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFileManager.swift; sourceTree = "<group>"; };
 		3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInteractionTracker.swift; sourceTree = "<group>"; };
 		3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
 		3D4656A8262F510D00BFC421 /* CampaignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignTests.swift; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				D6B405C2263C58F7002814FC /* TestMessage.swift */,
 				3D46582B264B005600BFC421 /* MockDiskCache.swift */,
 				3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */,
+				3D1157A7265713B700B55AF6 /* MockFileManager.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -883,6 +886,7 @@
 				3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */,
 				3D465693262F4C9800BFC421 /* TestableExtensionRuntime.swift in Sources */,
 				3D46582C264B005700BFC421 /* MockDiskCache.swift in Sources */,
+				3D1157A8265713B700B55AF6 /* MockFileManager.swift in Sources */,
 				3D4657A2263CB19600BFC421 /* CampaignRulesDownloaderTests.swift in Sources */,
 				D6577DEF2628DAC7008F0528 /* MockDataQueuing.swift in Sources */,
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,

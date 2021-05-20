@@ -235,7 +235,7 @@ public class Campaign: NSObject, Extension {
     ///Clears the cached `Campaign rules`
     private func clearCachedRules() {
         let campaignRulesCache = CampaignRulesCache()
-        campaignRulesCache.deleteCachedAssets()
+        campaignRulesCache.deleteCachedAssets(fileManager: FileManager.default)
         guard let storedRulesUrl = state.getRulesUrlFromDataStore() else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to remove cached rules from Cache Service. No rules url is found in Data store.")
             return

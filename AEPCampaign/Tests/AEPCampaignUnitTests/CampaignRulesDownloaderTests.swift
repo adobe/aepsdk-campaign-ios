@@ -329,7 +329,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
         Thread.sleep(forTimeInterval: 2)
 
         //Assert
-        XCTAssertTrue(campaignState.getRulesUrlFromDataStore()?.contains("rules.zip") ?? false)
+        XCTAssertTrue(campaignState.getRulesUrlFromDataStore()?.contains(url.absoluteString) ?? false)
     }
 
     func testLoadRulesFromUrlSuccessTriggersAssetsDownload() {
@@ -382,7 +382,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
     }
 }
 
-//MARK:- Helper functions
+// MARK: Helper functions
 extension CampaignRulesDownloaderTests {
 
     private func createHttpConnection(statusCode: Int, url: URL, httpVersion: String? = nil, headerFields: [String: String]? = nil, data: Data? = nil, error: Error? = nil) -> HttpConnection {

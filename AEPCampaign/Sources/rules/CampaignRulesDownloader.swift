@@ -30,7 +30,7 @@ struct CampaignRulesDownloader {
     let dispatchQueue: DispatchQueue?
     private let campaignRulesCache: CampaignRulesCache
 
-    init(campaignRulesCache: CampaignRulesCache ,ruleEngine: LaunchRulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache? = nil, dispatchQueue: DispatchQueue? = nil) {
+    init(campaignRulesCache: CampaignRulesCache,ruleEngine: LaunchRulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache? = nil, dispatchQueue: DispatchQueue? = nil) {
         self.fileUnzipper = FileUnzipper()
         self.campaignRulesCache = campaignRulesCache
         self.rulesEngine = ruleEngine
