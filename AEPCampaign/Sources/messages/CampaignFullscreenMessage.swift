@@ -205,7 +205,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         }
 
         // first prioritize remote urls that are cached
-        for asset in assetArray.dropFirst() {
+        for asset in assetArray {
             if let messageId = messageId, let url = URL(string: asset), url.scheme == CampaignConstants.Campaign.Scheme.HTTPS {
                 guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
                     Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace assets, the message cache directory does not exist.")

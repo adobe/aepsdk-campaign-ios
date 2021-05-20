@@ -27,6 +27,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
 
     var rootViewController: UIViewController!
     let mockHtmlString = "mock html content with image from: https://images.com/image.jpg"
+    let mockHtmlStringForLocalTest = "mock html content with image from: bundled.jpg"
 
     override func setUp() {
         uiService = MockUIService()
@@ -50,9 +51,14 @@ class CampaignFullscreenMessageTests: XCTestCase {
         state.update(dataMap: dataMap)
     }
 
-    func setupMockCache() {
+    func setupMockCache(forLocalTest: Bool) {
+        var data = Data()
         // add fullscreen html to cache
-        let data = Data(mockHtmlString.utf8)
+        if !forLocalTest {
+            data = Data(mockHtmlString.utf8)
+        } else {
+            data = Data(mockHtmlStringForLocalTest.utf8)
+        }
         guard let cachedDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }
@@ -139,7 +145,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
     // MARK: showMessage tests
     func testFullscreenShowMessageHappy() {
         // setup
-        setupMockCache()
+        setupMockCache(forLocalTest: false)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen"] as [String: Any]
         let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
@@ -180,7 +186,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
 
     func testFullscreenShowMessageEmptyHTML() {
         // setup
-        setupMockCache()
+        setupMockCache(forLocalTest: false)
         let details = ["html": "", "template": "fullscreen"] as [String: Any]
         let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
@@ -197,7 +203,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
 
     func testFullscreenShowMessageMissingHTML() {
         // setup
-        setupMockCache()
+        setupMockCache(forLocalTest: false)
         let details = ["template": "fullscreen"] as [String: Any]
         let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
@@ -215,12 +221,12 @@ class CampaignFullscreenMessageTests: XCTestCase {
     // MARK: Fullscreen message with assets tests
     func testFullscreenShowMessageWithAssetsHappy() {
         // setup
-        setupMockCache()
+        setupMockCache(forLocalTest: false)
         addRemoteAssetToCache()
         let details = ["html": "fullscreenIam.html", "template": "fullscreen", "remoteAssets": [
             [
                 "https://images.com/image.jpg",
-                "https://images.com/anotherimage.jpg"
+                "local.jpg"
             ]
         ]] as [String: Any]
         let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
@@ -237,18 +243,18 @@ class CampaignFullscreenMessageTests: XCTestCase {
             XCTFail("no html payload found")
             return
         }
-        XCTAssertTrue(payload.contains("/Caches/messages/20761932/httpsimagescomanotherimagejpg"))
+        XCTAssertTrue(payload.contains("/Caches/messages/20761932/httpsimagescomimagejpg"))
         let messageTriggeredEvent = dispatchedEvents[0]
         let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2] as [String: Any]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
-    func testFullscreenShowMessageWithLocalAssets() {
+    func testFullscreenShowMessageUseLocalAssets() {
         // setup
-        setupMockCache()
+        setupMockCache(forLocalTest: true)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen", "remoteAssets": [
             [
-                "https://images.com/image.jpg",
+                "bundled.jpg",
                 "local.jpg"
             ]
         ]] as [String: Any]
@@ -276,7 +282,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
 
     func testFullscreenShowMessageWithEmptyAssetsArray() {
         // setup
-        setupMockCache()
+        setupMockCache(forLocalTest: false)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen", "remoteAssets": [[]]] as [String: Any]
         let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
