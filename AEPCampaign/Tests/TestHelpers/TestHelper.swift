@@ -56,7 +56,7 @@ extension XCTest {
         XCTAssertEqual(event?.source, EventSource.responseContent)
         let data = event?.data as? [String: String] ?? [:]
         XCTAssertEqual(data.count, expectedDataSize)
-        XCTAssertEqual(data["messageId"], "20761932")
+        XCTAssertEqual(data["a.message.id"], "20761932")
         XCTAssertEqual(data["a.message.\(actionType)"], "1")
         if let additionalData = expectedParameters["additionalData"] as? [String: String] {
             for (key, value) in additionalData {
