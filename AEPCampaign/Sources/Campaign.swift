@@ -112,6 +112,7 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event) {
+        updateCampaignState(event: event)
         state.queueRegistrationRequest(event: event)
     }
 
@@ -140,6 +141,7 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Generic Data`
     private func handleGenericDataEvents(event: Event) {
+        updateCampaignState(event: event)
         MessageInteractionTracker.processMessageInformation(event: event, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
     }
 
@@ -172,9 +174,6 @@ public class Campaign: NSObject, Extension {
         }
 
         if state.privacyStatus == PrivacyStatus.optedIn {
-//            let fakeUrl = URL(string: "https://assets.adobedtm.com/94f571f308d5/0d8e122e1a29/launch-dad327eb0536-development-rules.zip")
-//            var campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: self.rulesEngine)
-//            campaignRulesDownloader.loadRulesFromUrl(rulesUrl: fakeUrl!, linkageFieldHeaders: nil, state: self.state)
             triggerRulesDownload()
         }
     }

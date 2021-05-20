@@ -61,11 +61,11 @@ class CampaignTests: XCTestCase {
         setUpSharedStates()
     }
 
-    private func setUpSharedStates() {
-        identitySharedState = [
+    private func setUpSharedStates(configuration: [String: Any]? = nil, identity: [String: Any]? = nil) {
+        identitySharedState = identity ?? [
             CampaignConstants.Identity.EXPERIENCE_CLOUD_ID: ecid
         ]
-        configurationSharedState = [
+        configurationSharedState = configuration ?? [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
             CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
@@ -168,6 +168,13 @@ class CampaignTests: XCTestCase {
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
+        let configurationSharedState = [
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
+            CampaignConstants.Configuration.PROPERTY_ID: propertyId,
+            CampaignConstants.Configuration.CAMPAIGN_PKEY: pkey
+        ]
+        setUpSharedStates(configuration: configurationSharedState, identity: nil)
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -188,6 +195,7 @@ class CampaignTests: XCTestCase {
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
+        setUpSharedStates(configuration: nil, identity: [String: Any]())
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -208,6 +216,14 @@ class CampaignTests: XCTestCase {
         let deliveryId = "deliveryId"
         let action = "1"
         //Setup
+        let configurationSharedState = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
+            CampaignConstants.Configuration.PROPERTY_ID: propertyId,
+            CampaignConstants.Configuration.CAMPAIGN_PKEY: pkey
+        ]
+        setUpSharedStates(configuration: configurationSharedState, identity: nil)
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -243,6 +259,14 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenCampaignServerIsNil() {
+        //setup
+        let configurationSharedState = [
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
+            CampaignConstants.Configuration.PROPERTY_ID: propertyId,
+            CampaignConstants.Configuration.CAMPAIGN_PKEY: pkey
+        ]
+        setUpSharedStates(configuration: configurationSharedState, identity: nil)
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
@@ -253,6 +277,14 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenCampaignPkeyIsNil() {
+        //setup
+        let configurationSharedState = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
+            CampaignConstants.Configuration.PROPERTY_ID: propertyId
+        ]
+        setUpSharedStates(configuration: configurationSharedState, identity: nil)
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
@@ -263,6 +295,15 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenPrivacyIsOptedOut() {
+        //setup
+        let configurationSharedState = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
+            CampaignConstants.Configuration.PROPERTY_ID: propertyId,
+            CampaignConstants.Configuration.CAMPAIGN_PKEY: pkey
+        ]
+        setUpSharedStates(configuration: configurationSharedState, identity: nil)
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
@@ -273,6 +314,15 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventQueuedCampaignRegistrationRequestWhenPrivacyIsUnknown() {
+        //setup
+        let configurationSharedState = [
+            CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.unknown.rawValue,
+            CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
+            CampaignConstants.Configuration.PROPERTY_ID: propertyId,
+            CampaignConstants.Configuration.CAMPAIGN_PKEY: pkey
+        ]
+        setUpSharedStates(configuration: configurationSharedState, identity: nil)
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
@@ -285,6 +335,8 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenThereIsNoECIDInSharedState() {
+        //setup
+        setUpSharedStates(configuration: nil, identity: [String: Any]())
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
@@ -294,16 +346,16 @@ class CampaignTests: XCTestCase {
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
-    //MARK:- Unit tests for CampaignRequestIdentity and CampaignRequestReset Events handling.
+    // MARK: Unit tests for CampaignRequestIdentity and CampaignRequestReset Events handling.
 
     func testCampaignRequestIdentityEventSuccess() {
 
         let linkageFields = ["key1": "value1", "key2": "value2"]
         guard let linkageFieldsData = try? JSONEncoder().encode(linkageFields) else {
-            XCTFail("Error in JSON encoding Linkage fields")
+            XCTFail("Error in Encoding Linkage fields")
             return
         }
-        let jsonEncodedLinkageFields = String.init(data: linkageFieldsData, encoding: .utf8)
+        let jsonEncodedLinkageFields = String(data: linkageFieldsData, encoding: .utf8)
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
