@@ -11,6 +11,7 @@
  */
 
 import UIKit
+import UserNotifications
 import AEPCore
 import AEPIdentity
 import AEPCampaign
@@ -29,8 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
 
         // request permission to display notifications
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
             if let error = error {
                 print("error encountered when requesting notification authorization: \(error)")
                 // Handle the error here.
