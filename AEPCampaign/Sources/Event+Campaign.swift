@@ -47,4 +47,16 @@ extension Event {
     var action: String? {
         return data?[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION] as? String
     }
+
+    /// Base64 Encoded value of JSONEncoded Linkage fields.
+    var linkageFields: String? {
+        guard let linkageFieldsMap = data?[CampaignConstants.EventDataKeys.LINKAGE_FIELDS] as? [String: String], !linkageFieldsMap.isEmpty else {
+            return nil
+        }
+        guard let serializedLinkageField = try? JSONEncoder().encode(linkageFieldsMap) else {
+            return nil
+        }
+
+        return serializedLinkageField.base64EncodedString()
+    }
 }

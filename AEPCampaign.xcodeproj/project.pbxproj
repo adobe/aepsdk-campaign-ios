@@ -21,13 +21,14 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		18797F3E0012A7BA6578DF95 /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 213BB6DAB298278F9C5BB0BF /* Pods_AEPCampaign.framework */; };
 		3D10A606262581650049BDA1 /* AEPCampaign.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D10A5F8262581650049BDA1 /* AEPCampaign.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3D10A6292625826D0049BDA1 /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
 		3D10A63F262582A60049BDA1 /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
 		3D10A653262583C70049BDA1 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A652262583C70049BDA1 /* Campaign.swift */; };
 		3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A6572625841C0049BDA1 /* CampaignConstants.swift */; };
 		3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */; };
+		3D1157A8265713B700B55AF6 /* MockFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1157A7265713B700B55AF6 /* MockFileManager.swift */; };
+		3D11582926572B4D00B55AF6 /* CampaignCacheable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46573E2637739D00BFC421 /* CampaignCacheable.swift */; };
 		3D46568B262A1DBE00BFC421 /* MessageInteractionTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */; };
 		3D465693262F4C9800BFC421 /* TestableExtensionRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */; };
 		3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4656A8262F510D00BFC421 /* CampaignTests.swift */; };
@@ -37,9 +38,13 @@
 		3D4657D426449FA900BFC421 /* CampaignMessageAssetsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */; };
 		3D46582C264B005700BFC421 /* MockDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46582B264B005600BFC421 /* MockDiskCache.swift */; };
 		3D465838264B0B3B00BFC421 /* MockRulesEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */; };
-		9C45F90B11EB2103A1BB8AB3 /* Pods_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374428386226D10931057570 /* Pods_AEPCampaignUnitTests.framework */; };
-		CA7090B0230966F0E39740C6 /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA739EA6395FC06CCA2D8E84 /* Pods_CampaignTester.framework */; };
-		CC5CD838C90CBE5CF7F50374 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB375DC15B9F10E504C14968 /* Pods_AEPCampaignFunctionalTests.framework */; };
+		3D46589C264DF98900BFC421 /* FileManager+Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */; };
+		3D4658B12652F58900BFC421 /* CampaignRulesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4658B02652F58900BFC421 /* CampaignRulesCache.swift */; };
+		3D4658C42653207200BFC421 /* CampaignRulesCacheUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4658C32653207200BFC421 /* CampaignRulesCacheUnitTests.swift */; };
+		79B75EA1B1C304B1CEB41818 /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 679F11BD2A3FA83C8A782F9C /* Pods_CampaignTester.framework */; };
+		92BB4E706C889447FB22B96A /* Pods_AEPCampaignUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CB4B8EFE5688C51B9A65B7 /* Pods_AEPCampaignUnitTests.framework */; };
+		B0E7CA6A5BCE7FF39C499F08 /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4621C50F13BAAC3CD83F6D3E /* Pods_AEPCampaign.framework */; };
+		B6342EC1AD4111F03FD753E2 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B7C29A6FF303ED0247DECB6 /* Pods_AEPCampaignFunctionalTests.framework */; };
 		D64731D02644D3370065A992 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
@@ -69,7 +74,6 @@
 		D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4068B26420269002814FC /* CampaignFullscreenMessage.swift */; };
 		D6B4069326424F32002814FC /* CampaignFullscreenMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */; };
 		D6B407102643921E002814FC /* AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D10A5F5262581650049BDA1 /* AEPCampaign.framework */; };
-		D6D9B2EE264A002E00BAF249 /* CampaignCacheable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D9B2ED264A002E00BAF249 /* CampaignCacheable.swift */; };
 		D6E29BA4264DE12F001FEAF6 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = D6E29BA2264DE12F001FEAF6 /* rules.json */; };
 		D6E29BA5264DE12F001FEAF6 /* rules.json in Resources */ = {isa = PBXBuildFile; fileRef = D6E29BA2264DE12F001FEAF6 /* rules.json */; };
 		D6E29BA6264DE12F001FEAF6 /* rules.zip in Resources */ = {isa = PBXBuildFile; fileRef = D6E29BA3264DE12F001FEAF6 /* rules.zip */; };
@@ -146,10 +150,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		03DC342FB74D606C63FC1BC3 /* Pods-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
-		213BB6DAB298278F9C5BB0BF /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		374428386226D10931057570 /* Pods_AEPCampaignUnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaignUnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		37572EF84E4889626519DDC8 /* Pods-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
+		141CF3EA9D1C198A1FB27019 /* Pods-CampaignTester.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.debug.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.debug.xcconfig"; sourceTree = "<group>"; };
+		1CCB4CE6A94A95D41508E648 /* Pods-AEPCampaign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.release.xcconfig"; sourceTree = "<group>"; };
+		3B55248A59EFF7D5C7BD2328 /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
 		3D10A5F5262581650049BDA1 /* AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D10A5F8262581650049BDA1 /* AEPCampaign.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AEPCampaign.h; sourceTree = "<group>"; };
 		3D10A5F9262581650049BDA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -159,20 +162,29 @@
 		3D10A652262583C70049BDA1 /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Campaign.swift; path = AEPCampaign/Sources/Campaign.swift; sourceTree = SOURCE_ROOT; };
 		3D10A6572625841C0049BDA1 /* CampaignConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignConstants.swift; sourceTree = "<group>"; };
 		3D10A65C2625847B0049BDA1 /* Campaign+PublicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Campaign+PublicAPI.swift"; sourceTree = "<group>"; };
+		3D1157A7265713B700B55AF6 /* MockFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFileManager.swift; sourceTree = "<group>"; };
 		3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInteractionTracker.swift; sourceTree = "<group>"; };
 		3D465692262F4C9800BFC421 /* TestableExtensionRuntime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableExtensionRuntime.swift; sourceTree = "<group>"; };
 		3D4656A8262F510D00BFC421 /* CampaignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignTests.swift; sourceTree = "<group>"; };
 		3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignRulesDownloader.swift; sourceTree = "<group>"; };
 		3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCachedRules.swift; sourceTree = "<group>"; };
+		3D46573E2637739D00BFC421 /* CampaignCacheable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignCacheable.swift; sourceTree = "<group>"; };
 		3D4657A1263CB19600BFC421 /* CampaignRulesDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRulesDownloaderTests.swift; sourceTree = "<group>"; };
 		3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignMessageAssetsCache.swift; sourceTree = "<group>"; };
 		3D46582B264B005600BFC421 /* MockDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDiskCache.swift; sourceTree = "<group>"; };
 		3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRulesEngine.swift; sourceTree = "<group>"; };
-		521FFDAA97F062FEB893AFDC /* Pods-AEPCampaign.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.debug.xcconfig"; sourceTree = "<group>"; };
-		5D175890156889E2CF12FFB9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
-		7BF5C3BDD4347DCA119A9115 /* Pods-CampaignTester.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.debug.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.debug.xcconfig"; sourceTree = "<group>"; };
-		8025CEBEA95DC90CDBADB1FE /* Pods-AEPCampaign.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaign.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaign/Pods-AEPCampaign.release.xcconfig"; sourceTree = "<group>"; };
-		C4B4AA96C4249A68B45D411A /* Pods-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
+		3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Campaign.swift"; sourceTree = "<group>"; };
+		3D4658B02652F58900BFC421 /* CampaignRulesCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CampaignRulesCache.swift; path = AEPCampaign/Sources/Rules/CampaignRulesCache.swift; sourceTree = SOURCE_ROOT; };
+		3D4658C32653207200BFC421 /* CampaignRulesCacheUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRulesCacheUnitTests.swift; sourceTree = "<group>"; };
+		4621C50F13BAAC3CD83F6D3E /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		52CB4B8EFE5688C51B9A65B7 /* Pods_AEPCampaignUnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaignUnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B7C29A6FF303ED0247DECB6 /* Pods_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		623653C52428E8F03DA84630 /* Pods-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
+		679F11BD2A3FA83C8A782F9C /* Pods_CampaignTester.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CampaignTester.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8955C691537F135A3C0BAC84 /* Pods-AEPCampaignFunctionalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.release.xcconfig"; sourceTree = "<group>"; };
+		99920600ABA48439B1FD42E9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignFunctionalTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B6F4EBEAE0E97DF607F9DF64 /* Pods-CampaignTester.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.release.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.release.xcconfig"; sourceTree = "<group>"; };
+		CB8C8918C7FF3CD1EDA473B6 /* Pods-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
 		D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueueService.swift; sourceTree = "<group>"; };
 		D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueuing.swift; sourceTree = "<group>"; };
 		D6577DF92628F48A008F0528 /* URL+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Campaign.swift"; sourceTree = "<group>"; };
@@ -220,9 +232,6 @@
 		D6E979012639DFE6003F3372 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessageTests.swift; sourceTree = "<group>"; };
 		D6E9792E263B4775003F3372 /* Event+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Campaign.swift"; sourceTree = "<group>"; };
-		E60A890D31D5DBB19C8102C2 /* Pods-CampaignTester.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.release.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.release.xcconfig"; sourceTree = "<group>"; };
-		EA739EA6395FC06CCA2D8E84 /* Pods_CampaignTester.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CampaignTester.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FB375DC15B9F10E504C14968 /* Pods_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,7 +239,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18797F3E0012A7BA6578DF95 /* Pods_AEPCampaign.framework in Frameworks */,
+				B0E7CA6A5BCE7FF39C499F08 /* Pods_AEPCampaign.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,7 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D10A6292625826D0049BDA1 /* AEPCampaign.framework in Frameworks */,
-				CC5CD838C90CBE5CF7F50374 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */,
+				B6342EC1AD4111F03FD753E2 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D10A63F262582A60049BDA1 /* AEPCampaign.framework in Frameworks */,
-				9C45F90B11EB2103A1BB8AB3 /* Pods_AEPCampaignUnitTests.framework in Frameworks */,
+				92BB4E706C889447FB22B96A /* Pods_AEPCampaignUnitTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,7 +274,7 @@
 			files = (
 				D64731D02644D3370065A992 /* WebKit.framework in Frameworks */,
 				D6B407102643921E002814FC /* AEPCampaign.framework in Frameworks */,
-				CA7090B0230966F0E39740C6 /* Pods_CampaignTester.framework in Frameworks */,
+				79B75EA1B1C304B1CEB41818 /* Pods_CampaignTester.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,10 +288,10 @@
 				D6E978A72639D1F2003F3372 /* NotificationCenter.framework */,
 				D6E978A82639D1F2003F3372 /* UserNotifications.framework */,
 				D6E978A62639D1F2003F3372 /* UserNotificationsUI.framework */,
-				213BB6DAB298278F9C5BB0BF /* Pods_AEPCampaign.framework */,
-				FB375DC15B9F10E504C14968 /* Pods_AEPCampaignFunctionalTests.framework */,
-				374428386226D10931057570 /* Pods_AEPCampaignUnitTests.framework */,
-				EA739EA6395FC06CCA2D8E84 /* Pods_CampaignTester.framework */,
+				4621C50F13BAAC3CD83F6D3E /* Pods_AEPCampaign.framework */,
+				5B7C29A6FF303ED0247DECB6 /* Pods_AEPCampaignFunctionalTests.framework */,
+				52CB4B8EFE5688C51B9A65B7 /* Pods_AEPCampaignUnitTests.framework */,
+				679F11BD2A3FA83C8A782F9C /* Pods_CampaignTester.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -290,14 +299,14 @@
 		2AB161FD1BE5CCC7C18D7E78 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				521FFDAA97F062FEB893AFDC /* Pods-AEPCampaign.debug.xcconfig */,
-				8025CEBEA95DC90CDBADB1FE /* Pods-AEPCampaign.release.xcconfig */,
-				5D175890156889E2CF12FFB9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */,
-				C4B4AA96C4249A68B45D411A /* Pods-AEPCampaignFunctionalTests.release.xcconfig */,
-				37572EF84E4889626519DDC8 /* Pods-AEPCampaignUnitTests.debug.xcconfig */,
-				03DC342FB74D606C63FC1BC3 /* Pods-AEPCampaignUnitTests.release.xcconfig */,
-				7BF5C3BDD4347DCA119A9115 /* Pods-CampaignTester.debug.xcconfig */,
-				E60A890D31D5DBB19C8102C2 /* Pods-CampaignTester.release.xcconfig */,
+				3B55248A59EFF7D5C7BD2328 /* Pods-AEPCampaign.debug.xcconfig */,
+				1CCB4CE6A94A95D41508E648 /* Pods-AEPCampaign.release.xcconfig */,
+				99920600ABA48439B1FD42E9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */,
+				8955C691537F135A3C0BAC84 /* Pods-AEPCampaignFunctionalTests.release.xcconfig */,
+				623653C52428E8F03DA84630 /* Pods-AEPCampaignUnitTests.debug.xcconfig */,
+				CB8C8918C7FF3CD1EDA473B6 /* Pods-AEPCampaignUnitTests.release.xcconfig */,
+				141CF3EA9D1C198A1FB27019 /* Pods-CampaignTester.debug.xcconfig */,
+				B6F4EBEAE0E97DF607F9DF64 /* Pods-CampaignTester.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -311,6 +320,7 @@
 				3D10A5F6262581650049BDA1 /* Products */,
 				2AB161FD1BE5CCC7C18D7E78 /* Pods */,
 				26A2BD5124D3A357DD151235 /* Frameworks */,
+				3D11581A26572B0600B55AF6 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -338,7 +348,7 @@
 		3D10A61B262581AD0049BDA1 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				D6B2F0242637444600747CFE /* rules */,
+				3D4657162633813800BFC421 /* rules */,
 				D6B2F01E2637326800747CFE /* messages */,
 				3D10A5F8262581650049BDA1 /* AEPCampaign.h */,
 				3D10A5F9262581650049BDA1 /* Info.plist */,
@@ -352,6 +362,7 @@
 				D6577E19262DFFA9008F0528 /* HitQueuing+Campaign.swift */,
 				3D46568A262A1DBE00BFC421 /* MessageInteractionTracker.swift */,
 				D6577DF92628F48A008F0528 /* URL+Campaign.swift */,
+				3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -385,8 +396,29 @@
 				3D4657A1263CB19600BFC421 /* CampaignRulesDownloaderTests.swift */,
 				D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */,
 				D6B405AB263B801B002814FC /* CampaignMessagingTests.swift */,
+				3D4658C32653207200BFC421 /* CampaignRulesCacheUnitTests.swift */,
 			);
 			path = AEPCampaignUnitTests;
+			sourceTree = "<group>";
+		};
+		3D11581A26572B0600B55AF6 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				D6D9B2ED264A002E00BAF249 /* CampaignCacheable.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		3D4657162633813800BFC421 /* rules */ = {
+			isa = PBXGroup;
+			children = (
+				3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */,
+				3D46573E2637739D00BFC421 /* CampaignCacheable.swift */,
+				3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */,
+				3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */,
+				3D4658B02652F58900BFC421 /* CampaignRulesCache.swift */,
+			);
+			path = rules;
 			sourceTree = "<group>";
 		};
 		D6B2F01E2637326800747CFE /* messages */ = {
@@ -398,17 +430,6 @@
 				D6B4069226424F32002814FC /* CampaignFullscreenMessageDelegate.swift */,
 			);
 			path = messages;
-			sourceTree = "<group>";
-		};
-		D6B2F0242637444600747CFE /* rules */ = {
-			isa = PBXGroup;
-			children = (
-				D6D9B2ED264A002E00BAF249 /* CampaignCacheable.swift */,
-				3D4657D326449FA900BFC421 /* CampaignMessageAssetsCache.swift */,
-				3D46573D2637739D00BFC421 /* CampaignCachedRules.swift */,
-				3D4657352637521700BFC421 /* CampaignRulesDownloader.swift */,
-			);
-			path = rules;
 			sourceTree = "<group>";
 		};
 		D6B40602263C99EE002814FC /* UnitTestApp */ = {
@@ -456,6 +477,7 @@
 				D6B405C2263C58F7002814FC /* TestMessage.swift */,
 				3D46582B264B005600BFC421 /* MockDiskCache.swift */,
 				3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */,
+				3D1157A7265713B700B55AF6 /* MockFileManager.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -501,7 +523,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D10A609262581650049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaign" */;
 			buildPhases = (
-				865D54D29A545A360AB363A1 /* [CP] Check Pods Manifest.lock */,
+				5BB6E0454AABE40047D575BD /* [CP] Check Pods Manifest.lock */,
 				3D10A5F0262581650049BDA1 /* Headers */,
 				3D10A5F1262581650049BDA1 /* Sources */,
 				3D10A5F2262581650049BDA1 /* Frameworks */,
@@ -521,11 +543,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D10A62C2625826D0049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignFunctionalTests" */;
 			buildPhases = (
-				1462184A773C8B595AA8EE80 /* [CP] Check Pods Manifest.lock */,
+				8164D595D32E88A0708D762E /* [CP] Check Pods Manifest.lock */,
 				3D10A6202625826D0049BDA1 /* Sources */,
 				3D10A6212625826D0049BDA1 /* Frameworks */,
 				3D10A6222625826D0049BDA1 /* Resources */,
-				B43089E7BE329BA5A96F24F0 /* [CP] Embed Pods Frameworks */,
+				528FDEAE5A2C0A41FAAC6708 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -541,11 +563,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3D10A642262582A60049BDA1 /* Build configuration list for PBXNativeTarget "AEPCampaignUnitTests" */;
 			buildPhases = (
-				D6560AC4B1C48196AC7F2B4F /* [CP] Check Pods Manifest.lock */,
+				F26085287263EDE3395179D5 /* [CP] Check Pods Manifest.lock */,
 				3D10A636262582A60049BDA1 /* Sources */,
 				3D10A637262582A60049BDA1 /* Frameworks */,
 				3D10A638262582A60049BDA1 /* Resources */,
-				9D4E40E6AC9B7324441C99AD /* [CP] Embed Pods Frameworks */,
+				11EAAA615D18762ABFDB9E25 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -579,12 +601,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D6E978902639D199003F3372 /* Build configuration list for PBXNativeTarget "CampaignTester" */;
 			buildPhases = (
-				495E6CE8D7CFA6AD4BE1B8B5 /* [CP] Check Pods Manifest.lock */,
+				386A0D86FE58F460F4F99A44 /* [CP] Check Pods Manifest.lock */,
 				D6E978792639D197003F3372 /* Sources */,
 				D6E9787A2639D197003F3372 /* Frameworks */,
 				D6E9787B2639D197003F3372 /* Resources */,
 				D6B407122643921E002814FC /* Embed Frameworks */,
-				C89B748BED71F23F39C1CC0B /* [CP] Embed Pods Frameworks */,
+				2C0414BC34E3A0DCE895119E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -699,29 +721,41 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1462184A773C8B595AA8EE80 /* [CP] Check Pods Manifest.lock */ = {
+		11EAAA615D18762ABFDB9E25 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPCampaignFunctionalTests-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		495E6CE8D7CFA6AD4BE1B8B5 /* [CP] Check Pods Manifest.lock */ = {
+		2C0414BC34E3A0DCE895119E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampaignTester/Pods-CampaignTester-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampaignTester/Pods-CampaignTester-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampaignTester/Pods-CampaignTester-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		386A0D86FE58F460F4F99A44 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -743,7 +777,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		865D54D29A545A360AB363A1 /* [CP] Check Pods Manifest.lock */ = {
+		528FDEAE5A2C0A41FAAC6708 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5BB6E0454AABE40047D575BD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -765,58 +816,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9D4E40E6AC9B7324441C99AD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B43089E7BE329BA5A96F24F0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AEPCampaignFunctionalTests/Pods-AEPCampaignFunctionalTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C89B748BED71F23F39C1CC0B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampaignTester/Pods-CampaignTester-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampaignTester/Pods-CampaignTester-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampaignTester/Pods-CampaignTester-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D6560AC4B1C48196AC7F2B4F /* [CP] Check Pods Manifest.lock */ = {
+		8164D595D32E88A0708D762E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -831,7 +831,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AEPCampaignUnitTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-AEPCampaignFunctionalTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -855,6 +855,28 @@
 			shellPath = /bin/sh;
 			shellScript = "cd ${PROJECT_DIR}\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"error: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\nif which swiftformat >/dev/null; then\n   swiftformat .\nelse\necho \"error: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
 		};
+		F26085287263EDE3395179D5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AEPCampaignUnitTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -862,14 +884,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D11582926572B4D00B55AF6 /* CampaignCacheable.swift in Sources */,
 				3D4657362637521700BFC421 /* CampaignRulesDownloader.swift in Sources */,
 				3D46568B262A1DBE00BFC421 /* MessageInteractionTracker.swift in Sources */,
 				3D46573F2637739D00BFC421 /* CampaignCachedRules.swift in Sources */,
 				D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */,
 				3D10A653262583C70049BDA1 /* Campaign.swift in Sources */,
 				D6E9792F263B4775003F3372 /* Event+Campaign.swift in Sources */,
-				D6D9B2EE264A002E00BAF249 /* CampaignCacheable.swift in Sources */,
 				D6577DFA2628F48A008F0528 /* URL+Campaign.swift in Sources */,
+				3D4658B12652F58900BFC421 /* CampaignRulesCache.swift in Sources */,
 				3D10A65D2625847B0049BDA1 /* Campaign+PublicAPI.swift in Sources */,
 				D6E823E22627617F0092C7DE /* CampaignHit.swift in Sources */,
 				3D10A6582625841C0049BDA1 /* CampaignConstants.swift in Sources */,
@@ -880,6 +903,7 @@
 				D6B2F04E26386EB100747CFE /* CampaignMessaging.swift in Sources */,
 				D6B4068C26420269002814FC /* CampaignFullscreenMessage.swift in Sources */,
 				D6E823B9262616E90092C7DE /* CampaignState.swift in Sources */,
+				3D46589C264DF98900BFC421 /* FileManager+Campaign.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,6 +936,7 @@
 				3D4656A9262F510D00BFC421 /* CampaignTests.swift in Sources */,
 				3D465693262F4C9800BFC421 /* TestableExtensionRuntime.swift in Sources */,
 				3D46582C264B005700BFC421 /* MockDiskCache.swift in Sources */,
+				3D1157A8265713B700B55AF6 /* MockFileManager.swift in Sources */,
 				3D4657A2263CB19600BFC421 /* CampaignRulesDownloaderTests.swift in Sources */,
 				D6577DEF2628DAC7008F0528 /* MockDataQueuing.swift in Sources */,
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
@@ -919,6 +944,7 @@
 				D6B405C3263C58F7002814FC /* TestMessage.swift in Sources */,
 				D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */,
 				D6B2F0112634B3F000747CFE /* MockExtension.swift in Sources */,
+				3D4658C42653207200BFC421 /* CampaignRulesCacheUnitTests.swift in Sources */,
 				3D465838264B0B3B00BFC421 /* MockRulesEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1117,7 +1143,7 @@
 		};
 		3D10A60A262581650049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 521FFDAA97F062FEB893AFDC /* Pods-AEPCampaign.debug.xcconfig */;
+			baseConfigurationReference = 3B55248A59EFF7D5C7BD2328 /* Pods-AEPCampaign.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1146,7 +1172,7 @@
 		};
 		3D10A60B262581650049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8025CEBEA95DC90CDBADB1FE /* Pods-AEPCampaign.release.xcconfig */;
+			baseConfigurationReference = 1CCB4CE6A94A95D41508E648 /* Pods-AEPCampaign.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1174,7 +1200,7 @@
 		};
 		3D10A62D2625826D0049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5D175890156889E2CF12FFB9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */;
+			baseConfigurationReference = 99920600ABA48439B1FD42E9 /* Pods-AEPCampaignFunctionalTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1194,7 +1220,7 @@
 		};
 		3D10A62E2625826D0049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C4B4AA96C4249A68B45D411A /* Pods-AEPCampaignFunctionalTests.release.xcconfig */;
+			baseConfigurationReference = 8955C691537F135A3C0BAC84 /* Pods-AEPCampaignFunctionalTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1214,7 +1240,7 @@
 		};
 		3D10A643262582A60049BDA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 37572EF84E4889626519DDC8 /* Pods-AEPCampaignUnitTests.debug.xcconfig */;
+			baseConfigurationReference = 623653C52428E8F03DA84630 /* Pods-AEPCampaignUnitTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1235,7 +1261,7 @@
 		};
 		3D10A644262582A60049BDA1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 03DC342FB74D606C63FC1BC3 /* Pods-AEPCampaignUnitTests.release.xcconfig */;
+			baseConfigurationReference = CB8C8918C7FF3CD1EDA473B6 /* Pods-AEPCampaignUnitTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1316,7 +1342,7 @@
 		};
 		D6E9788E2639D199003F3372 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7BF5C3BDD4347DCA119A9115 /* Pods-CampaignTester.debug.xcconfig */;
+			baseConfigurationReference = 141CF3EA9D1C198A1FB27019 /* Pods-CampaignTester.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1340,7 +1366,7 @@
 		};
 		D6E9788F2639D199003F3372 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E60A890D31D5DBB19C8102C2 /* Pods-CampaignTester.release.xcconfig */;
+			baseConfigurationReference = B6F4EBEAE0E97DF607F9DF64 /* Pods-CampaignTester.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
