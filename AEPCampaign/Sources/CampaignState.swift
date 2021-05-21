@@ -29,7 +29,14 @@ class CampaignState {
     private(set) var campaignPropertyId: String?
     private(set) var campaignRegistrationDelay: TimeInterval?
     private(set) var campaignRegistrationPaused: Bool?
-    private(set) var campaignRulesDownloadUrl: URL?
+    var campaignRulesDownloadUrl: URL? {
+        if let mciasServer = campaignMciasServer, let campaignServer = campaignServer, let propertyId = campaignPropertyId, let ecid = ecid {
+            return URL.getRulesDownloadUrl(mciasServer: mciasServer, campaignServer: campaignServer, propertyId: propertyId, ecid: ecid)
+        } else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to create Campaign Rules download URL. Required Configuration is missing.")
+            return nil
+        }
+    }
 
     // Identity shared state
     private(set) var ecid: String?
@@ -83,14 +90,11 @@ class CampaignState {
             self.campaignRegistrationDelay = CampaignConstants.Campaign.DEFAULT_REGISTRATION_DELAY
         }
         self.campaignRegistrationPaused = configurationData[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] as? Bool ?? false
+        createHitQueue()
+    }
 
-        if let mciasServer = campaignMciasServer, let campaignServer = campaignServer, let propertyId = campaignPropertyId, let ecid = ecid {
-            campaignRulesDownloadUrl = URL.getRulesDownloadUrl(mciasServer: mciasServer, campaignServer: campaignServer, propertyId: propertyId, ecid: ecid)
-        } else {
-            Log.debug(label: LOG_TAG, "\(#function) - Unable to create Campaign Rules download URL. Required Configuration is missing.")
-        }
-
-        // create the hitqueue if not yet created. otherwise, update the hitQueue with the latest privacy status.
+    // create the hitqueue if not yet created. otherwise, update the hitQueue with the latest privacy status.
+    private func createHitQueue(){
         if let hitQueue = hitQueue {
             hitQueue.handlePrivacyChange(status: self.privacyStatus)
         } else {
@@ -211,7 +215,7 @@ class CampaignState {
     ///    - url: The request URL
     ///    - payload: The request payload
     ///    - event:The `Event` that triggered the network request
-    func processRequest(url: URL, payload: String, event: Event) {
+    func processRequest(url: URL, payload: String, event: Event) {        
         // check if this request is a registration request by checking for the presence of a payload and if it is a registration request, determine if it should be sent.
         if !payload.isEmpty { //Registration request
             guard shouldSendRegistrationRequest(eventTimeStamp: event.timestamp.timeIntervalSince1970) else {

@@ -36,7 +36,7 @@ struct CampaignMessageAssetsCache {
         let assetToRetainAlphaNumeric = assetsToRetain.map { url in
             url.absoluteString.alphanumeric
         }
-        clearCachedAssetsForMessagesNotInList(filesToRetain: assetToRetainAlphaNumeric, pathRelativeToCacheDir: "\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)")
+        clearCachedAssetsNotInList(filesToRetain: assetToRetainAlphaNumeric, pathRelativeToCacheDir: "\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)")
         downloadAssets(urls: assetsToRetain, messageId: messageId)
     }
 
@@ -81,24 +81,9 @@ struct CampaignMessageAssetsCache {
     /// - Parameters:
     ///   - filesToRetain: An array of file names that have to retain.
     ///   - pathRelativeToCacheDir: The path of cache directory relative to `Library/Cache`
-    func clearCachedAssetsForMessagesNotInList(filesToRetain: [String], pathRelativeToCacheDir: String) {
-        Log.trace(label: LOG_PREFIX, "\(#function) - Attempt to delete the Non required cached assets from directory \(pathRelativeToCacheDir)")
-        guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
-            return
-        }
-        cacheDir.appendPathComponent(pathRelativeToCacheDir)
-        guard let cachedFiles = try? fileManager.contentsOfDirectory(atPath: cacheDir.absoluteString) else {
-            return
-        }
-        let assetsToDelete = cachedFiles.filter { cachedFile in
-            !filesToRetain.contains(cachedFile)
-        }
-
-        // MARK: Delete non required cached files for the message
-        assetsToDelete.forEach { fileName in
-            try? fileManager.removeItem(atPath: "\(cacheDir.absoluteString)/\(fileName)")
-            Log.debug(label: LOG_PREFIX, "\(#function) - Deleted the non required cached asset at path: \(cacheDir.absoluteString)/\(fileName)")
-        }
+    func clearCachedAssetsNotInList(filesToRetain: [String], pathRelativeToCacheDir: String) {
+        Log.trace(label: LOG_PREFIX, "\(#function) - Attempt to delete \(filesToRetain.count) non required cached assets from directory '\(pathRelativeToCacheDir)'")
+        fileManager.deleteCachedFiles(except: filesToRetain, parentFolderRelativeToCache: pathRelativeToCacheDir)
     }
 
     /// Creates the directory to store the cache if it does not exist
