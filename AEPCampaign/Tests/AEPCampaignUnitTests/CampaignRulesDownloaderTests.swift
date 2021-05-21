@@ -22,6 +22,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
     var ruleEngine: MockRulesEngine!
     var mockDiskCache: MockDiskCache!
     var mockNetworking = MockNetworking()
+    var campaignRulesCache = CampaignRulesCache()
 
     static var bundle: Bundle {
         Bundle(for: self)
@@ -54,9 +55,9 @@ class CampaignRulesDownloaderTests: XCTestCase {
             return
         }
 
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine)
         let campaignCachedRules = CampaignCachedRules(cacheable: data, lastModified: nil, eTag: nil)
-        campaignRulesDownloader.setCachedRulesProxy(rulesUrl: rulesJsonUrl.absoluteString, cachedRules: campaignCachedRules)
+        _ = campaignRulesCache.setCachedRules(rulesUrl: rulesJsonUrl.absoluteString, cachedRules: campaignCachedRules)
 
         //Action
         campaignRulesDownloader.loadRulesFromCache(rulesUrlString: rulesJsonUrl.absoluteString)
@@ -71,7 +72,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
     func testLoadRulesFromCacheFailure() {
         //Setup
         let invalidUrl = "https://fakeurl.com"
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine)
 
         //Action
         campaignRulesDownloader.loadRulesFromCache(rulesUrlString: invalidUrl)
@@ -95,7 +96,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
             XCTFail("Unable to encode linkage filed to Base64")
             return
         }
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine)
         let linkageFields = [
             CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFieldBase64Encoded
         ]
@@ -128,8 +129,8 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let eTag = "fakeETag"
         let lastModified = Date().description
         let campaignCachedRules = CampaignCachedRules(cacheable: data, lastModified: lastModified, eTag: eTag)
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
-        campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine)
+        _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
 
         //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
@@ -154,7 +155,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let httpConnection = HttpConnection(data: nil, response: httpUrlResponse, error: nil)
         mockNetworking.expectedResponse = httpConnection
 
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine)
 
         //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
@@ -184,8 +185,8 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let eTag = "fakeETag"
         let lastModified = Date().description
         let campaignCachedRules = CampaignCachedRules(cacheable: data, lastModified: lastModified, eTag: eTag)
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine)
-        campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine)
+        _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: nil, error: nil)
 
         //Action
@@ -226,8 +227,8 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let dispatchQueue = DispatchQueue(label: "CampaignTestDispatchQueue")
 
         let campaignCachedRules = CampaignCachedRules(cacheable: dataJson, lastModified: nil, eTag: nil)
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine, dispatchQueue: dispatchQueue)
-        campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine, dispatchQueue: dispatchQueue)
+        _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
         mockDiskCache.reset()
@@ -272,8 +273,8 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let dispatchQueue = DispatchQueue(label: "CampaignTestDispatchQueue")
 
         let campaignCachedRules = CampaignCachedRules(cacheable: dataJson, lastModified: nil, eTag: nil)
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine, dispatchQueue: dispatchQueue)
-        campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine, dispatchQueue: dispatchQueue)
+        _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
         //Action
@@ -318,8 +319,8 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let campaignState = CampaignState()
 
         let campaignCachedRules = CampaignCachedRules(cacheable: dataJson, lastModified: nil, eTag: nil)
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine, dispatchQueue: dispatchQueue)
-        campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine, dispatchQueue: dispatchQueue)
+        _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
         //Action
@@ -328,7 +329,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
         Thread.sleep(forTimeInterval: 2)
 
         //Assert
-        XCTAssertTrue(campaignState.getRulesUrlFromDataStore()?.contains("rules.zip") ?? false)
+        XCTAssertTrue(campaignState.getRulesUrlFromDataStore()?.contains(url.absoluteString) ?? false)
     }
 
     func testLoadRulesFromUrlSuccessTriggersAssetsDownload() {
@@ -364,8 +365,8 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let campaignMessageAssetsCache = CampaignMessageAssetsCache(dispatchQueue: dispatchQueue)
 
         let campaignCachedRules = CampaignCachedRules(cacheable: dataJson, lastModified: nil, eTag: nil)
-        campaignRulesDownloader = CampaignRulesDownloader(fileUnzipper: FileUnzipper(), ruleEngine: ruleEngine, campaignMessageAssetsCache: campaignMessageAssetsCache, dispatchQueue: dispatchQueue)
-        campaignRulesDownloader.setCachedRulesProxy(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
+        campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine, campaignMessageAssetsCache: campaignMessageAssetsCache, dispatchQueue: dispatchQueue)
+        _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
         //Action

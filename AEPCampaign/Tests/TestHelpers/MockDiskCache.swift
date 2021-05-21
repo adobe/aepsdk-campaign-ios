@@ -17,7 +17,7 @@ class MockDiskCache: Caching {
     var cache = [String: CacheEntry]()
     var isSetCacheCalled = false
     var isGetCacheCalled = false
-    var isRemoveCacheCalled = false
+    var isRemoveCacheItemCalled = false    
 
     func set(cacheName: String, key: String, entry: CacheEntry) throws {
         isSetCacheCalled = true
@@ -30,13 +30,14 @@ class MockDiskCache: Caching {
     }
 
     func remove(cacheName: String, key: String) throws {
-        isRemoveCacheCalled = true
+        isRemoveCacheItemCalled = true
+        cache.removeValue(forKey: key)
     }
 
     func reset() {
         cache = [String: CacheEntry]()
         isSetCacheCalled = false
         isGetCacheCalled = false
-        isRemoveCacheCalled = false
+        isRemoveCacheItemCalled = false        
     }
 }
