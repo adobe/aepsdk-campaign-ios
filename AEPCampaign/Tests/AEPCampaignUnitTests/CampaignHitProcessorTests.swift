@@ -83,7 +83,7 @@ class CampaignHitProcessorTests: XCTestCase {
         let actualUrlString = mockNetworkService?.connectAsyncCalledWithNetworkRequest?.url.absoluteString ?? ""
         let expectedUrlString = expectedUrl.absoluteString
         XCTAssertEqual(actualUrlString, expectedUrlString) // network request should be made with the url in the hit
-        let actualBody = mockNetworkService?.connectAsyncCalledWithNetworkRequest?.connectPayload
+        let actualBody = mockNetworkService?.connectAsyncCalledWithNetworkRequest?.payloadAsString()
         XCTAssertEqual(expectedBody, actualBody)
     }
 

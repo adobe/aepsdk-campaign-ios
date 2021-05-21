@@ -94,7 +94,7 @@ class CampaignState {
     }
 
     // create the hitqueue if not yet created. otherwise, update the hitQueue with the latest privacy status.
-    private func createHitQueue(){
+    private func createHitQueue() {
         if let hitQueue = hitQueue {
             hitQueue.handlePrivacyChange(status: self.privacyStatus)
         } else {
@@ -215,7 +215,7 @@ class CampaignState {
     ///    - url: The request URL
     ///    - payload: The request payload
     ///    - event:The `Event` that triggered the network request
-    func processRequest(url: URL, payload: String, event: Event) {        
+    func processRequest(url: URL, payload: String, event: Event) {
         // check if this request is a registration request by checking for the presence of a payload and if it is a registration request, determine if it should be sent.
         if !payload.isEmpty { //Registration request
             guard shouldSendRegistrationRequest(eventTimeStamp: event.timestamp.timeIntervalSince1970) else {
