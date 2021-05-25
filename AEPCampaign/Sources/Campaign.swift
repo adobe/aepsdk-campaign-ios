@@ -138,11 +138,10 @@ public class Campaign: NSObject, Extension {
         } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
             Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing a fullscreen message.")
             message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
+            message = AlertMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
         }
-//        else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
-//            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
-//            message = AlertMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
-//        }
         guard let builtMessage = message else { return }
         builtMessage.showMessage()
     }

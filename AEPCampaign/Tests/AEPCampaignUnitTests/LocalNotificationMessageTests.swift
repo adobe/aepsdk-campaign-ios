@@ -68,13 +68,6 @@ class LocalNotificationMessageTests: XCTestCase {
         XCTAssertNil(messageObject)
     }
 
-    func testCreateLocalNotificationMessageWithNilConsequence() {
-        // test
-        let messageObject = LocalNotificationMessage.createMessageObject(consequence: nil, state: state, eventDispatcher: { _, _, _, _ in })
-        // verify
-        XCTAssertNil(messageObject)
-    }
-
     func testCreateLocalNotificationMessageWithEmptyDetailDictionary() {
         // setup
         let localNotificationConsequence = RuleConsequence(id: "20761932", type: "iam", details: [:])

@@ -177,7 +177,7 @@ class CampaignState {
             return true
         }
 
-        let retrievedTimeStamp = dataStore.getLong(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? Int64(CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE)
+        let retrievedTimeStamp = dataStore.getDouble(key: CampaignConstants.Campaign.Datastore.REGISTRATION_TIMESTAMP_KEY) ?? CampaignConstants.Campaign.DEFAULT_TIMESTAMP_VALUE
 
         if eventTimeStamp - TimeInterval(retrievedTimeStamp) >= registrationDelay {
             Log.debug(label: LOG_TAG, "\(#function) - Registration delay of '\(registrationDelay)' seconds has elapsed. Sending the Campaign registration request.")
