@@ -69,23 +69,26 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
-        switch event.source {
-        case EventSource.requestContent:
-            handleCampaignRequestContent(event: event)
-        case EventSource.requestIdentity:
-            let isSuccessfull = extractLinkageFields(event: event)
-            if isSuccessfull {
-                clearCachedRules()
-                updateCampaignState(event: event)
-                triggerRulesDownload()
-            } else {
-                Log.debug(label: LOG_TAG, "\(#function) - Dropping Campaign RequestIdentity event '\(event.name)'. Unable to extract Linkage fields.")
+        dispatchQueue.async {[weak self] in
+            guard let self = self else {return}
+            switch event.source {
+            case EventSource.requestContent:
+                self.handleCampaignRequestContent(event: event)
+            case EventSource.requestIdentity:
+                let isSuccessfull = self.extractLinkageFields(event: event)
+                if isSuccessfull {
+                    self.clearCachedRules()
+                    self.updateCampaignState(event: event)
+                    self.triggerRulesDownload()
+                } else {
+                    Log.debug(label: self.LOG_TAG, "\(#function) - Dropping Campaign RequestIdentity event '\(event.name)'. Unable to extract Linkage fields.")
+                }
+            case EventSource.requestReset:
+                self.resetRules()
+                self.updateCampaignState(event: event)
+                self.triggerRulesDownload()
+            default: Log.debug(label: self.LOG_TAG, "\(#function) - Dropping event '\(event.id)'. The event source '\(event.source)' is unknown.")
             }
-        case EventSource.requestReset:
-            resetRules()
-            updateCampaignState(event: event)
-            triggerRulesDownload()
-        default: Log.debug(label: LOG_TAG, "\(#function) - Dropping event \(event.id). The event source '\(event.source)' is unknown.")
         }
     }
 
@@ -114,10 +117,14 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event) {
-        updateCampaignState(event: event)
-        state.queueRegistrationRequest(event: event)
+        dispatchQueue.async { [weak self] in
+            guard let self = self else {return}
+            self.updateCampaignState(event: event)
+            self.state.queueRegistrationRequest(event: event)
+        }
     }
 
+    /// A wildcard listener for all the events. Pass the received events to `Rules Engine` for processing.
     private func handleWildCardEvents(event: Event) {
         _ = rulesEngine.process(event: event)
     }
@@ -143,8 +150,11 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Generic Data`
     private func handleGenericDataEvents(event: Event) {
-        updateCampaignState(event: event)
-        MessageInteractionTracker.processMessageInformation(event: event, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+        dispatchQueue.async { [weak self] in
+            guard let self = self else {return}
+            self.updateCampaignState(event: event)
+            MessageInteractionTracker.processMessageInformation(event: event, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:))
+        }
     }
 
     /// Dispatches an event with provided `Name`, `Type`, `Source` and `Data`.
@@ -180,40 +190,34 @@ public class Campaign: NSObject, Extension {
         }
     }
 
-    ///Triggers the rules downloading and caching.
+    ///Triggers the rules download and cache them
     private func triggerRulesDownload() {
-        dispatchQueue.async { [weak self] in
-            //Download rules from the remote URL and cache them.
-            guard let self = self else {return}
-            guard let url = self.state.campaignRulesDownloadUrl else {
-                Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
-                return
-            }
-            let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(dispatchQueue: self.dispatchQueue), dispatchQueue: self.dispatchQueue)
-            var linkageFieldsHeader: [String: String]?
-            if let linkageFields = self.linkageFields {
-                linkageFieldsHeader = [
-                    CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
-                ]
-            }
-            campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
+        guard let url = self.state.campaignRulesDownloadUrl else {
+            Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
+            return
         }
+        let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(), dispatchQueue: self.dispatchQueue)
+        var linkageFieldsHeader: [String: String]?
+        if let linkageFields = self.linkageFields {
+            linkageFieldsHeader = [
+                CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
+            ]
+        }
+        campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
     }
 
     ///Loads the Cached Campaign rules on receiving the Configuration event first time.
     private func loadCachedRules() {
         if !hasCachedRulesLoaded {
             Log.trace(label: LOG_TAG, "\(#function) - Attempting to load the Cached Campaign Rules.")
-            dispatchQueue.async { [weak self] in
-                guard let self = self else {return}
-                guard let urlString = self.state.getRulesUrlFromDataStore() else {
-                    Log.debug(label: self.LOG_TAG, "\(#function) - Unable to load cached rules. Couldn't get valid rules URL from Datastore")
-                    return
-                }
-                let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine)
-                campaignRulesDownloader.loadRulesFromCache(rulesUrlString: urlString)
-                self.hasCachedRulesLoaded = true
+            guard let urlString = self.state.getRulesUrlFromDataStore() else {
+                Log.debug(label: self.LOG_TAG, "\(#function) - Unable to load cached rules. Couldn't get valid rules URL from Datastore")
+                return
             }
+            let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine)
+            campaignRulesDownloader.loadRulesFromCache(rulesUrlString: urlString)
+            self.hasCachedRulesLoaded = true
+
         }
     }
 

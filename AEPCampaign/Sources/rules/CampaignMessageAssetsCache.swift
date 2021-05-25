@@ -17,8 +17,9 @@ import AEPServices
 struct CampaignMessageAssetsCache {
 
     private let LOG_PREFIX = "CampaignMessageAssetsCache"
-    let fileManager = FileManager.default
-    let dispatchQueue: DispatchQueue
+    let dispatchQueue = DispatchQueue(label: "\(CampaignConstants.EXTENSION_NAME).messageassetscache")
+
+    init() {}
 
     ///Download and Caches the Assets for a given messageId.
     ///- Parameters:
@@ -87,13 +88,14 @@ struct CampaignMessageAssetsCache {
     ///   - pathRelativeToCacheDir: The path of cache directory relative to `Library/Cache`
     func clearCachedAssetsNotInList(filesToRetain: [String], pathRelativeToCacheDir: String) {
         Log.trace(label: LOG_PREFIX, "\(#function) - Attempt to delete \(filesToRetain.count) non required cached assets from directory '\(pathRelativeToCacheDir)'")
-        fileManager.deleteCachedFiles(except: filesToRetain, parentFolderRelativeToCache: pathRelativeToCacheDir)
+        FileManager.default.deleteCachedFiles(except: filesToRetain, parentFolderRelativeToCache: pathRelativeToCacheDir)
     }
 
     /// Creates the directory to store the cache if it does not exist
     /// - Parameters messageId: The message Id
     /// - Returns the Path to the Message Cache folder, Returns nil if cache folder does not exist and unable to create
     private func createDirectoryIfNeeded(messageId: String) -> String? {
+        let fileManager = FileManager.default
         guard let cacheUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
             Log.debug(label: LOG_PREFIX, "\(#function) - \(#function) - Failed to retrieve cache directory URL.")
             return nil
