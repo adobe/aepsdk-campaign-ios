@@ -63,7 +63,7 @@ class CampaignFullscreenMessageDelegateTests: XCTestCase {
         campaignFullscreenMessageDelegate.onDismiss(message: mockFullscreenMessage)
         // verify
         let messageDismissedEvent = dispatchedEvents[0]
-        let messageParameters = ["event": messageDismissedEvent as Any, "actionType": "viewed", "size": 2] as [String: Any]
+        let messageParameters = ["event": messageDismissedEvent as Any, "actionType": "viewed", "size": 2]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)
     }
 
@@ -72,7 +72,7 @@ class CampaignFullscreenMessageDelegateTests: XCTestCase {
         shouldSDKHandleUrl = campaignFullscreenMessageDelegate.overrideUrlLoad(message: mockFullscreenMessage, url: "adbinapp://confirm/?id=h18a880,103b8f5,3")
         // verify
         let messageConfirmEvent = dispatchedEvents[0]
-        let messageParameters = ["event": messageConfirmEvent as Any, "actionType": "clicked", "size": 4, "type": "confirm", "id": "h18a880,103b8f5,3", "expectedComponents": ["confirm", "h18a880,103b8f5,3"]] as [String: Any]
+        let messageParameters = ["event": messageConfirmEvent as Any, "actionType": "clicked", "size": 4, "type": "confirm", "id": "h18a880,103b8f5,3", "expectedComponents": ["confirm", "h18a880,103b8f5,3"]]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)
         XCTAssertTrue(shouldSDKHandleUrl)
     }
@@ -82,7 +82,7 @@ class CampaignFullscreenMessageDelegateTests: XCTestCase {
         shouldSDKHandleUrl = campaignFullscreenMessageDelegate.overrideUrlLoad(message: mockFullscreenMessage, url: "adbinapp://cancel?id=h18a880,103b8f5,5")
         // verify
         let messageCancelEvent = dispatchedEvents[0]
-        let messageParameters = ["event": messageCancelEvent as Any, "actionType": "clicked", "size": 4, "type": "cancel", "id": "h18a880,103b8f5,5", "expectedComponents": ["cancel", "h18a880,103b8f5,5"]] as [String: Any]
+        let messageParameters = ["event": messageCancelEvent as Any, "actionType": "clicked", "size": 4, "type": "cancel", "id": "h18a880,103b8f5,5", "expectedComponents": ["cancel", "h18a880,103b8f5,5"]]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)
         XCTAssertTrue(shouldSDKHandleUrl)
     }

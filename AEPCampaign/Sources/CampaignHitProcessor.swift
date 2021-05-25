@@ -19,7 +19,7 @@ class CampaignHitProcessor: HitProcessing {
     private let timeout: TimeInterval
     private let dispatchQueue: DispatchQueue
     private let responseHandler: (CampaignHit) -> Void
-    private let headers = [NetworkServiceConstants.Headers.CONTENT_TYPE: CampaignConstants.Campaign.CONTENT_TYPE_APPLICATION, CampaignConstants.Campaign.HEADER_KEY_ACCEPT: "*/*"]
+    private let headers = [NetworkServiceConstants.Headers.CONTENT_TYPE: CampaignConstants.Campaign.CONTENT_TYPE_JSON, CampaignConstants.Campaign.HEADER_KEY_ACCEPT: "*/*"]
 
     /// Creates a new `CampaignHitProcessor` where the `responseHandler` will be invoked after the successful sending of a hit
     /// - Parameters:

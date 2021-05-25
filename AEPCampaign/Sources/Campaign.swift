@@ -70,8 +70,6 @@ public class Campaign: NSObject, Extension {
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
         switch event.source {
-        case EventSource.requestContent:
-            handleCampaignRequestContent(event: event)
         case EventSource.requestIdentity:
             let isSuccessfull = extractLinkageFields(event: event)
             if isSuccessfull {
@@ -86,29 +84,6 @@ public class Campaign: NSObject, Extension {
             updateCampaignState(event: event)
             triggerRulesDownload()
         default: Log.debug(label: LOG_TAG, "\(#function) - Dropping event \(event.id). The event source '\(event.source)' is unknown.")
-        }
-    }
-
-    private func handleCampaignRequestContent(event: Event) {
-        Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
-        guard let details = event.consequenceDetails, !details.isEmpty else {
-            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Campaign event, detail dictionary is nil or empty.")
-            return
-        }
-        let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
-        let template = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String
-        if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
-            Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a local notification. Scheduling the received local notification.")
-            guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
-                return
-            }
-            message.showMessage()
-        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
-            Log.debug(label: LOG_TAG, "\(#function) - Received a Campaign Request content event containing a fullscreen message.")
-            guard let message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
-                return
-            }
-            message.showMessage()
         }
     }
 
