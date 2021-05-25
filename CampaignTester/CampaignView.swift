@@ -15,12 +15,29 @@ import AEPCampaign
 import AEPCore
 import AEPServices
 
+class LinkageFieldsError: ObservableObject {
+    @Published var errorObserved: Bool = false
+
+    public func didSeeLinkageFieldsError() {
+        self.errorObserved = true
+    }
+
+    public func reset() {
+        self.errorObserved = false
+    }
+}
+
 struct CampaignView: View {
     let LOG_TAG = "CampaignTester::CampaignView"
+
+    @ObservedObject var errorObserver: LinkageFieldsError = LinkageFieldsError()
 
     // state vars
     @State private var extensionVersion: String = ""
     @State private var trackActionVar: String = ""
+    @State private var firstname: String = UserDefaults.standard.string(forKey: "FirstName") ?? ""
+    @State private var lastname: String = UserDefaults.standard.string(forKey: "LastName") ?? ""
+    @State private var email: String = UserDefaults.standard.string(forKey: "Email") ?? ""
 
     var body: some View {
         ScrollView {
@@ -116,9 +133,19 @@ struct CampaignView: View {
                             .foregroundColor(.white)
                             .font(.caption)
                     }.cornerRadius(5)
-
+                    TextField("First Name:", text: $firstname)
+                    TextField("Last Name:", text: $lastname)
+                    TextField("Email:", text: $email)
                     Button(action: {
-                        // set linkage fields
+                        // save the entered linkage fields to user defaults
+                        updateUserDefaults(clearDefaults: false)
+                        guard !firstname.isEmpty, !lastname.isEmpty, !email.isEmpty else {
+                            errorObserver.didSeeLinkageFieldsError()
+                            return
+                        }
+                        let linkageFields = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email]
+                        Campaign.setLinkageFields(linkageFields: linkageFields)
+                        hideKeyboard()
                     }
                     ) {
                         Text("Set Linkage Fields")
@@ -128,9 +155,14 @@ struct CampaignView: View {
                             .foregroundColor(.white)
                             .font(.caption)
                     }.cornerRadius(5)
-
+                }
+                Group {
                     Button(action: {
-                        // reset linkage fields
+                        Campaign.resetLinkageFields()
+                        // reset user defaults
+                        updateUserDefaults(clearDefaults: true)
+                        // reset observer
+                        errorObserver.reset()
                     }
                     ) {
                         Text("Reset Linkage Fields")
@@ -142,7 +174,25 @@ struct CampaignView: View {
                     }.cornerRadius(5)
                 }
             }
-            )}
+            )}.alert(isPresented: $errorObserver.errorObserved, content: {
+            Alert(title: Text("Set Linkage Fields Error"),
+                  message: Text("First name, last name, and email are required."),
+                  dismissButton: .default(Text("OK")) {})
+        })
+    }
+    func updateUserDefaults(clearDefaults: Bool) {
+        if !clearDefaults {
+            UserDefaults.standard.setValue(firstname, forKey: "FirstName")
+            UserDefaults.standard.setValue(lastname, forKey: "LastName")
+            UserDefaults.standard.setValue(email, forKey: "Email")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "FirstName")
+            UserDefaults.standard.removeObject(forKey: "LastName")
+            UserDefaults.standard.removeObject(forKey: "Email")
+            firstname = ""
+            lastname = ""
+            email = ""
+        }
     }
 }
 
@@ -151,3 +201,11 @@ struct CampaignView_Previews: PreviewProvider {
         CampaignView()
     }
 }
+
+#if canImport(UIKit)
+    extension View {
+        func hideKeyboard() {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
+    }
+#endif
