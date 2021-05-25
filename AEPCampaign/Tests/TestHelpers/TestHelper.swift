@@ -56,12 +56,17 @@ extension XCTest {
         XCTAssertEqual(event?.source, EventSource.responseContent)
         let data = event?.data as? [String: String] ?? [:]
         XCTAssertEqual(data.count, expectedDataSize)
-        XCTAssertEqual(data["messageId"], "20761932")
+        XCTAssertEqual(data["a.message.id"], "20761932")
         XCTAssertEqual(data["a.message.\(actionType)"], "1")
         if let additionalData = expectedParameters["additionalData"] as? [String: String] {
             for (key, value) in additionalData {
                 XCTAssertEqual(data[key], value)
             }
+        }
+        if data["type"] != nil && data["id"] != nil { // check for id and type fields if present
+            let urlComponents = expectedParameters["expectedComponents"] as? [String] ?? []
+            XCTAssertEqual(data["type"], urlComponents[0])
+            XCTAssertEqual(data["id"], urlComponents[1])
         }
     }
 
@@ -74,5 +79,12 @@ extension XCTest {
         XCTAssertEqual(data["action"], "7")
         XCTAssertEqual(data["deliveryId"], "13ccd4c")
         XCTAssertEqual(data["broadlogId"], "h1bd500")
+    }
+}
+
+extension String {
+    ///Removes non alphanumeric character from `String`
+    var alphanumeric: String {
+        return components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
     }
 }

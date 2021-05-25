@@ -41,7 +41,7 @@ enum CampaignConstants {
         static let TRACKING_URL = "https://%@/r/?id=%@,%@,%s&mcId=%@"
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%@__"
         static let PATH_SEPARATOR = "/"
-        static let CONTENT_TYPE_APPLICATION = "application/json"
+        static let CONTENT_TYPE_JSON = "application/json"
         static let HEADER_KEY_ACCEPT = "Accept"
 
         enum Scheme {

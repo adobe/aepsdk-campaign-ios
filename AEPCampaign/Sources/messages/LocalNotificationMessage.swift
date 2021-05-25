@@ -161,7 +161,9 @@ struct LocalNotificationMessage: CampaignMessaging {
         // prefer the date specified by fire date, otherwise use provided delay. both are optional.
         let fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.DATE] as? TimeInterval ?? TimeInterval(0)
         if fireDate <= TimeInterval(0) {
-            self.fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? TimeInterval ?? TimeInterval(0.1)
+            // default to showing the local notification immediately
+            let wait = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? Int ?? 0
+            self.fireDate = TimeInterval(wait)
         } else {
             self.fireDate = fireDate
         }
