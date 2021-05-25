@@ -27,9 +27,10 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var html: String?
     private var extractedAssets: [[String]]?
     private var isUsingLocalImage = false
-    private var fullscreenMessage: FullscreenPresentable?
+    private var fullscreenMessagePresentable: FullscreenPresentable?
 
     #if DEBUG
+        // var for unit testing
         var htmlPayload: String?
     #endif
 
@@ -79,8 +80,8 @@ class CampaignFullscreenMessage: CampaignMessaging {
             finalHtml = htmlContent
         }
         self.htmlPayload = finalHtml
-        self.fullscreenMessage = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
-        self.fullscreenMessage?.show()
+        self.fullscreenMessagePresentable = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
+        self.fullscreenMessagePresentable?.show()
     }
 
     /// Returns true as the Campaign Fullscreen Message class should download assets
@@ -200,23 +201,27 @@ class CampaignFullscreenMessage: CampaignMessaging {
         }
 
         // first prioritize remote urls that are cached
-        for asset in assetArray.dropFirst() {
+        for asset in assetArray {
             if let messageId = messageId, let url = URL(string: asset), url.scheme == CampaignConstants.Campaign.Scheme.HTTPS {
                 guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
                     Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace assets, the message cache directory does not exist.")
                     return nil
                 }
                 cacheDir.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)/\(url.absoluteString.alphanumeric)")
-                Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from \(asset).")
+                Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from: \(asset).")
                 return cacheDir.path
             }
         }
 
         // then fallback to local urls
         for asset in assetArray.dropFirst() {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using local file \(asset).")
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Replaced assets using local file: \(asset).")
             self.isUsingLocalImage = true
-            return asset
+            let assetComponents = asset.split(separator: ".")
+            let assetName = String(assetComponents[0])
+            let assetType = String(assetComponents[1])
+            let pathToBundledAsset = Bundle.main.path(forResource: assetName, ofType: assetType)
+            return pathToBundledAsset
         }
         return nil
     }

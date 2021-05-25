@@ -50,8 +50,11 @@ extension URL {
         // rules url: https://mciasServer/campaignServer/propertyId/ecid/rules.zip
         var components = URLComponents()
         components.scheme = "https"
-        let mciasHost = String(mciasServer.split(separator: "/").first ?? "")
-        components.host = mciasHost
+        guard let mciasHost = mciasServer.split(separator: "/").first else {
+            Log.error(label: Self.LOG_TAG, "Failed to find an MCIAS host, returning nil.")
+            return nil
+        }
+        components.host = String(mciasHost)
         components.path = String(format: CampaignConstants.Campaign.RULES_DOWNLOAD_PATH, campaignServer, propertyId, ecid)
 
         return components.url

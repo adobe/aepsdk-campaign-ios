@@ -222,7 +222,7 @@ public class Campaign: NSObject, Extension {
 
     ///Reset the Campaign Extension and download rules again
     private func resetRules() {
-        Log.debug(label: LOG_TAG, "\(#function) - Cleared linkageFields, Loaded Campaign Rules and Cached Campaign Rules file")
+        Log.debug(label: LOG_TAG, "\(#function) - Clearing set linkage fields, the currently loaded campaign rules, and the cached campaign rules file.")
         linkageFields = nil
         rulesEngine.replaceRules(with: [LaunchRule]())
         clearCachedRules()
