@@ -124,7 +124,26 @@ public class Campaign: NSObject, Extension {
 
     /// Handles the `Rules engine response` event, when a rule matches
     private func handleRulesEngineResponseEvent(event: Event) {
-        //TODO: If the consequence is of type IAM show the correct IAM
+        Log.trace(label: LOG_TAG, "An event of type \(event.type) has received.")
+        guard let details = event.consequenceDetails, !details.isEmpty else {
+            Log.warning(label: LOG_TAG, "\(#function) - Unable to handle Rules Response event, detail dictionary is nil or empty.")
+            return
+        }
+        let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
+        let template = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String
+        var message: CampaignMessaging?
+        if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing a local notification. Scheduling the received local notification.")
+            message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing a fullscreen message.")
+            message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+        } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
+            Log.debug(label: LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
+            message = AlertMessage.createMessageObject(consequence: consequence, state: state, eventDispatcher: dispatchEvent(eventName:eventType:eventSource:eventData:))
+        }
+        guard let builtMessage = message else { return }
+        builtMessage.showMessage()
     }
 
     ///Handles events of type `Configuration`

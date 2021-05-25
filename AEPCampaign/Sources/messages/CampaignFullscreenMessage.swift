@@ -53,11 +53,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
-        guard let consequence = consequence else {
-            Log.trace(label: LOG_TAG, "\(#function) - Cannot create a Fullscreen Message object, the consequence is nil.")
-            return nil
-        }
+    static func createMessageObject(consequence: RuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         let fullscreenMessage = CampaignFullscreenMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
         // html is required so no message object is returned if it is nil
         guard fullscreenMessage.html != nil else {

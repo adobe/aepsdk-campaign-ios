@@ -16,7 +16,7 @@ import AEPServices
 struct CampaignRulesCache {
     private let LOG_TAG = "CampaignRulesCache"
     private let cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
-    
+
     /// Builds the cache key from the rules url and the rules cache prefix
     /// - Parameter rulesUrl: The rules url
     /// - Returns: The built cache key for the rules
@@ -28,7 +28,7 @@ struct CampaignRulesCache {
 
         return CampaignConstants.RulesDownloaderConstants.Keys.RULES_CACHE_PREFIX + base64RulesUrl
     }
-    
+
     /// Caches the given rules
     /// - Parameters:
     ///    - rulesUrl: The rules url string to be used for building the key
@@ -45,7 +45,7 @@ struct CampaignRulesCache {
             return false
         }
     }
-    
+
     /// Gets the cached rules for the given rulesUrl
     /// - Parameter rulesUrl: The rules url as a string to be used to get the right cached rules
     /// - Returns: The `CachedRules` for the given rulesUrl
@@ -55,7 +55,7 @@ struct CampaignRulesCache {
         }
         return try? JSONDecoder().decode(CampaignCachedRules.self, from: cachedEntry.data)
     }
-    
+
     /// Deletes the cached campaign rules.json from Cache Service.
     /// - Parameter url: The rules URL which is used as key to cache rules.json
     func deleteCachedRules(url: String) {
@@ -66,13 +66,13 @@ struct CampaignRulesCache {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to remove the cached campaign rule.json from CacheService")
         }
     }
-    
+
     /// Deletes the cached campaign assets.
-    func deleteCachedAssets(fileManager: FileManager) {        
+    func deleteCachedAssets(fileManager: FileManager) {
         guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }
-        
+
         cacheDir.appendPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY)
         do {
             try fileManager.removeItem(at: cacheDir)

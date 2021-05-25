@@ -12,11 +12,11 @@
 
 import XCTest
 import Foundation
-import AEPServices
+@testable import AEPServices
 @testable import AEPCore
 @testable import AEPCampaign
 
-class CampaignMessagingTests: XCTestCase {
+class MessagingImplementationTests: XCTestCase {
     var state: CampaignState!
     var hitProcessor: MockHitProcessor!
     var dataQueue: MockDataQueue!
