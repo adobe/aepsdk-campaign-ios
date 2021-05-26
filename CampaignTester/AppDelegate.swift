@@ -31,13 +31,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
 
         // request permission to display notifications
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
-            if let error = error {
-                print("error encountered when requesting notification authorization: \(error)")
-                // Handle the error here.
-            }
-            // Enable or disable features based on the authorization.
-        }
+//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
+//            if let error = error {
+//                print("error encountered when requesting notification authorization: \(error)")
+//                // Handle the error here.
+//            }
+//            // Enable or disable features based on the authorization.
+//        }
 
         return true
     }

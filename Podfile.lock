@@ -15,7 +15,7 @@ DEPENDENCIES:
   - "AEPCore (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.4`)"
   - "AEPIdentity (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.4`)"
   - "AEPLifecycle (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.4`)"
-  - "AEPRulesEngine (from `git@github.com:adobe/aepsdk-rulesengine-ios.git`, branch `main`)"
+  - "AEPRulesEngine (from `git@github.com:adobe/aepsdk-rulesengine-ios.git`, branch `dev-v1.0.2`)"
   - "AEPServices (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.4`)"
   - "AEPUserProfile (from `git@github.com:adobe/aepsdk-userprofile-ios.git`, branch `dev-v3.0.0`)"
 
@@ -30,7 +30,7 @@ EXTERNAL SOURCES:
     :branch: dev-v3.1.4
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPRulesEngine:
-    :branch: main
+    :branch: dev-v1.0.2
     :git: "git@github.com:adobe/aepsdk-rulesengine-ios.git"
   AEPServices:
     :branch: dev-v3.1.4
@@ -50,7 +50,7 @@ CHECKOUT OPTIONS:
     :commit: 1599c5ec155017e82880b2d4e1a656d2347d35ac
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPRulesEngine:
-    :commit: c3337be0f893db495aa497fef760e0518a1e5fe2
+    :commit: 39a1d7850a8c37807723545cb8a1a7d8d3c7e9c0
     :git: "git@github.com:adobe/aepsdk-rulesengine-ios.git"
   AEPServices:
     :commit: 1599c5ec155017e82880b2d4e1a656d2347d35ac
@@ -67,6 +67,6 @@ SPEC CHECKSUMS:
   AEPServices: e032bfacfcb31f3a583b2aa1e87df5d427cca95d
   AEPUserProfile: d8702b2e3fc321febdc3854208db9bb1ad3b61c8
 
-PODFILE CHECKSUM: 8b45373fb2fb9e55a9aa4349c748a2adcbbb33d5
+PODFILE CHECKSUM: 4daaaba6059f0f51084b24958f4be96d41682748
 
 COCOAPODS: 1.10.1

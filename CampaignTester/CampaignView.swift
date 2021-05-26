@@ -123,7 +123,7 @@ struct CampaignView: View {
                 }
                 Group {
                     Button(action: {
-                        MobileCore.track(action: "fullscreen", data: nil)
+                        MobileCore.track(action: "fullscreenuntilclick", data: nil)
                     }
                     ) {
                         Text("Trigger fullscreen message")

@@ -208,6 +208,10 @@ class CampaignFullscreenMessage: CampaignMessaging {
                     return nil
                 }
                 cacheDir.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)/\(url.absoluteString.alphanumeric)")
+                if !fileManager.fileExists(atPath: cacheDir.path) {
+                    Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace asset, no cached image is present for \(asset)")
+                    continue
+                }
                 Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from: \(asset).")
                 return cacheDir.path
             }
