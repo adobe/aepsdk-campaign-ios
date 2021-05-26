@@ -326,7 +326,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
         //Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: campaignState)
 
-        Thread.sleep(forTimeInterval: 2)
+        Thread.sleep(forTimeInterval: 1)
 
         //Assert
         XCTAssertTrue(campaignState.getRulesUrlFromDataStore()?.contains(url.absoluteString) ?? false)
@@ -362,7 +362,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let assetURL = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
         let dispatchQueue = DispatchQueue(label: "CampaignTestDispatchQueue")
         let campaignState = CampaignState()
-        let campaignMessageAssetsCache = CampaignMessageAssetsCache(dispatchQueue: dispatchQueue)
+        let campaignMessageAssetsCache = CampaignMessageAssetsCache()
 
         let campaignCachedRules = CampaignCachedRules(cacheable: dataJson, lastModified: nil, eTag: nil)
         campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine, campaignMessageAssetsCache: campaignMessageAssetsCache, dispatchQueue: dispatchQueue)

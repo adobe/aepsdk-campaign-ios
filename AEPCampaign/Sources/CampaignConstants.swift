@@ -24,9 +24,10 @@ enum CampaignConstants {
         static let IAM_CONSEQUENCE_TYPE = "iam"
         static let LINKAGE_FIELD_NETWORK_HEADER = "X-InApp-Auth"
         static let DEFAULT_TIMEOUT = 5
-        static let PUSH_PLATFORM = "pushPlatform"
+        static let PROFILE_REQUEST_PUSH_PLATFORM = "pushPlatform"
+        static let PROFILE_REQUEST_EXPERIENCE_CLOUD_ID = "marketingCloudId"
         static let DEFAULT_REGISTRATION_DELAY = TimeInterval(60 * 60 * 24 * 7) // 7 days
-        static let DEFAULT_TIMESTAMP_VALUE = -1
+        static let DEFAULT_TIMESTAMP_VALUE = TimeInterval(-1)
         static let SECONDS_IN_A_DAY = 86400
         static let MILLISECONDS_IN_A_SECOND = 1000 // check if still needed
         static let SERVER_TOKEN =
@@ -36,10 +37,12 @@ enum CampaignConstants {
         static let IDENTITY_ECID_TOKEN = "{%~state.com.adobe.module.identity/mid%}"
         static let MESSAGE_ID_TOKEN = "messageId"
         static let PROFILE_URL_PATH = "/rest/head/mobileAppV5/%@/subscriptions/%@"
-        static let RULES_DOWNLOAD_PATH = "/%@/%@/%@/rules.zip"
+        static let RULES_DOWNLOAD_PATH = "/mcias/%@/%@/%@/rules.zip"
         static let TRACKING_URL = "https://%@/r/?id=%@,%@,%s&mcId=%@"
         static let CAMPAIGN_ENV_PLACEHOLDER = "__%@__"
         static let PATH_SEPARATOR = "/"
+        static let CONTENT_TYPE_JSON = "application/json"
+        static let HEADER_KEY_ACCEPT = "Accept"
 
         enum Scheme {
             static let FILE = "file"

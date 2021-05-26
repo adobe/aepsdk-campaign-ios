@@ -32,7 +32,7 @@ extension FileManager {
 
         // MARK: Delete non required cached files for the message
         assetsToDelete.forEach { fileName in
-            try? removeItem(atPath: "\(cacheDir.absoluteString)/\(fileName)")            
+            try? removeItem(atPath: "\(cacheDir.absoluteString)/\(fileName)")
         }
     }
 }

@@ -41,17 +41,13 @@ struct LocalNotificationMessage: CampaignMessaging {
         self.parseLocalNotificationMessagePayload(consequence: consequence)
     }
 
-    /// Creates a Local Notification Message object
+    /// Creates a `LocalNotificationMessage` object
     ///  - Parameters:
     ///    - consequence: `RuleConsequence` containing a Message-defining payload
     ///    - state: The CampaignState
     ///    - eventDispatcher: The Campaign event dispatcher
     ///  - Returns: A Message object or nil if the message object creation failed.
-    static func createMessageObject(consequence: RuleConsequence?, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
-        guard let consequence = consequence else {
-            Log.trace(label: LOG_TAG, "\(#function) - Cannot create a Local Notification Message object, the consequence is nil.")
-            return nil
-        }
+    static func createMessageObject(consequence: RuleConsequence, state: CampaignState, eventDispatcher: @escaping Campaign.EventDispatcher) -> CampaignMessaging? {
         let localNotificationMessage = LocalNotificationMessage(consequence: consequence, state: state, eventDispatcher: eventDispatcher)
         // content is required so no message object is returned if it is nil
         guard localNotificationMessage.content != nil else {
@@ -92,7 +88,7 @@ struct LocalNotificationMessage: CampaignMessaging {
     private func scheduleLocalNotification() {
         // content (message body) is required, bail early if we don't have it
         guard let localNotificationBody = self.content else {
-            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message consequence.details is nil.")
+            Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot schedule local notification, the message body is nil.")
             return
         }
 
@@ -165,7 +161,9 @@ struct LocalNotificationMessage: CampaignMessaging {
         // prefer the date specified by fire date, otherwise use provided delay. both are optional.
         let fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.DATE] as? TimeInterval ?? TimeInterval(0)
         if fireDate <= TimeInterval(0) {
-            self.fireDate = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? TimeInterval ?? TimeInterval(0.1)
+            // default to showing the local notification immediately
+            let wait = consequence.details[CampaignConstants.EventDataKeys.RulesEngine.Detail.WAIT] as? Int ?? 0
+            self.fireDate = TimeInterval(wait)
         } else {
             self.fireDate = fireDate
         }
@@ -207,7 +205,7 @@ struct LocalNotificationMessage: CampaignMessaging {
     }
 
     // no-op for local notifications
-    internal func shouldDownloadAssets() -> Bool {
+    func shouldDownloadAssets() -> Bool {
         return false
     }
 }

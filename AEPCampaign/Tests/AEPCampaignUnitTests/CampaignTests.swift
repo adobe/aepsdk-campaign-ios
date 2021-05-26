@@ -406,7 +406,7 @@ class CampaignTests: XCTestCase {
         Thread.sleep(forTimeInterval: 1)
         let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)
         extensionRuntime.simulateComingEvents(campaignRequestResetEvent)
-        Thread.sleep(forTimeInterval: 10)
+        Thread.sleep(forTimeInterval: 1)
 
         //Assert
         XCTAssertEqual(networking.cachedNetworkRequests.count, 2)

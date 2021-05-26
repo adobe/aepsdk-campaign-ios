@@ -50,7 +50,11 @@ extension URL {
         // rules url: https://mciasServer/campaignServer/propertyId/ecid/rules.zip
         var components = URLComponents()
         components.scheme = "https"
-        components.host = mciasServer
+        guard let mciasHost = mciasServer.split(separator: "/").first else {
+            Log.error(label: Self.LOG_TAG, "Failed to find an MCIAS host, returning nil.")
+            return nil
+        }
+        components.host = String(mciasHost)
         components.path = String(format: CampaignConstants.Campaign.RULES_DOWNLOAD_PATH, campaignServer, propertyId, ecid)
 
         return components.url
@@ -68,8 +72,8 @@ extension URL {
 
         var profileData = [String: String]()
         profileData.merge(data ?? [:]) { _, new in new }
-        profileData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
-        profileData[CampaignConstants.Campaign.PUSH_PLATFORM] = "apns"
+        profileData[CampaignConstants.Campaign.PROFILE_REQUEST_EXPERIENCE_CLOUD_ID] = ecid
+        profileData[CampaignConstants.Campaign.PROFILE_REQUEST_PUSH_PLATFORM] = "apns"
 
         let encoder = JSONEncoder()
         if let bodyJson = try? encoder.encode(profileData) {
