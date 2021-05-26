@@ -27,10 +27,11 @@ class LinkageFieldsError: ObservableObject {
     }
 }
 
+@available(iOS 14.0, *)
 struct CampaignView: View {
     let LOG_TAG = "CampaignTester::CampaignView"
 
-    @ObservedObject var errorObserver: LinkageFieldsError = LinkageFieldsError()
+    @StateObject var errorObserver: LinkageFieldsError = LinkageFieldsError()
 
     // state vars
     @State private var extensionVersion: String = ""
@@ -123,10 +124,21 @@ struct CampaignView: View {
                 }
                 Group {
                     Button(action: {
-                        MobileCore.track(action: "fullscreenuntilclick", data: nil)
+                        MobileCore.track(action: "fullscreen", data: nil)
                     }
                     ) {
                         Text("Trigger fullscreen message")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+                    Button(action: {
+                        MobileCore.track(action: "fullscreenmp4", data: nil)
+                    }
+                    ) {
+                        Text("Trigger fullscreen message with video")
                             .frame(minWidth: 0, maxWidth: .infinity)
                             .padding()
                             .background(Color.gray)
@@ -198,7 +210,11 @@ struct CampaignView: View {
 
 struct CampaignView_Previews: PreviewProvider {
     static var previews: some View {
-        CampaignView()
+        if #available(iOS 14.0, *) {
+            CampaignView()
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 

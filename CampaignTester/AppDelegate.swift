@@ -17,12 +17,14 @@ import AEPIdentity
 import AEPCampaign
 import AEPLifecycle
 import AEPUserProfile
+import AEPServices
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     private let LAUNCH_ENVIRONMENT_FILE_ID = "31d8b0ad1f9f/3a905906efff/launch-cb3acd193018-development"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
 
         MobileCore.setLogLevel(.trace)
         MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self], {
@@ -31,13 +33,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
 
         // request permission to display notifications
-//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
-//            if let error = error {
-//                print("error encountered when requesting notification authorization: \(error)")
-//                // Handle the error here.
-//            }
-//            // Enable or disable features based on the authorization.
-//        }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
+            if let error = error {
+                print("error encountered when requesting notification authorization: \(error)")
+                // Handle the error here.
+            }
+            // Enable or disable features based on the authorization.
+        }
 
         return true
     }
@@ -54,4 +56,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+
+    /// Handle local notifications if they arrive while app is in foreground
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler:
+                                @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.sound, .alert])
+    }
+
+    /// Handle local notification clickthrough to send local notification tracking and/or open any included deeplink
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        // send local notification clicked through tracking
+        guard var userInfo = response.notification.request.content.userInfo as? [String: Any] else { return }
+        userInfo["action"] = "2"
+        MobileCore.collectMessageInfo(userInfo)
+        // open any included adb deeplink
+        guard let deeplink = userInfo["adb_deeplink"] as? String, let url = URL(string: deeplink) else { return }
+        ServiceProvider.shared.urlService.openUrl(url)
+    }
+
 }
