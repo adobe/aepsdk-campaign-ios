@@ -41,7 +41,6 @@ public class Campaign: NSObject, Extension {
         rulesEngine = LaunchRulesEngine(name: "\(CampaignConstants.EXTENSION_NAME).rulesengine", extensionRuntime: runtime)
         self.state = CampaignState()
         super.init()
-        loadCachedRules()
     }
 
     /// Invoked when the Campaign extension has been registered by the `EventHub`
