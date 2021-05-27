@@ -17,6 +17,7 @@ import AEPIdentity
 import AEPCampaign
 import AEPLifecycle
 import AEPUserProfile
+import AEPSignal
 import AEPServices
 
 @UIApplicationMain
@@ -27,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
 
         MobileCore.setLogLevel(.trace)
-        MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self], {
+        MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self, Signal.self], {
             // Use the App id assigned to this application via Adobe Launch
             MobileCore.configureWith(appId: self.LAUNCH_ENVIRONMENT_FILE_ID)
         })
@@ -69,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-        // send local notification clicked through tracking
+        // send local notification clickthrough tracking
         guard var userInfo = response.notification.request.content.userInfo as? [String: Any] else { return }
         userInfo["action"] = "2"
         MobileCore.collectMessageInfo(userInfo)

@@ -212,7 +212,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
                     Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace asset, no cached image is present for \(asset)")
                     continue
                 }
-                Log.trace(label: Self.LOG_TAG, "\(#function) - Will replace \(assetArray[0]) with cached remote assets from: \(asset).")
+                Log.trace(label: Self.LOG_TAG, "\(#function) - Found cached remote assets for \(assetArray[0]).")
                 return cacheDir.path
             }
         }

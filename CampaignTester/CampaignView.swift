@@ -145,9 +145,9 @@ struct CampaignView: View {
                             .foregroundColor(.white)
                             .font(.caption)
                     }.cornerRadius(5)
-                    TextField("First Name:", text: $firstname)
-                    TextField("Last Name:", text: $lastname)
-                    TextField("Email:", text: $email)
+                    TextField("First Name:", text: $firstname).autocapitalization(.none)
+                    TextField("Last Name:", text: $lastname).autocapitalization(.none)
+                    TextField("Email:", text: $email).autocapitalization(.none)
                     Button(action: {
                         // save the entered linkage fields to user defaults
                         updateUserDefaults(clearDefaults: false)
@@ -155,9 +155,12 @@ struct CampaignView: View {
                             errorObserver.didSeeLinkageFieldsError()
                             return
                         }
-                        let linkageFields = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email]
-                        Campaign.setLinkageFields(linkageFields: linkageFields)
+                        var loginData = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email]
+                        Campaign.setLinkageFields(linkageFields: loginData)
                         hideKeyboard()
+                        loginData["triggerKey"] = "collectPIIIOS"
+                        // update ACS subscriber table with login data
+                        MobileCore.collectPii(loginData)
                     }
                     ) {
                         Text("Set Linkage Fields")

@@ -182,7 +182,7 @@ public class Campaign: NSObject, Extension {
     ///2). Remove all the registered rules
     ///3). Deletes all the cached Assets for the rules
     ///4). Remove rules URL from data store
-    private func handlePrivacyOutput(){
+    private func handlePrivacyOutput() {
         Log.debug(label: LOG_TAG, "\(#function) - Process the Privacy opt-out")
         resetRules()
         state.removeRuleUrlFromDatastore()
