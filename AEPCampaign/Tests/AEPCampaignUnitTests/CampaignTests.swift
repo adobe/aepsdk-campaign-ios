@@ -397,6 +397,9 @@ class CampaignTests: XCTestCase {
         let httpConnection = HttpConnection(data: nil, response: nil, error: nil)
         networking.expectedResponse = httpConnection
 
+        let rulesUrl = "https://rulesurl.com"
+        state.updateRuleUrlInDataStore(url: rulesUrl)
+
         let linkageFields = ["key1": "value1", "key2": "value2"]
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
