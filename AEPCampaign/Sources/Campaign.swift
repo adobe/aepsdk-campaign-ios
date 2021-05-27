@@ -67,12 +67,13 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Campaign`
     private func handleCampaignEvents(event: Event) {
+        Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async {[weak self] in
             guard let self = self else {return}
             switch event.source {
             case EventSource.requestIdentity:
-                let isSuccessfull = self.extractLinkageFields(event: event)
-                if isSuccessfull {
+                let isSuccessful = self.extractLinkageFields(event: event)
+                if isSuccessful {
                     self.clearCachedRules()
                     self.updateCampaignState(event: event)
                     self.triggerRulesDownload()
@@ -90,6 +91,7 @@ public class Campaign: NSObject, Extension {
 
     /// Handles events of type `Lifecycle`
     private func handleLifecycleEvents(event: Event) {
+        Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async { [weak self] in
             guard let self = self else {return}
             self.updateCampaignState(event: event)
@@ -104,8 +106,8 @@ public class Campaign: NSObject, Extension {
 
     /// Handles the `Rules engine response` event, when a rule matches
     private func handleRulesEngineResponseEvent(event: Event) {
+        Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async {
-            Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has received.")
             guard let details = event.consequenceDetails, !details.isEmpty else {
                 Log.warning(label: self.LOG_TAG, "\(#function) - Unable to handle Rules Response event, detail dictionary is nil or empty.")
                 return
@@ -130,6 +132,7 @@ public class Campaign: NSObject, Extension {
 
     ///Handles `Configuration Response` events
     private func handleConfigurationEvents(event: Event) {
+        Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async { [weak self] in
             guard let self = self else {return}
             self.updateCampaignState(event: event)
@@ -146,6 +149,7 @@ public class Campaign: NSObject, Extension {
 
     /// Handles `Generic Data OS` events
     private func handleGenericDataEvents(event: Event) {
+        Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async { [weak self] in
             guard let self = self else {return}
             self.updateCampaignState(event: event)
@@ -173,7 +177,7 @@ public class Campaign: NSObject, Extension {
         state.update(dataMap: sharedStates)
     }
 
-    ///Handles the Privacy opt-out. Function take following action to process privacy opt-out
+    ///Handles the Privacy opt-out. The function takes the following actions to process privacy opt-out
     ///1). Reset linkage field to empty string
     ///2). Remove all the registered rules
     ///3). Deletes all the cached Assets for the rules
@@ -184,7 +188,7 @@ public class Campaign: NSObject, Extension {
         state.removeRuleUrlFromDatastore()
     }
 
-    ///Triggers the rules download and cache them
+    ///Triggers the rules download and if successful, caches the downloaded rules.
     private func triggerRulesDownload() {
         guard let url = self.state.campaignRulesDownloadUrl else {
             Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
@@ -232,9 +236,10 @@ public class Campaign: NSObject, Extension {
         clearCachedRules()
     }
 
-    ///Clears the cached `Campaign rules`. The function does following operations.
+    ///The function does the following operations.
     ///1). Clears the cached assets for the Campaign rules.
     ///2). Remove the cached rules.json file.
+    ///3). Remove the rule url from Data store.
     private func clearCachedRules() {
         let campaignRulesCache = CampaignRulesCache()
         campaignRulesCache.deleteCachedAssets(fileManager: FileManager.default)
@@ -243,5 +248,6 @@ public class Campaign: NSObject, Extension {
             return
         }
         campaignRulesCache.deleteCachedRules(url: storedRulesUrl)
+        state.removeRuleUrlFromDatastore()
     }
 }
