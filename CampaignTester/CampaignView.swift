@@ -145,6 +145,23 @@ struct CampaignView: View {
                             .foregroundColor(.white)
                             .font(.caption)
                     }.cornerRadius(5)
+                    Button(action: {
+                        MobileCore.track(action: "personalized", data: nil)
+                    }
+                    ) {
+                        Text("Trigger personalized fullscreen IAM.")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+                    Text("Note: Personalized IAM must be created on ACS after setting linkage fields to target that user.")
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .font(.callout)
                     TextField("First Name:", text: $firstname).autocapitalization(.none)
                     TextField("Last Name:", text: $lastname).autocapitalization(.none)
                     TextField("Email:", text: $email).autocapitalization(.none)
@@ -155,12 +172,8 @@ struct CampaignView: View {
                             errorObserver.didSeeLinkageFieldsError()
                             return
                         }
-                        var loginData = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email]
-                        Campaign.setLinkageFields(linkageFields: loginData)
-                        hideKeyboard()
-                        loginData["triggerKey"] = "collectPIIIOS"
-                        // update ACS subscriber table with login data
-                        MobileCore.collectPii(loginData)
+                        // invoke the linkage fields API and invoke collectPii to update the acs subscriber table
+                        setLinkageFieldsAndUpdateAcsSubscriber()
                     }
                     ) {
                         Text("Set Linkage Fields")
@@ -208,6 +221,15 @@ struct CampaignView: View {
             lastname = ""
             email = ""
         }
+    }
+
+    func setLinkageFieldsAndUpdateAcsSubscriber() {
+        // build user login data dictionary
+        var loginData = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email]
+        Campaign.setLinkageFields(linkageFields: loginData)
+        loginData["triggerKey"] = "collectPIIIOS"
+        // update ACS subscriber table with login data
+        MobileCore.collectPii(loginData)
     }
 }
 
