@@ -397,6 +397,9 @@ class CampaignTests: XCTestCase {
         let httpConnection = HttpConnection(data: nil, response: nil, error: nil)
         networking.expectedResponse = httpConnection
 
+        let rulesUrl = "https://rulesurl.com"
+        state.updateRuleUrlInDataStore(url: rulesUrl)
+
         let linkageFields = ["key1": "value1", "key2": "value2"]
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
@@ -406,7 +409,7 @@ class CampaignTests: XCTestCase {
         Thread.sleep(forTimeInterval: 1)
         let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)
         extensionRuntime.simulateComingEvents(campaignRequestResetEvent)
-        Thread.sleep(forTimeInterval: 10)
+        Thread.sleep(forTimeInterval: 1)
 
         //Assert
         XCTAssertEqual(networking.cachedNetworkRequests.count, 2)

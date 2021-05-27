@@ -253,7 +253,11 @@ class CampaignState {
 
     ///Retrieves the rules url from the data store
     func getRulesUrlFromDataStore() -> String? {
-        return dataStore.getString(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY)
+        return dataStore[CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY]
+    }
+
+    func removeRuleUrlFromDatastore() {
+        dataStore.remove(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY)
     }
 
     /// Sets up the `PersistentHitQueue` to handle `CampaignHit`s
