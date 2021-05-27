@@ -46,14 +46,14 @@
 		CD932BC00793A2EC1F81BEE7 /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0DD8BDBF930404DE04F2E9 /* Pods_CampaignTester.framework */; };
 		D61AA761265325BE00D44D12 /* AlertMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61AA760265325BE00D44D12 /* AlertMessageTests.swift */; };
 		D61AA8562654295A00D44D12 /* MessagingImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61AA8552654295A00D44D12 /* MessagingImplementationTests.swift */; };
-		D61AA903265622A900D44D12 /* honk.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D61AA901265622A800D44D12 /* honk.aiff */; };
-		D61AA904265622A900D44D12 /* local.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D61AA902265622A800D44D12 /* local.jpg */; };
 		D61AA91A2656B7AC00D44D12 /* local.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D61AA9192656B7AC00D44D12 /* local.jpg */; };
 		D61AA9AF26575CE700D44D12 /* CampaignFullscreenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61AA9AA26575CE700D44D12 /* CampaignFullscreenMessage.swift */; };
 		D61AA9B026575CE700D44D12 /* CampaignFullscreenMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61AA9AB26575CE700D44D12 /* CampaignFullscreenMessageDelegate.swift */; };
 		D61AA9B126575CE700D44D12 /* CampaignMessaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61AA9AC26575CE700D44D12 /* CampaignMessaging.swift */; };
 		D61AA9B226575CE700D44D12 /* AlertMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61AA9AD26575CE700D44D12 /* AlertMessage.swift */; };
 		D61AA9B326575CE700D44D12 /* LocalNotificationMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61AA9AE26575CE700D44D12 /* LocalNotificationMessage.swift */; };
+		D61AAA9A265DB4DC00D44D12 /* honk.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D61AA901265622A800D44D12 /* honk.aiff */; };
+		D61AAA9B265DB4DC00D44D12 /* local.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D61AA902265622A800D44D12 /* local.jpg */; };
 		D64731D02644D3370065A992 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
@@ -736,9 +736,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D61AA904265622A900D44D12 /* local.jpg in Resources */,
+				D61AAA9A265DB4DC00D44D12 /* honk.aiff in Resources */,
+				D61AAA9B265DB4DC00D44D12 /* local.jpg in Resources */,
 				D6E9788C2639D199003F3372 /* LaunchScreen.storyboard in Resources */,
-				D61AA903265622A900D44D12 /* honk.aiff in Resources */,
 				D6E979022639DFE6003F3372 /* Assets.xcassets in Resources */,
 				D6E978892639D199003F3372 /* Preview Assets.xcassets in Resources */,
 			);
@@ -1386,7 +1386,7 @@
 				DEVELOPMENT_TEAM = FKGEE875K4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CampaignTester/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1410,7 +1410,7 @@
 				DEVELOPMENT_TEAM = FKGEE875K4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CampaignTester/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

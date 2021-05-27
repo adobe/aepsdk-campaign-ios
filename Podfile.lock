@@ -8,6 +8,8 @@ PODS:
     - AEPCore (= 3.1.3)
   - AEPRulesEngine (1.0.1)
   - AEPServices (3.1.3)
+  - AEPSignal (3.1.3):
+    - AEPCore (= 3.1.3)
   - AEPUserProfile (3.0.0):
     - AEPCore
 
@@ -17,6 +19,7 @@ DEPENDENCIES:
   - "AEPLifecycle (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.4`)"
   - "AEPRulesEngine (from `git@github.com:adobe/aepsdk-rulesengine-ios.git`, branch `dev-v1.0.2`)"
   - "AEPServices (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.4`)"
+  - "AEPSignal (from `git@github.com:adobe/aepsdk-core-ios.git`, branch `dev-v3.1.4`)"
   - "AEPUserProfile (from `git@github.com:adobe/aepsdk-userprofile-ios.git`, branch `dev-v3.0.0`)"
 
 EXTERNAL SOURCES:
@@ -35,25 +38,31 @@ EXTERNAL SOURCES:
   AEPServices:
     :branch: dev-v3.1.4
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
+  AEPSignal:
+    :branch: dev-v3.1.4
+    :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPUserProfile:
     :branch: dev-v3.0.0
     :git: "git@github.com:adobe/aepsdk-userprofile-ios.git"
 
 CHECKOUT OPTIONS:
   AEPCore:
-    :commit: 1599c5ec155017e82880b2d4e1a656d2347d35ac
+    :commit: fbf5259515f734f6934637482b1c722456d89392
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPIdentity:
-    :commit: 1599c5ec155017e82880b2d4e1a656d2347d35ac
+    :commit: fbf5259515f734f6934637482b1c722456d89392
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPLifecycle:
-    :commit: 1599c5ec155017e82880b2d4e1a656d2347d35ac
+    :commit: fbf5259515f734f6934637482b1c722456d89392
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPRulesEngine:
     :commit: 39a1d7850a8c37807723545cb8a1a7d8d3c7e9c0
     :git: "git@github.com:adobe/aepsdk-rulesengine-ios.git"
   AEPServices:
-    :commit: 1599c5ec155017e82880b2d4e1a656d2347d35ac
+    :commit: fbf5259515f734f6934637482b1c722456d89392
+    :git: "git@github.com:adobe/aepsdk-core-ios.git"
+  AEPSignal:
+    :commit: fbf5259515f734f6934637482b1c722456d89392
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPUserProfile:
     :commit: c7473e499f8fb1701c0f34aa1d6ea5f65172b639
@@ -65,8 +74,9 @@ SPEC CHECKSUMS:
   AEPLifecycle: 9ed7ceabd98cc5c94b13c3b085c9f1eef2c714fe
   AEPRulesEngine: 5075ed294026a12e37bd26fe260f74604d205354
   AEPServices: e032bfacfcb31f3a583b2aa1e87df5d427cca95d
+  AEPSignal: c0619814fbf50dbb1dde4e79141d528aa2606e9e
   AEPUserProfile: d8702b2e3fc321febdc3854208db9bb1ad3b61c8
 
-PODFILE CHECKSUM: 4daaaba6059f0f51084b24958f4be96d41682748
+PODFILE CHECKSUM: 54b84ba9e32d5c76ef367735efbe535631277a7a
 
 COCOAPODS: 1.10.1

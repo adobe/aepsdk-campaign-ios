@@ -10,8 +10,14 @@
  governing permissions and limitations under the License.
  */
 
+import Foundation
+import AEPCore
+import AEPServices
+
 // swiftlint:disable redundant_objc_attribute
+/// Defines the public interface for the Campaign extension
 @objc public extension Campaign {
+    private static let LOG_TAG = "Campaign"
 
     ///Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
     ///The set linkage fields are stored as base64 encoded JSON string in memory and they are sent in a custom HTTP header 'X-InApp-Auth'
@@ -21,13 +27,21 @@
     ///If the current SDK privacy status is not OPT_IN, no rules download happens.
     /// - Parameters linkageFields: The Linkage fields key value pairs.
     @objc static func setLinkageFields(linkageFields: [String: String]) {
-        ///TODO
+        guard !linkageFields.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) - Unable to set the linkage fields. The passed in linkage fields dictionary is empty.")
+            return
+        }
+
+        let data  = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
+        let event = Event(name: "SetLinkageFields", type: EventType.campaign, source: EventSource.requestIdentity, data: data)
+        MobileCore.dispatch(event: event)
     }
 
     ///Clears previously stored linkage fields in the mobile SDK and triggers Campaign rules download request to the configured Campaign server.
     ///This method unregisters any previously registered rules with the Event Hub and clears cached rules from previous download.
     ///If the current SDK privacy status is not `OPT_IN`, no rules download happens.
     @objc static func resetLinkageFields() {
-        ///TODO
+        let event = Event(name: "ResetLinkageFields", type: EventType.campaign, source: EventSource.requestReset, data: nil)
+        MobileCore.dispatch(event: event)
     }
 }

@@ -19,6 +19,8 @@ import UIKit
 
 class CampaignFullscreenMessageTests: XCTestCase {
 
+    private let messageId = "20761932"
+
     var state: CampaignState!
     let fileManager = FileManager.default
     var dispatchedEvents: [Event] = []
@@ -28,6 +30,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
     var rootViewController: UIViewController!
     let mockHtmlString = "mock html content with image from: https://images.com/image.jpg"
     let mockHtmlStringForLocalTest = "mock html content with image from: bundled.jpg"
+    let mockRemoteImage = "mockRemoteImage"
 
     override func setUp() {
         uiService = MockUIService()
@@ -51,6 +54,21 @@ class CampaignFullscreenMessageTests: XCTestCase {
         state.update(dataMap: dataMap)
     }
 
+    func addRemoteImageToCache() {
+        guard let cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+            return
+        }
+        let messagesDir = cacheDir.appendingPathComponent(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER).appendingPathComponent(messageId)
+        let cachedRemoteImageFile = messagesDir.appendingPathComponent("httpsimagescomimagejpg")
+        do {
+            try fileManager.createDirectory(atPath: messagesDir.path, withIntermediateDirectories: true, attributes: nil)
+            let data = Data(mockRemoteImage.utf8)
+            try data.write(to: cachedRemoteImageFile, options: .atomic)
+        } catch {
+            print(error)
+        }
+    }
+
     func setupMockCache(forLocalTest: Bool) {
         var data = Data()
         // add fullscreen html to cache
@@ -59,12 +77,13 @@ class CampaignFullscreenMessageTests: XCTestCase {
         } else {
             data = Data(mockHtmlStringForLocalTest.utf8)
         }
-        guard let cachedDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+
+        guard let cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }
-        // clear cached html first
-        let htmlDir = cachedDir.appendingPathComponent("campaignrules").appendingPathComponent("assets")
-        clearContentsOf(htmlDir)
+        // clear cached files from previous tests
+        clearContentsOf(cacheDir)
+        let htmlDir = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY).appendingPathComponent(CampaignConstants.Campaign.Rules.ASSETS_DIRECTORY)
         // write html file to assets directory
         let file = htmlDir.appendingPathComponent("fullscreenIam").appendingPathExtension("html")
         do {
@@ -75,31 +94,16 @@ class CampaignFullscreenMessageTests: XCTestCase {
         }
     }
 
-    func addRemoteAssetToCache() {
-        guard let cacheUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
-            return
-        }
-        // clear cached message assets first
-        let messageAssetCacheUrl = cacheUrl.appendingPathComponent("messages").appendingPathComponent("20761932")
-        clearContentsOf(messageAssetCacheUrl)
-        // write mock image data to messages/messageId directory
-        if let mockData = "remote image data".data(using: .utf8) {
-            do {
-                try mockData.write(to: messageAssetCacheUrl)
-            } catch {
-                print(error)
-            }
-        }
-    }
-
     func clearContentsOf(_ url: URL) {
         do {
-            let contents = try fileManager.contentsOfDirectory(atPath: url.path)
-            print("before  \(contents)")
+            var contents = try fileManager.contentsOfDirectory(atPath: url.path)
+            print("before cleaning: \(contents)")
             let urls = contents.map { URL(string: "\(url.appendingPathComponent("\($0)"))")! }
             urls.forEach {
                 try? FileManager.default.removeItem(at: $0)
             }
+            contents = try fileManager.contentsOfDirectory(atPath: url.path)
+            print("after cleaning: \(contents)")
         } catch {
             print(error)
         }
@@ -109,7 +113,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
     func testCreateFullscreenMessageWithValidConsequence() {
         // setup
         let details = ["html": "fullscreenIam.html", "template": "fullscreen"]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         // test
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
@@ -119,7 +123,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
     func testCreateFullscreenMessageWithHtmlFilenameMissingInDetails() {
         // setup
         let details = ["template": "fullscreen"]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         // test
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
@@ -128,7 +132,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
 
     func testCreateFullscreenMessageWithEmptyDetailDictionary() {
         // setup
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: [:])
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: [:])
         // test
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { _, _, _, _ in })
         // verify
@@ -140,12 +144,13 @@ class CampaignFullscreenMessageTests: XCTestCase {
         // setup
         setupMockCache(forLocalTest: false)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen"]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: messageObject, isLocalImageUsed: false, messageMonitor: MessageMonitor())
         uiService.fullscreenMessage = mockFullscreenMessage
+        addRemoteImageToCache()
         // test
         messageObject?.showMessage()
         // verify
@@ -160,11 +165,11 @@ class CampaignFullscreenMessageTests: XCTestCase {
         guard let cachedDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }
-        let htmlDir = cachedDir.appendingPathComponent("campaignrules").appendingPathComponent("assets")
+        let htmlDir = cachedDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY).appendingPathComponent(CampaignConstants.Campaign.Rules.ASSETS_DIRECTORY)
         // clear cached html
         clearContentsOf(htmlDir)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen"]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
@@ -181,7 +186,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
         // setup
         setupMockCache(forLocalTest: false)
         let details = ["html": "", "template": "fullscreen"]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
@@ -198,7 +203,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
         // setup
         setupMockCache(forLocalTest: false)
         let details = ["template": "fullscreen"]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
@@ -215,14 +220,14 @@ class CampaignFullscreenMessageTests: XCTestCase {
     func testFullscreenShowMessageWithAssetsHappy() {
         // setup
         setupMockCache(forLocalTest: false)
-        addRemoteAssetToCache()
+        addRemoteImageToCache()
         let details = ["html": "fullscreenIam.html", "template": "fullscreen", "remoteAssets": [
             [
                 "https://images.com/image.jpg",
                 "local.jpg"
             ]
         ]] as [String: Any]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
@@ -251,7 +256,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
                 "local.jpg"
             ]
         ]] as [String: Any]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
@@ -277,7 +282,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
         // setup
         setupMockCache(forLocalTest: false)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen", "remoteAssets": [[]]]  as [String: Any]
-        let fullscreenConsequence = RuleConsequence(id: "20761932", type: "iam", details: details)
+        let fullscreenConsequence = RuleConsequence(id: messageId, type: "iam", details: details)
         let messageObject = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage

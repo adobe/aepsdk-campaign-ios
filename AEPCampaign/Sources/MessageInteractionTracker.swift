@@ -100,7 +100,7 @@ class MessageInteractionTracker {
         dispatchMessageInteraction(data: contextData, eventDispatcher: eventDispatcher)
     }
 
-    /// Invokes the Campaign  event dispatcher to dispatch message interaction events
+    /// Invokes the Campaign event dispatcher to dispatch message interaction events
     static func dispatchMessageInteraction(data: [String: Any], eventDispatcher: Campaign.EventDispatcher) {
         eventDispatcher("DataForMessageRequest", EventType.campaign, EventSource.responseContent, data)
     }
