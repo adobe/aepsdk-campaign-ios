@@ -11,6 +11,7 @@
 
 import XCTest
 @testable import AEPCore
+@testable import AEPServices
 
 extension EventHub {
     static func reset() {
@@ -38,6 +39,22 @@ extension FileManager {
 
             do {
                 try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.module.campaign"))
+            } catch {
+                print("ERROR DESCRIPTION: \(error)")
+            }
+
+            do {
+                try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.module.lifecycle"))
+            } catch {
+                print("ERROR DESCRIPTION: \(error)")
+            }
+        }
+    }
+
+    func clearLifecycleData() {
+        if let _ = self.urls(for: .cachesDirectory, in: .userDomainMask).first {
+            do {
+                try self.removeItem(at: URL(fileURLWithPath: "Library/Caches/com.adobe.module.lifecycle"))
             } catch {
                 print("ERROR DESCRIPTION: \(error)")
             }
@@ -80,11 +97,56 @@ extension XCTest {
         XCTAssertEqual(data["deliveryId"], "13ccd4c")
         XCTAssertEqual(data["broadlogId"], "h1bd500")
     }
+
+    func verifyCampaignRegistrationRequest(request: NetworkRequest, buildEnvironment: String?, ecid: String) {
+        let buildEnvironment = buildEnvironment ?? ""
+        let url = request.url.absoluteString
+        let payload = request.payloadAsDictionary()
+        if !buildEnvironment.isEmpty {
+            XCTAssertEqual("https://\(buildEnvironment).campaign.adobe.com/rest/head/mobileAppV5/\(buildEnvironment)_pkey/subscriptions/\(ecid)", url)
+        } else {
+            XCTAssertEqual("https://prod.campaign.adobe.com/rest/head/mobileAppV5/pkey/subscriptions/\(ecid)", url)
+        }
+        XCTAssertEqual(2, payload.count)
+        XCTAssertEqual(ecid, payload["marketingCloudId"])
+        XCTAssertEqual("apns", payload["pushPlatform"])
+    }
+
+    func verifyDemdexHit(request: NetworkRequest, ecid: String) {
+        let url = request.url.absoluteString
+        XCTAssertEqual(url, "https://dpm.demdex.net/id?d_rtbd=json&d_ver=2&d_orgid=testOrg@AdobeOrg&d_mid=\(ecid)")
+    }
+
+    func verifyCampaignRulesDownloadRequest(request: NetworkRequest, buildEnvironment: String?, ecid: String, isPersonalized: Bool) {
+        let expectedBase64EncodedLinkageFields = "eyJrZXkiOiJ2YWx1ZSIsImtleTMiOiJ2YWx1ZTMiLCJrZXkyIjoidmFsdWUyIn0="
+        let buildEnvironment = buildEnvironment ?? ""
+        let url = request.url.absoluteString
+        let headers = request.httpHeaders
+        if !buildEnvironment.isEmpty {
+            XCTAssertEqual(url, "https://mcias-server.com/mcias/\(buildEnvironment).campaign.adobe.com/propertyId/\(ecid)/rules.zip")
+        } else {
+            XCTAssertEqual(url, "https://mcias-server.com/mcias/prod.campaign.adobe.com/propertyId/\(ecid)/rules.zip")
+        }
+        if isPersonalized {
+            XCTAssertEqual(headers["X-InApp-Auth"], expectedBase64EncodedLinkageFields)
+        } else {
+            XCTAssertNil(headers["X-InApp-Auth"])
+        }
+    }
 }
 
 extension String {
     ///Removes non alphanumeric character from `String`
     var alphanumeric: String {
         return components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
+    }
+}
+
+extension NetworkRequest {
+    func payloadAsDictionary() -> [String: String] {
+        guard let payload = try? JSONSerialization.jsonObject(with: self.connectPayload, options: .allowFragments) as? [String: String] else {
+            return [:]
+        }
+        return payload
     }
 }

@@ -15,7 +15,7 @@ import Foundation
 enum CampaignConstants {
     static let EXTENSION_NAME                           = "com.adobe.module.campaign"
     static let FRIENDLY_NAME                            = "Campaign"
-    static let EXTENSION_VERSION                        = "0.0.1"
+    static let EXTENSION_VERSION                        = "3.0.0"
     static let DATASTORE_NAME                           = EXTENSION_NAME
     static let LOG_TAG                                  = FRIENDLY_NAME
 
@@ -92,9 +92,14 @@ enum CampaignConstants {
     enum Configuration {
         static let EXTENSION_NAME = "com.adobe.module.configuration"
         static let GLOBAL_CONFIG_PRIVACY = "global.privacy"
+        static let GLOBAL_CONFIG_BUILD_ENVIRONMENT = "build.environment"
         static let PROPERTY_ID = "property.id"
         static let CAMPAIGN_SERVER  = "campaign.server"
+        static let DEV_CAMPAIGN_SERVER = "__dev__campaign.server"
+        static let STAGE_CAMPAIGN_SERVER = "__stage__campaign.server"
         static let CAMPAIGN_PKEY = "campaign.pkey"
+        static let DEV_PKEY = "__dev__campaign.pkey"
+        static let STAGE_PKEY = "__stage__campaign.pkey"
         static let CAMPAIGN_MCIAS = "campaign.mcias"
         static let CAMPAIGN_TIMEOUT = "campaign.timeout"
         static let CAMPAIGN_REGISTRATION_DELAY_KEY =
