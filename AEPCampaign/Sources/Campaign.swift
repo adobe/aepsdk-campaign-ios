@@ -107,26 +107,28 @@ public class Campaign: NSObject, Extension {
     /// Handles the `Rules engine response` event, when a rule matches
     private func handleRulesEngineResponseEvent(event: Event) {
         Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
-        dispatchQueue.async {
+        dispatchQueue.async { [weak self] in
+            guard let self = self else {return}
             guard let details = event.consequenceDetails, !details.isEmpty else {
                 Log.warning(label: self.LOG_TAG, "\(#function) - Unable to handle Rules Response event, detail dictionary is nil or empty.")
                 return
             }
-            let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
-            let template = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String
-            var message: CampaignMessaging?
-            if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_LOCAL {
-                Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing a local notification. Scheduling the received local notification.")
-                message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:))
-            } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN {
-                Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing a fullscreen message.")
-                message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:))
-            } else if template == CampaignConstants.Campaign.MessagePayload.TEMPLATE_ALERT {
-                Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
-                message = AlertMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:))
+            guard let template = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String else {
+                Log.debug(label: self.LOG_TAG, "\(#function) Dropping triggered consequence event '\(event.id)'. Template type is missing.")
+                return
             }
-            guard let builtMessage = message else { return }
-            builtMessage.showMessage()
+            guard let iamType = IAMType(rawValue: template) else {
+                Log.debug(label: self.LOG_TAG, "\(#function) Dropping triggered consequence event '\(event.id)'. Template type is unknown.")
+                return
+            }
+
+            let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
+
+            switch iamType {
+            case .fullscreen: self.showFullScreenMessage(forConsequence: consequence)
+            case .alert: self.showAlertMessage(forConsequence: consequence)
+            case .local: self.showLocalNotification(forConsequence: consequence)
+            }
         }
     }
 
@@ -249,5 +251,40 @@ public class Campaign: NSObject, Extension {
         }
         campaignRulesCache.deleteCachedRules(url: storedRulesUrl)
         state.removeRuleUrlFromDatastore()
+    }
+}
+
+// MARK: Functions to show IAMs
+private extension Campaign {
+
+    /// Triggers the alert IAM
+    func showAlertMessage(forConsequence consequence: RuleConsequence) {
+        Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
+        guard let message = AlertMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
+            Log.debug(label: self.LOG_TAG, "\(#function) - Unable to show Alert IAM for consequence '\(consequence.id)'. Message created was nil.")
+            return
+        }
+        message.showMessage()
+    }
+
+    /// Triggers the fullscreen IAM
+    func showFullScreenMessage(forConsequence consequence: RuleConsequence) {
+        Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing a fullscreen message.")
+        guard let message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
+            Log.debug(label: self.LOG_TAG, "\(#function) - Unable to show Fullscreen IAM for consequence '\(consequence.id)'. Message created was nil.")
+            return
+        }
+        message.showMessage()
+
+    }
+
+    /// Triggers the local notification IAM
+    func showLocalNotification(forConsequence consequence: RuleConsequence) {
+        Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing a local notification. Scheduling the received local notification.")
+        guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
+            Log.debug(label: self.LOG_TAG, "\(#function) - Unable to show Local notification for consequence '\(consequence.id)'. Message created was nil.")
+            return
+        }
+        message.showMessage()
     }
 }

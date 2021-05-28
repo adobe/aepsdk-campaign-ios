@@ -41,6 +41,7 @@
 		3D46589C264DF98900BFC421 /* FileManager+Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */; };
 		3D4658B12652F58900BFC421 /* CampaignRulesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4658B02652F58900BFC421 /* CampaignRulesCache.swift */; };
 		3D4658C42653207200BFC421 /* CampaignRulesCacheUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4658C32653207200BFC421 /* CampaignRulesCacheUnitTests.swift */; };
+		3D6B0A782660DC69006E87B5 /* IAMTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B0A772660DC69006E87B5 /* IAMTypes.swift */; };
 		4D62AC87C1BEFAF426CC78A7 /* Pods_AEPCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AA2DC1FB3E940FD25141AB2 /* Pods_AEPCampaign.framework */; };
 		AD7D4293FAD65236D1B04B26 /* Pods_AEPCampaignFunctionalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12FD871AC98385866DF45077 /* Pods_AEPCampaignFunctionalTests.framework */; };
 		CD932BC00793A2EC1F81BEE7 /* Pods_CampaignTester.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0DD8BDBF930404DE04F2E9 /* Pods_CampaignTester.framework */; };
@@ -186,6 +187,7 @@
 		3D46589B264DF98900BFC421 /* FileManager+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Campaign.swift"; sourceTree = "<group>"; };
 		3D4658B02652F58900BFC421 /* CampaignRulesCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CampaignRulesCache.swift; path = AEPCampaign/Sources/Rules/CampaignRulesCache.swift; sourceTree = SOURCE_ROOT; };
 		3D4658C32653207200BFC421 /* CampaignRulesCacheUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignRulesCacheUnitTests.swift; sourceTree = "<group>"; };
+		3D6B0A772660DC69006E87B5 /* IAMTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAMTypes.swift; sourceTree = "<group>"; };
 		5324B88020D5830B44C54480 /* Pods-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
 		5BC2BF2D811EF6DCA32BCEDD /* Pods-AEPCampaignUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.debug.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		714D4FB53662D1635D876C06 /* Pods-CampaignTester.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.release.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.release.xcconfig"; sourceTree = "<group>"; };
@@ -446,6 +448,7 @@
 				D61AA9AB26575CE700D44D12 /* CampaignFullscreenMessageDelegate.swift */,
 				D61AA9AC26575CE700D44D12 /* CampaignMessaging.swift */,
 				D61AA9AE26575CE700D44D12 /* LocalNotificationMessage.swift */,
+				3D6B0A772660DC69006E87B5 /* IAMTypes.swift */,
 			);
 			path = messages;
 			sourceTree = "<group>";
@@ -917,6 +920,7 @@
 				3D46573F2637739D00BFC421 /* CampaignCachedRules.swift in Sources */,
 				D61AA9B326575CE700D44D12 /* LocalNotificationMessage.swift in Sources */,
 				D6E823DD262761130092C7DE /* CampaignHitProcessor.swift in Sources */,
+				3D6B0A782660DC69006E87B5 /* IAMTypes.swift in Sources */,
 				D61AA9B226575CE700D44D12 /* AlertMessage.swift in Sources */,
 				3D10A653262583C70049BDA1 /* Campaign.swift in Sources */,
 				D6E9792F263B4775003F3372 /* Event+Campaign.swift in Sources */,
