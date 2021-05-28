@@ -16,7 +16,7 @@ jobs:
 
   build-and-test:
     macos:
-      xcode: 11.6.0 # Specify the Xcode version to use
+      xcode: 12.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -27,6 +27,12 @@ jobs:
             - cocoapods-cache-v4-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
             - cocoapods-cache-v4-{{ arch }}-{{ .Branch }}
             - cocoapods-cache-v4
+
+      # make sure we're on the right version of cocoapods
+      - run:
+          name: Verify Cocoapods Version
+          command: bundle check || bundle install --path vendor/bundle
+
 
       # install CocoaPods - using default CocoaPods version, not the bundle
       - run:
