@@ -28,6 +28,12 @@ jobs:
             - cocoapods-cache-v4-{{ arch }}-{{ .Branch }}
             - cocoapods-cache-v4
 
+      # make sure we're on the right version of cocoapods
+      - run:
+          name: Verify Cocoapods Version
+          command: bundle check || bundle install --path vendor/bundle
+
+
       # install CocoaPods - using default CocoaPods version, not the bundle
       - run:
           name: Repo Update & Install CocoaPods
