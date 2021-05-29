@@ -138,6 +138,37 @@ class CampaignState {
         return true
     }
 
+    /// Determines if this `CampaignState` is valid for sending a Campaign rules download request to Campaign.
+    ///- Returns true if the CampaignState is valid else return false
+    func canDownloadRulesWithCurrentState() -> Bool {
+        guard privacyStatus == .optedIn else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Privacy status is not Opted In.")
+            return false
+        }
+
+        guard let ecid = ecid, !ecid.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. ECID is invalid.")
+            return false
+        }
+
+        guard let campaignServer = campaignServer, !campaignServer.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Campaign server value is invalid.")
+            return false
+        }
+
+        guard let campaignMciasServer = campaignMciasServer, !campaignMciasServer.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Campaign mcias server value is invalid.")
+            return false
+        }
+
+        guard let propertyId = campaignPropertyId, !propertyId.isEmpty else {
+            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Campaign property id value is invalid.")
+            return false
+        }
+
+        return true
+    }
+
     ///Determines if this `CampaignState` is valid for sending message track request to Campaign.
     ///- Returns true if the CampaignState is valid else return false
     func canSendTrackInfoWithCurrentState() -> Bool {

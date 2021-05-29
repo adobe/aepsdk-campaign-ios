@@ -133,6 +133,11 @@ extension XCTest {
             XCTAssertNil(headers["X-InApp-Auth"])
         }
     }
+
+    func verifyMessageTrackRequest(request: NetworkRequest, ecid: String, interactionType: String) {
+        let url = request.url.absoluteString
+        XCTAssertEqual(url, "https://prod.campaign.adobe.com/r?id=h153d80,b670ea,\(interactionType)&mcId=\(ecid)")
+    }
 }
 
 extension String {
@@ -143,6 +148,10 @@ extension String {
 }
 
 extension NetworkRequest {
+    func payloadAsString() -> String {
+        return String(data: connectPayload, encoding: .utf8) ?? ""
+    }
+
     func payloadAsDictionary() -> [String: String] {
         guard let payload = try? JSONSerialization.jsonObject(with: self.connectPayload, options: .allowFragments) as? [String: String] else {
             return [:]

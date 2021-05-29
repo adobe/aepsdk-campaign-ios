@@ -20,7 +20,9 @@ import Foundation
 import UIKit
 
 class CampaignFunctionalTests: XCTestCase {
-    let datastore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
+    var mockRuntime: TestableExtensionRuntime!
+    var testableNetworkService: TestableNetworkService!
+    var datastore: NamedCollectionDataStore!
 
     func waitForProcessing(interval: TimeInterval = 1) {
         let expectation = XCTestExpectation()
@@ -35,6 +37,12 @@ class CampaignFunctionalTests: XCTestCase {
         FileManager.default.clearCache()
         ServiceProvider.shared.reset()
         EventHub.reset()
+        datastore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
+        mockRuntime = TestableExtensionRuntime()
+        testableNetworkService = TestableNetworkService()
+        ServiceProvider.shared.networkService = testableNetworkService
+        mockRuntime.resetDispatchedEventAndCreatedSharedStates()
+        waitForProcessing()
     }
 
     override func tearDown() {
@@ -66,7 +74,7 @@ class CampaignFunctionalTests: XCTestCase {
 
     func updateConfiguration(customConfig: [String: String]? = nil) {
         var configDict = [
-            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: "optedin",
+            CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
             CampaignConstants.Configuration.GLOBAL_CONFIG_BUILD_ENVIRONMENT: "prod",
             CampaignConstants.Configuration.CAMPAIGN_MCIAS: "mcias-server.com",
             CampaignConstants.Configuration.PROPERTY_ID: "propertyId",
@@ -126,13 +134,63 @@ class CampaignFunctionalTests: XCTestCase {
         FileManager.default.clearLifecycleData()
     }
 
+    func setCampaignRulesFromBundleAsResponse(expectedUrlFragment: String, statusCode: Int, mockNetworkService: TestableNetworkService) {
+        guard let localRulesZipUrl = Bundle.main.url(forResource: "rules-localNotification", withExtension: "zip") else {
+            print("Failed to find local notification rules zip in bundle.")
+            return
+        }
+        guard let responseData = try? Data(contentsOf: localRulesZipUrl) else {
+            print("Failed to convert the zipfile into data.")
+            return
+        }
+        let response = HTTPURLResponse(url: URL(string: "https://adobe.com")!, statusCode: statusCode, httpVersion: nil, headerFields: [:])
+
+        mockNetworkService.mock { _ in
+            return (data: responseData, response: response, error: nil)
+        }
+    }
+
+    // MARK: campaign registration tests
+    func testCampaignProfileUpdateHappy() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+        let ecid = getEcid()
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // verify
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. campaign registration request sent to prod environment
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyCampaignRegistrationRequest(request: requests[2], buildEnvironment: nil, ecid: ecid)
+    }
+
+    func testCampaignProfileUpdateWhenPrivacyIsOptedOut() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue])
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // verify
+        // 0 requests expected
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 0)
+    }
+
     // MARK: environment aware config tests
     func testEnvironmentAwareConfigWithDevEnvironment() {
         // setup
         initExtensionsAndWait()
         sleep(1)
-        let testableNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = testableNetworkService
         self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_BUILD_ENVIRONMENT: "dev"])
         let ecid = getEcid()
         // test
@@ -154,8 +212,6 @@ class CampaignFunctionalTests: XCTestCase {
         // setup
         initExtensionsAndWait()
         sleep(1)
-        let testableNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = testableNetworkService
         self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_BUILD_ENVIRONMENT: "stage"])
         let ecid = getEcid()
         // test
@@ -177,8 +233,6 @@ class CampaignFunctionalTests: XCTestCase {
         // setup
         initExtensionsAndWait()
         sleep(1)
-        let testableNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = testableNetworkService
         self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_BUILD_ENVIRONMENT: "invalid"])
         let ecid = getEcid()
         // test
@@ -201,8 +255,6 @@ class CampaignFunctionalTests: XCTestCase {
         // setup
         initExtensionsAndWait()
         sleep(1)
-        let testableNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = testableNetworkService
         self.updateConfiguration()
 
         // test
@@ -231,8 +283,6 @@ class CampaignFunctionalTests: XCTestCase {
         // setup
         initExtensionsAndWait()
         sleep(1)
-        let testableNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = testableNetworkService
         self.updateConfiguration()
 
         // test
@@ -265,8 +315,6 @@ class CampaignFunctionalTests: XCTestCase {
         // setup
         initExtensionsAndWait()
         sleep(1)
-        let testableNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = testableNetworkService
         self.updateConfiguration()
 
         // test
@@ -285,13 +333,44 @@ class CampaignFunctionalTests: XCTestCase {
         verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
     }
 
-    // TODO: revisit, issue opened: https://github.com/adobe/aepsdk-core-ios/issues/639
+    func testSetLinkageFieldsWhenPrivacyOptedOut() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue])
+
+        // test
+        let linkageFields = [:] as [String: String]
+        Campaign.setLinkageFields(linkageFields: linkageFields)
+        waitForProcessing()
+
+        // verify
+        // 0 requests expected:
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 0)
+    }
+
+    func testSetLinkageFieldsWhenPrivacyUnknown() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.unknown.rawValue])
+
+        // test
+        let linkageFields = [:] as [String: String]
+        Campaign.setLinkageFields(linkageFields: linkageFields)
+        waitForProcessing()
+
+        // verify
+        // 0 requests expected:
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 0)
+    }
+
     func skip_testSetLinkageFieldsThenPrivacyOptOutAndPrivacyOptedInTriggersNonPersonalizedRulesDownloadAgain() {
         // setup
         initExtensionsAndWait()
         sleep(1)
-        let testableNetworkService = TestableNetworkService()
-        ServiceProvider.shared.networkService = testableNetworkService
         self.updateConfiguration()
 
         // test
@@ -324,4 +403,184 @@ class CampaignFunctionalTests: XCTestCase {
         verifyDemdexHit(request: requests[4], ecid: newEcid)
         verifyCampaignRulesDownloadRequest(request: requests[5], buildEnvironment: nil, ecid: newEcid, isPersonalized: false)
     }
+
+    // MARK: notification tracking tests
+    func testLocalNotificationImpressionTracking() {
+        // setup
+        setCampaignRulesFromBundleAsResponse(expectedUrlFragment: "https://mcias-server.com/mcias/", statusCode: 200, mockNetworkService: testableNetworkService)
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        MobileCore.track(action: "localImpression", data: nil)
+        waitForProcessing()
+
+        // verify
+        let ecid = getEcid()
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. local notification viewed track request
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyMessageTrackRequest(request: requests[2], ecid: ecid, interactionType: "7")
+    }
+
+    func testLocalNotificationImpressionTrackingViaCollectMessageInfo() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        var messageData = [String: Any]()
+        messageData["broadlogId"] = "h153d80"
+        messageData["deliveryId"] = "b670ea"
+        messageData["action"] = "7"
+        MobileCore.collectMessageInfo(messageData)
+        waitForProcessing()
+
+        // verify
+        let ecid = getEcid()
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. local notification viewed track request
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyMessageTrackRequest(request: requests[2], ecid: ecid, interactionType: "7")
+    }
+
+    func testLocalNotificationOpenTracking() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        var messageData = [String: Any]()
+        messageData["broadlogId"] = "h153d80"
+        messageData["deliveryId"] = "b670ea"
+        messageData["action"] = "1"
+        MobileCore.collectMessageInfo(messageData)
+        waitForProcessing()
+
+        // verify
+        let ecid = getEcid()
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. local notification opened track request
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyMessageTrackRequest(request: requests[2], ecid: ecid, interactionType: "1")
+    }
+
+    func testLocalNotificationClickTracking() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        var messageData = [String: Any]()
+        messageData["broadlogId"] = "h153d80"
+        messageData["deliveryId"] = "b670ea"
+        messageData["action"] = "2"
+        MobileCore.collectMessageInfo(messageData)
+        waitForProcessing()
+
+        // verify
+        let ecid = getEcid()
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. local notification clicked track request
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyMessageTrackRequest(request: requests[2], ecid: ecid, interactionType: "2")
+    }
+
+    func testNotificationTrackingMissingBroadlogId() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        var messageData = [String: Any]()
+        messageData["deliveryId"] = "b670ea"
+        messageData["action"] = "2"
+        MobileCore.collectMessageInfo(messageData)
+        waitForProcessing()
+
+        // verify
+        let ecid = getEcid()
+        // 2 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 2)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+    }
+
+    func testNotificationTrackingMissingDeliveryId() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        var messageData = [String: Any]()
+        messageData["broadlogId"] = "h153d80"
+        messageData["action"] = "2"
+        MobileCore.collectMessageInfo(messageData)
+        waitForProcessing()
+
+        // verify
+        let ecid = getEcid()
+        // 2 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 2)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+    }
+
+    func testNotificationTrackingMissingAction() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        var messageData = [String: Any]()
+        messageData["broadlogId"] = "h153d80"
+        messageData["deliveryId"] = "b670ea"
+        MobileCore.collectMessageInfo(messageData)
+        waitForProcessing()
+
+        // verify
+        let ecid = getEcid()
+        // 2 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 2)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+    }
+
+    // MARK: registration reduction tests
 }
