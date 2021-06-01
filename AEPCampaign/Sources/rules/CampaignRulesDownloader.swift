@@ -199,7 +199,7 @@ private extension RuleConsequence {
             return false
         }
 
-        guard details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String == CampaignConstants.Campaign.MessagePayload.TEMPLATE_FULLSCREEN else {
+        guard details[CampaignConstants.EventDataKeys.RulesEngine.Detail.TEMPLATE] as? String == IAMType.fullscreen.rawValue else {
             return false
         }
 

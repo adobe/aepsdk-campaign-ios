@@ -14,6 +14,7 @@ import SwiftUI
 import AEPCampaign
 import AEPCore
 import AEPServices
+import AEPAssurance
 
 class LinkageFieldsError: ObservableObject {
     @Published var errorObserved: Bool = false
@@ -39,6 +40,7 @@ struct CampaignView: View {
     @State private var firstname: String = UserDefaults.standard.string(forKey: "FirstName") ?? ""
     @State private var lastname: String = UserDefaults.standard.string(forKey: "LastName") ?? ""
     @State private var email: String = UserDefaults.standard.string(forKey: "Email") ?? ""
+    @State private var assuranceURL: String = ""
 
     var body: some View {
         ScrollView {
@@ -194,6 +196,24 @@ struct CampaignView: View {
                     }
                     ) {
                         Text("Reset Linkage Fields")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+                }
+                Group {
+                    Text("Configure Assurance").bold().frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                    TextField("Enter Assurance URL", text: $assuranceURL)
+                    Button(action: {
+                        guard let url = URL(string: self.assuranceURL) else {
+                            Log.debug(label: LOG_TAG, "Unable to start Assurance session. Invalid URL.")
+                            return
+                        }
+                        AEPAssurance.startSession(url)
+                    }) {
+                        Text("Start Assurance Session")
                             .frame(minWidth: 0, maxWidth: .infinity)
                             .padding()
                             .background(Color.gray)
