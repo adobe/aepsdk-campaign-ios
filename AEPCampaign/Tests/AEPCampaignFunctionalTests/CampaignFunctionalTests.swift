@@ -72,7 +72,7 @@ class CampaignFunctionalTests: XCTestCase {
         wait(for: [initExpectation], timeout: 2)
     }
 
-    func updateConfiguration(customConfig: [String: String]? = nil) {
+    func updateConfiguration(customConfig: [String: Any]? = nil) {
         var configDict = [
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
             CampaignConstants.Configuration.GLOBAL_CONFIG_BUILD_ENVIRONMENT: "prod",
@@ -80,13 +80,14 @@ class CampaignFunctionalTests: XCTestCase {
             CampaignConstants.Configuration.PROPERTY_ID: "propertyId",
             CampaignConstants.Configuration.CAMPAIGN_PKEY: "pkey",
             CampaignConstants.Configuration.CAMPAIGN_SERVER: "prod.campaign.adobe.com",
-            "experienceCloud.org": "testOrg@AdobeOrg",
-            CampaignConstants.Configuration.CAMPAIGN_TIMEOUT: "5",
+            TestConstants.Configuration.ORG_ID: "testOrg@AdobeOrg",
+            TestConstants.Configuration.LIFECYCLE_SESSION_TIMEOUT: 2,
+            CampaignConstants.Configuration.CAMPAIGN_TIMEOUT: 5,
             CampaignConstants.Configuration.DEV_PKEY: "dev_pkey",
             CampaignConstants.Configuration.STAGE_PKEY: "stage_pkey",
             CampaignConstants.Configuration.DEV_CAMPAIGN_SERVER: "dev.campaign.adobe.com",
             CampaignConstants.Configuration.STAGE_CAMPAIGN_SERVER: "stage.campaign.adobe.com"
-        ]
+        ] as [String: Any]
 
         configDict.merge(customConfig ?? [:]) { _, newValue in
             newValue
@@ -100,24 +101,18 @@ class CampaignFunctionalTests: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
         var ecid = String()
         Identity.getExperienceCloudId { (retrievedEcid, _) in
-            ecid = retrievedEcid ?? ""
-            semaphore.signal()
+            if let retrievedEcid = retrievedEcid, !retrievedEcid.isEmpty {
+                ecid = retrievedEcid
+                semaphore.signal()
+            }
         }
-        semaphore.wait()
+        _ = semaphore.wait(timeout: .now() + TimeInterval(5))
         return ecid
     }
 
     func setBuildEnvironment(environment: String) {
         var config = [String: Any]()
         config[CampaignConstants.Configuration.GLOBAL_CONFIG_BUILD_ENVIRONMENT] = environment
-        MobileCore.updateConfigurationWith(configDict: config)
-        waitForProcessing()
-    }
-
-    func setRegistrationDelayOrRegistrationPaused(delay: Int, pausedStatus: Bool) {
-        var config = [String: Any]()
-        config[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_DELAY_KEY] = delay
-        config[CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY] = pausedStatus
         MobileCore.updateConfigurationWith(configDict: config)
         waitForProcessing()
     }
@@ -365,9 +360,12 @@ class CampaignFunctionalTests: XCTestCase {
         // 0 requests expected:
         let requests = testableNetworkService.requests
         XCTAssertEqual(requests.count, 0)
+        MobileCore.setPrivacyStatus(.optedIn)
+        waitForProcessing()
     }
 
-    func skip_testSetLinkageFieldsThenPrivacyOptOutAndPrivacyOptedInTriggersNonPersonalizedRulesDownloadAgain() {
+    // TODO: revisit when opt-in issue is resolved
+    func skip_testSetLinkageFieldsThenPrivacyOptOutAndPrivacyOptedInTriggersNonPersonalizedRulesDownload() {
         // setup
         initExtensionsAndWait()
         sleep(1)
@@ -408,6 +406,7 @@ class CampaignFunctionalTests: XCTestCase {
     func testLocalNotificationImpressionTracking() {
         // setup
         setCampaignRulesFromBundleAsResponse(expectedUrlFragment: "https://mcias-server.com/mcias/", statusCode: 200, mockNetworkService: testableNetworkService)
+        waitForProcessing()
         initExtensionsAndWait()
         sleep(1)
         self.updateConfiguration()
@@ -583,4 +582,150 @@ class CampaignFunctionalTests: XCTestCase {
     }
 
     // MARK: registration reduction tests
+    func testVerifyNoProfileUpdateOnSecondLifecycleLaunchWithDefaultRegistrationDelay() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+        let ecid = getEcid()
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // wait for lifecycle session timeout
+        usleep(2500)
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        // verify
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. campaign registration request sent to prod environment
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyCampaignRegistrationRequest(request: requests[2], buildEnvironment: nil, ecid: ecid)
+    }
+
+    func testVerifyProfileUpdateOnSecondLifecycleLaunchWithDefaultRegistrationDelayElapsed() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+        // simulate a successful registration 8 days in the past + add the retrieved ecid to the datastore
+        let timestamp = Int(Date().timeIntervalSince1970) - (8 * CampaignConstants.Campaign.SECONDS_IN_A_DAY)
+        updateTimestampInDatastore(timestamp: timestamp)
+        let ecid = getEcid()
+        updateEcidInDatastore(ecid: ecid)
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // verify
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. campaign registration request sent to prod environment
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyCampaignRegistrationRequest(request: requests[2], buildEnvironment: nil, ecid: ecid)
+    }
+
+    func testVerifyProfileUpdateOnSecondLifecycleLaunchWithCustomRegistrationDelayElapsed() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        // set a registration delay of 30 days
+        self.updateConfiguration(customConfig: [CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_DELAY_KEY: 30, CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY: false])
+        // simulate a successful registration 31 days in the past + add the retrieved ecid to the datastore
+        let timestamp = Int(Date().timeIntervalSince1970) - (31 * CampaignConstants.Campaign.SECONDS_IN_A_DAY)
+        updateTimestampInDatastore(timestamp: timestamp)
+        let ecid = getEcid()
+        updateEcidInDatastore(ecid: ecid)
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // verify
+        // 3 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. campaign registration request sent to prod environment
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 3)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyCampaignRegistrationRequest(request: requests[2], buildEnvironment: nil, ecid: ecid)
+    }
+
+    func testVerifyNoProfileUpdateOnSecondLifecycleLaunchWithCustomRegistrationDelayNotElapsed() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        // set a registration delay of 100 days
+        self.updateConfiguration(customConfig: [CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_DELAY_KEY: 100, CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY: false])
+        // simulate a successful registration 31 days in the past + add the retrieved ecid to the datastore
+        let timestamp = Int(Date().timeIntervalSince1970) - (31 * CampaignConstants.Campaign.SECONDS_IN_A_DAY)
+        updateTimestampInDatastore(timestamp: timestamp)
+        let ecid = getEcid()
+        updateEcidInDatastore(ecid: ecid)
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // verify
+        // 2 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 2)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+    }
+
+    func testVerifyNoProfileUpdateOnLifecycleLaunchWhenRegistrationIsPaused() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        // pause campaign registration requests
+        self.updateConfiguration(customConfig: [ CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY: true])
+        let ecid = getEcid()
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // verify
+        // 2 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 2)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+    }
+
+    func testVerifyProfileUpdateOnSecondLifecycleLaunchWhenRegistrationDelaySetToZero() {
+        // setup
+        initExtensionsAndWait()
+        sleep(1)
+        // set a registration delay of 0 days. a registration request will be sent on every launch.
+        self.updateConfiguration(customConfig: [CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_DELAY_KEY: 0, CampaignConstants.Configuration.CAMPAIGN_REGISTRATION_PAUSED_KEY: false])
+        let ecid = getEcid()
+        // test
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        MobileCore.lifecyclePause()
+        sleep(3)
+        MobileCore.lifecycleStart(additionalContextData: nil)
+        waitForProcessing()
+        // verify
+        // 4 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. first campaign registration request sent to prod environment
+        // 4. second campaign registration request sent to prod environment
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 4)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        verifyCampaignRegistrationRequest(request: requests[2], buildEnvironment: nil, ecid: ecid)
+        verifyCampaignRegistrationRequest(request: requests[3], buildEnvironment: nil, ecid: ecid)
+    }
 }

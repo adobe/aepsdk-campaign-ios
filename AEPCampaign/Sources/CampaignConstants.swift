@@ -29,7 +29,6 @@ enum CampaignConstants {
         static let DEFAULT_REGISTRATION_DELAY = TimeInterval(60 * 60 * 24 * 7) // 7 days
         static let DEFAULT_TIMESTAMP_VALUE = TimeInterval(-1)
         static let SECONDS_IN_A_DAY = 86400
-        static let MILLISECONDS_IN_A_SECOND = 1000 // check if still needed
         static let SERVER_TOKEN =
             "{%~state.com.adobe.module.configuration/campaign.server%}"
         static let PROPERTY_TOKEN =

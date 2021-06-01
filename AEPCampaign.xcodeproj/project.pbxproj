@@ -59,6 +59,8 @@
 		D64731D02644D3370065A992 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
 		D65515652660685300A152CF /* TestableNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65515642660685300A152CF /* TestableNetworkService.swift */; };
 		D65516582661ADD200A152CF /* rules-localNotification.zip in Resources */ = {isa = PBXBuildFile; fileRef = D65516572661ADD200A152CF /* rules-localNotification.zip */; };
+		D655169C266695A900A152CF /* FunctionalTestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D655169B266695A900A152CF /* FunctionalTestConstants.swift */; };
+		D655169D266695A900A152CF /* FunctionalTestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D655169B266695A900A152CF /* FunctionalTestConstants.swift */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DEE2628DAC7008F0528 /* MockDataQueuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */; };
@@ -218,6 +220,7 @@
 		D61AA9AE26575CE700D44D12 /* LocalNotificationMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessage.swift; sourceTree = "<group>"; };
 		D65515642660685300A152CF /* TestableNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableNetworkService.swift; sourceTree = "<group>"; };
 		D65516572661ADD200A152CF /* rules-localNotification.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "rules-localNotification.zip"; sourceTree = "<group>"; };
+		D655169B266695A900A152CF /* FunctionalTestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTestConstants.swift; sourceTree = "<group>"; };
 		D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueueService.swift; sourceTree = "<group>"; };
 		D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueuing.swift; sourceTree = "<group>"; };
 		D6577DF92628F48A008F0528 /* URL+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Campaign.swift"; sourceTree = "<group>"; };
@@ -266,7 +269,6 @@
 		D6E97924263B34FE003F3372 /* LocalNotificationMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessageTests.swift; sourceTree = "<group>"; };
 		D6E9792E263B4775003F3372 /* Event+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Campaign.swift"; sourceTree = "<group>"; };
 		D6F9E16626601D7D00AB65BB /* CampaignFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignFunctionalTests.swift; sourceTree = "<group>"; };
-		E387BDC636BB38E8C209600D /* Pods-CampaignTester.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampaignTester.debug.xcconfig"; path = "Target Support Files/Pods-CampaignTester/Pods-CampaignTester.debug.xcconfig"; sourceTree = "<group>"; };
 		D8F3B261B256F14A0A4DFFE5 /* Pods-AEPCampaignUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AEPCampaignUnitTests.release.xcconfig"; path = "Target Support Files/Pods-AEPCampaignUnitTests/Pods-AEPCampaignUnitTests.release.xcconfig"; sourceTree = "<group>"; };
 		EF5BBA1E8789EA9F05117D67 /* Pods_AEPCampaignFunctionalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaignFunctionalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F514D00C3947D4DECB9E3F5E /* Pods_AEPCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AEPCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -520,6 +522,7 @@
 				3D465837264B0B3B00BFC421 /* MockRulesEngine.swift */,
 				3D1157A7265713B700B55AF6 /* MockFileManager.swift */,
 				D65515642660685300A152CF /* TestableNetworkService.swift */,
+				D655169B266695A900A152CF /* FunctionalTestConstants.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -968,6 +971,7 @@
 				D6577E33262F6E12008F0528 /* MockNetworking.swift in Sources */,
 				D6E314DC264B5026007A22BA /* MockUIService.swift in Sources */,
 				D6B405C9263C6057002814FC /* MockUrlService.swift in Sources */,
+				D655169C266695A900A152CF /* FunctionalTestConstants.swift in Sources */,
 				D6E8243B2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
 				D6F9E16D26601F4800AB65BB /* TestableExtensionRuntime.swift in Sources */,
 				D6F9E16726601D7D00AB65BB /* CampaignFunctionalTests.swift in Sources */,
@@ -1000,6 +1004,7 @@
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
 				D6D9B2582645F34600BAF249 /* CampaignFullscreenMessageTests.swift in Sources */,
 				D61AA8562654295A00D44D12 /* MessagingImplementationTests.swift in Sources */,
+				D655169D266695A900A152CF /* FunctionalTestConstants.swift in Sources */,
 				D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */,
 				D6B405C3263C58F7002814FC /* TestMessage.swift in Sources */,
 				D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */,
