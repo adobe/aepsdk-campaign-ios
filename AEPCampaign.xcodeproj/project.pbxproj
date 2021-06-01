@@ -1426,7 +1426,7 @@
 				DEVELOPMENT_TEAM = FKGEE875K4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CampaignTester/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1450,7 +1450,7 @@
 				DEVELOPMENT_TEAM = FKGEE875K4;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CampaignTester/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
