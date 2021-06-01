@@ -57,9 +57,6 @@ enum CampaignConstants {
         }
 
         enum MessagePayload {
-            static let TEMPLATE_ALERT = "alert"
-            static let TEMPLATE_FULLSCREEN = "fullscreen"
-            static let TEMPLATE_LOCAL = "local"
             static let DEEPLINK_SCHEME = "adbinapp"
             static let INTERACTION_URL  = "url"
             static let INTERACTION_TYPE  = "type"
