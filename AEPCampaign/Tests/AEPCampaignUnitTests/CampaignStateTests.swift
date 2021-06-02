@@ -101,4 +101,152 @@ class CampaignStateTests: XCTestCase {
         // verify
         XCTAssertEqual(state.ecid, ecid)
     }
+
+    func testCanDownloadRulesSuccess() {
+        // setup
+        let server = "campaign_server"
+        let pkey = "pkey"
+        let mciasServer = "campaign_rules/mcias"
+        let propertyId = "propertyId"
+        let ecid = "ecid"
+        var configurationData = [String: Any]()
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = server
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_MCIAS] = mciasServer
+        configurationData[CampaignConstants.Configuration.PROPERTY_ID] = propertyId
+        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
+        var identityData = [String: Any]()
+        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
+
+        //Action
+        state.update(dataMap: sharedStates)
+
+        //Assert
+        XCTAssertTrue(state.canDownloadRules())        
+    }
+
+    func testCanDownloadRulesFailureDueToServerMissing() {
+        // setup
+        let pkey = "pkey"
+        let mciasServer = "campaign_rules/mcias"
+        let propertyId = "propertyId"
+        let ecid = "ecid"
+        var configurationData = [String: Any]()
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_MCIAS] = mciasServer
+        configurationData[CampaignConstants.Configuration.PROPERTY_ID] = propertyId
+        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
+        var identityData = [String: Any]()
+        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
+
+        //Action
+        state.update(dataMap: sharedStates)
+
+        //Assert
+        XCTAssertFalse(state.canDownloadRules())
+    }
+
+    func testCanDownloadRulesFailureDueToMciasMissing() {
+        //setup
+        let server = "campaign_server"
+        let pkey = "pkey"
+        let propertyId = "propertyId"
+        let ecid = "ecid"
+        var configurationData = [String: Any]()
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = server
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
+        configurationData[CampaignConstants.Configuration.PROPERTY_ID] = propertyId
+        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
+        var identityData = [String: Any]()
+        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
+
+        //Action
+        state.update(dataMap: sharedStates)
+
+        //Assert
+        XCTAssertFalse(state.canDownloadRules())
+    }
+
+    func testCanDownloadRulesFailureDueToPropertyIdMissing() {
+        // setup
+        let server = "campaign_server"
+        let pkey = "pkey"
+        let mciasServer = "campaign_rules/mcias"
+        let ecid = "ecid"
+        var configurationData = [String: Any]()
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = server
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_MCIAS] = mciasServer
+        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
+        var identityData = [String: Any]()
+        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
+
+        //Action
+        state.update(dataMap: sharedStates)
+
+        //Assert
+        XCTAssertFalse(state.canDownloadRules())
+    }
+
+    func testCanDownloadRulesFailureDueToEcidMissing() {
+        // setup
+        let server = "campaign_server"
+        let pkey = "pkey"
+        let mciasServer = "campaign_rules/mcias"
+        let propertyId = "propertyId"
+        var configurationData = [String: Any]()
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = server
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_MCIAS] = mciasServer
+        configurationData[CampaignConstants.Configuration.PROPERTY_ID] = propertyId
+        configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] = PrivacyStatus.optedIn.rawValue
+        let identityData = [String: Any]()
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
+
+        //Action
+        state.update(dataMap: sharedStates)
+
+        //Assert
+        XCTAssertFalse(state.canDownloadRules())
+    }
+
+    func testCanDownloadRulesFailureDueToPrivacyNotOptedIn() {
+        // setup
+        let server = "campaign_server"
+        let pkey = "pkey"
+        let mciasServer = "campaign_rules/mcias"
+        let propertyId = "propertyId"
+        let ecid = "ecid"
+        var configurationData = [String: Any]()
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] = server
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_PKEY] = pkey
+        configurationData[CampaignConstants.Configuration.CAMPAIGN_MCIAS] = mciasServer
+        configurationData[CampaignConstants.Configuration.PROPERTY_ID] = propertyId
+        var identityData = [String: Any]()
+        identityData[CampaignConstants.Identity.EXPERIENCE_CLOUD_ID] = ecid
+        var sharedStates = [String: [String: Any]]()
+        sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
+        sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
+
+        //Action
+        state.update(dataMap: sharedStates)
+
+        //Assert
+        XCTAssertFalse(state.canDownloadRules())
+    }
+
 }
