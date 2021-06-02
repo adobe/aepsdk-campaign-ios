@@ -153,7 +153,7 @@ class CampaignStateTests: XCTestCase {
     }
 
     func testCanDownloadRulesFailureDueToMciasMissing() {
-        // setup
+        //setup
         let server = "campaign_server"
         let pkey = "pkey"
         let propertyId = "propertyId"
@@ -176,7 +176,7 @@ class CampaignStateTests: XCTestCase {
         XCTAssertFalse(state.canDownloadRules())
     }
 
-    func testCanDownloadRulesFailureDueToPropertIdMissing() {
+    func testCanDownloadRulesFailureDueToPropertyIdMissing() {
         // setup
         let server = "campaign_server"
         let pkey = "pkey"
@@ -224,7 +224,7 @@ class CampaignStateTests: XCTestCase {
         XCTAssertFalse(state.canDownloadRules())
     }
 
-    func testCanDownloadRulesFailureDueToNoOptedIn() {
+    func testCanDownloadRulesFailureDueToPrivacyNotOptedIn() {
         // setup
         let server = "campaign_server"
         let pkey = "pkey"
