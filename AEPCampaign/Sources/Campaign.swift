@@ -26,6 +26,7 @@ public class Campaign: NSObject, Extension {
     typealias EventDispatcher = (_ eventName: String, _ eventType: String, _ eventSource: String, _ contextData: [String: Any]?) -> Void
     let dispatchQueue: DispatchQueue
     private var hasCachedRulesLoaded = false
+    private var hasToDownloadRules = false
     var rulesEngine: LaunchRulesEngine
     private var linkageFields: String?
 
@@ -50,6 +51,7 @@ public class Campaign: NSObject, Extension {
         registerListener(type: EventType.lifecycle, source: EventSource.responseContent, listener: handleLifecycleEvents)
         registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationEvents)
         registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvents)
+        registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleHubSharedState(event:))
         //The wildcard listener for Rules Engine Processing
         registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildCardEvents)
         registerListener(type: EventType.rulesEngine, source: EventSource.responseContent, listener: handleRulesEngineResponseEvent)
@@ -134,7 +136,7 @@ public class Campaign: NSObject, Extension {
 
     ///Handles `Configuration Response` events
     private func handleConfigurationEvents(event: Event) {
-        Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
+        Log.trace(label: self.LOG_TAG, "An event of type '\(event.type)' has been received.")
         dispatchQueue.async { [weak self] in
             guard let self = self else {return}
             self.updateCampaignState(event: event)
@@ -142,9 +144,33 @@ public class Campaign: NSObject, Extension {
                 self.loadCachedRules()
             }
             if self.state.privacyStatus == PrivacyStatus.optedOut {
-                self.handlePrivacyOutput()
+                self.handlePrivacyOptOut()
                 return
             }
+            if self.state.canDownloadRules() {
+                self.hasToDownloadRules = false
+                self.triggerRulesDownload()
+            } else {
+                //Cannot download rules now. Most probably because Identity shared state hasn't received yet and we don't have ECID. Will try to download rules after receiving Identity shared state.
+                self.hasToDownloadRules = true
+            }
+        }
+    }
+
+    ///Handles `Identity` shared state updates
+    private func handleHubSharedState(event: Event) {
+        guard let stateOwner = event.data?[CampaignConstants.EventDataKeys.STATE_OWNER] as? String, stateOwner == CampaignConstants.Identity.EXTENSION_NAME else {
+            return
+        }
+
+        guard hasToDownloadRules else {
+            return
+        }
+
+        dispatchQueue.async { [weak self] in
+            guard let self = self else {return}
+            self.updateCampaignState(event: event)
+            self.hasToDownloadRules = false
             self.triggerRulesDownload()
         }
     }
@@ -165,7 +191,7 @@ public class Campaign: NSObject, Extension {
     ///    - eventType: `EventType` for event
     ///    - eventSource: `EventSource` for event
     ///    - eventData: `EventData` for event
-    func dispatchEvent(eventName name: String, eventType type: String, eventSource source: String, eventData data: [String: Any]?) {
+    func dispatchEvent(eventName name: String, eventType type: String, eventSource  source: String, eventData data: [String: Any]?) {
         let event = Event(name: name, type: type, source: source, data: data)
         dispatch(event: event)
     }
@@ -184,7 +210,7 @@ public class Campaign: NSObject, Extension {
     ///2). Remove all the registered rules
     ///3). Deletes all the cached Assets for the rules
     ///4). Remove rules URL from data store
-    private func handlePrivacyOutput() {
+    private func handlePrivacyOptOut() {
         Log.debug(label: LOG_TAG, "\(#function) - Process the Privacy opt-out")
         resetRules()
         state.removeRuleUrlFromDatastore()
