@@ -135,9 +135,9 @@ extension XCTestCase {
         if !fileManager.fileExists(atPath: cacheDir.path) {
             XCTFail("the cached message asset does not exist.")
             return
-        } else {
-            expectation.fulfill()
         }
+        print("asset found at \(cacheDir.path)")
+        expectation.fulfill()
         wait(for: [expectation], timeout: 5)
     }
 
