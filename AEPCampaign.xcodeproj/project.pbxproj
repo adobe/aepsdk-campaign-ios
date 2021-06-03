@@ -58,9 +58,9 @@
 		D61AAA9B265DB4DC00D44D12 /* local.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D61AA902265622A800D44D12 /* local.jpg */; };
 		D64731D02644D3370065A992 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B406C3264347C3002814FC /* WebKit.framework */; };
 		D65515652660685300A152CF /* TestableNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65515642660685300A152CF /* TestableNetworkService.swift */; };
-		D65516582661ADD200A152CF /* rules-localNotification.zip in Resources */ = {isa = PBXBuildFile; fileRef = D65516572661ADD200A152CF /* rules-localNotification.zip */; };
 		D655169C266695A900A152CF /* FunctionalTestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D655169B266695A900A152CF /* FunctionalTestConstants.swift */; };
-		D655169D266695A900A152CF /* FunctionalTestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D655169B266695A900A152CF /* FunctionalTestConstants.swift */; };
+		D655175926681ED000A152CF /* Adobe-SanJose.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D655175826681ED000A152CF /* Adobe-SanJose.gpx */; };
+		D655177D26687C3D00A152CF /* rules-testing.zip in Resources */ = {isa = PBXBuildFile; fileRef = D655177C26687C3D00A152CF /* rules-testing.zip */; };
 		D6577DE52628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */; };
 		D6577DEE2628DAC7008F0528 /* MockDataQueuing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */; };
@@ -219,8 +219,9 @@
 		D61AA9AD26575CE700D44D12 /* AlertMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
 		D61AA9AE26575CE700D44D12 /* LocalNotificationMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessage.swift; sourceTree = "<group>"; };
 		D65515642660685300A152CF /* TestableNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableNetworkService.swift; sourceTree = "<group>"; };
-		D65516572661ADD200A152CF /* rules-localNotification.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "rules-localNotification.zip"; sourceTree = "<group>"; };
 		D655169B266695A900A152CF /* FunctionalTestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTestConstants.swift; sourceTree = "<group>"; };
+		D655175826681ED000A152CF /* Adobe-SanJose.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Adobe-SanJose.gpx"; sourceTree = "<group>"; };
+		D655177C26687C3D00A152CF /* rules-testing.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "rules-testing.zip"; sourceTree = "<group>"; };
 		D6577DE42628DA8D008F0528 /* MockDataQueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueueService.swift; sourceTree = "<group>"; };
 		D6577DED2628DAC7008F0528 /* MockDataQueuing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataQueuing.swift; sourceTree = "<group>"; };
 		D6577DF92628F48A008F0528 /* URL+Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Campaign.swift"; sourceTree = "<group>"; };
@@ -474,7 +475,7 @@
 		D6B40602263C99EE002814FC /* UnitTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				D65516572661ADD200A152CF /* rules-localNotification.zip */,
+				D655177C26687C3D00A152CF /* rules-testing.zip */,
 				D61AA9192656B7AC00D44D12 /* local.jpg */,
 				D6B40603263C99EE002814FC /* AppDelegate.swift */,
 				D6B40605263C99EE002814FC /* SceneDelegate.swift */,
@@ -540,6 +541,7 @@
 				D6E9788A2639D199003F3372 /* LaunchScreen.storyboard */,
 				D6E9788D2639D199003F3372 /* Info.plist */,
 				D6E978872639D199003F3372 /* Preview Content */,
+				D655175826681ED000A152CF /* Adobe-SanJose.gpx */,
 			);
 			path = CampaignTester;
 			sourceTree = "<group>";
@@ -755,7 +757,7 @@
 				D6B4060D263C99EF002814FC /* Preview Assets.xcassets in Resources */,
 				D6B4060A263C99EF002814FC /* Assets.xcassets in Resources */,
 				D61AA91A2656B7AC00D44D12 /* local.jpg in Resources */,
-				D65516582661ADD200A152CF /* rules-localNotification.zip in Resources */,
+				D655177D26687C3D00A152CF /* rules-testing.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,6 +768,7 @@
 				D61AAA9A265DB4DC00D44D12 /* honk.aiff in Resources */,
 				D61AAA9B265DB4DC00D44D12 /* local.jpg in Resources */,
 				D6E9788C2639D199003F3372 /* LaunchScreen.storyboard in Resources */,
+				D655175926681ED000A152CF /* Adobe-SanJose.gpx in Resources */,
 				D6E979022639DFE6003F3372 /* Assets.xcassets in Resources */,
 				D6E978892639D199003F3372 /* Preview Assets.xcassets in Resources */,
 			);
@@ -1004,7 +1007,6 @@
 				D6E8243C2628A9830092C7DE /* MockHitProcessor.swift in Sources */,
 				D6D9B2582645F34600BAF249 /* CampaignFullscreenMessageTests.swift in Sources */,
 				D61AA8562654295A00D44D12 /* MessagingImplementationTests.swift in Sources */,
-				D655169D266695A900A152CF /* FunctionalTestConstants.swift in Sources */,
 				D6577DE62628DA8D008F0528 /* MockDataQueueService.swift in Sources */,
 				D6B405C3263C58F7002814FC /* TestMessage.swift in Sources */,
 				D6E823BB262616F90092C7DE /* CampaignStateTests.swift in Sources */,

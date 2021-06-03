@@ -48,7 +48,6 @@ class CampaignState {
 
     // Identity shared state
 
-
     /// Creates a new `CampaignState`.
     init() {
         self.dataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
@@ -133,37 +132,6 @@ class CampaignState {
 
         guard let campaignPkey = campaignPkey, !campaignPkey.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Campaign Pkey value is invalid.")
-            return false
-        }
-
-        return true
-    }
-
-    /// Determines if this `CampaignState` is valid for sending a Campaign rules download request to Campaign.
-    ///- Returns true if the CampaignState is valid else return false
-    func canDownloadRulesWithCurrentState() -> Bool {
-        guard privacyStatus == .optedIn else {
-            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Privacy status is not Opted In.")
-            return false
-        }
-
-        guard let ecid = ecid, !ecid.isEmpty else {
-            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. ECID is invalid.")
-            return false
-        }
-
-        guard let campaignServer = campaignServer, !campaignServer.isEmpty else {
-            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Campaign server value is invalid.")
-            return false
-        }
-
-        guard let campaignMciasServer = campaignMciasServer, !campaignMciasServer.isEmpty else {
-            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Campaign mcias server value is invalid.")
-            return false
-        }
-
-        guard let propertyId = campaignPropertyId, !propertyId.isEmpty else {
-            Log.debug(label: LOG_TAG, "\(#function) Unable to send rules download request to Campaign. Campaign property id value is invalid.")
             return false
         }
 

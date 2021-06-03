@@ -218,20 +218,18 @@ public class Campaign: NSObject, Extension {
 
     ///Triggers the rules download and if successful, caches the downloaded rules.
     private func triggerRulesDownload() {
-        if state.canDownloadRulesWithCurrentState() {
-            guard let url = self.state.campaignRulesDownloadUrl else {
-                Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
-                return
-            }
-            let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(), dispatchQueue: self.dispatchQueue)
-            var linkageFieldsHeader: [String: String]?
-            if let linkageFields = self.linkageFields {
-                linkageFieldsHeader = [
-                    CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
-                ]
-            }
-            campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
+        guard let url = self.state.campaignRulesDownloadUrl else {
+            Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
+            return
         }
+        let campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: CampaignRulesCache(), ruleEngine: self.rulesEngine, campaignMessageAssetsCache: CampaignMessageAssetsCache(), dispatchQueue: self.dispatchQueue)
+        var linkageFieldsHeader: [String: String]?
+        if let linkageFields = self.linkageFields {
+            linkageFieldsHeader = [
+                CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER: linkageFields
+            ]
+        }
+        campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
     }
 
     ///Loads the Cached Campaign rules on receiving the Configuration event first time.

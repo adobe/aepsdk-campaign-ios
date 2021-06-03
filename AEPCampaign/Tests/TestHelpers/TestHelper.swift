@@ -12,6 +12,7 @@
 import XCTest
 @testable import AEPCore
 @testable import AEPServices
+@testable import AEPCampaign
 
 extension EventHub {
     static func reset() {
@@ -62,7 +63,7 @@ extension FileManager {
     }
 }
 
-extension XCTest {
+extension XCTestCase {
     func verifyCampaignResponseEvent(expectedParameters: [String: Any]) {
         let event = expectedParameters["event"] as? Event
         let actionType = expectedParameters["actionType"] as? String ?? ""
@@ -115,6 +116,29 @@ extension XCTest {
     func verifyDemdexHit(request: NetworkRequest, ecid: String) {
         let url = request.url.absoluteString
         XCTAssertEqual(url, "https://dpm.demdex.net/id?d_rtbd=json&d_ver=2&d_orgid=testOrg@AdobeOrg&d_mid=\(ecid)")
+    }
+
+    func verifyDemdexOptOutHit(request: NetworkRequest, ecid: String) {
+        let url = request.url.absoluteString
+        XCTAssertEqual(url, "https://dpm.demdex.net/demoptout.jpg?d_orgid=testOrg@AdobeOrg&d_mid=\(ecid)")
+    }
+
+    func verifyAssetInCacheFor(url: String) {
+        let expectation = XCTestExpectation(description: "cached asset exists in the message cache directory.")
+        let fileManager = FileManager.default
+        guard var cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
+            XCTFail("the message cache directory does not exist")
+            return
+        }
+        let expectedUrl = url.alphanumeric
+        cacheDir.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/56785213/\(expectedUrl)")
+        if !fileManager.fileExists(atPath: cacheDir.path) {
+            XCTFail("the cached message asset does not exist.")
+            return
+        } else {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5)
     }
 
     func verifyCampaignRulesDownloadRequest(request: NetworkRequest, buildEnvironment: String?, ecid: String, isPersonalized: Bool) {

@@ -24,14 +24,6 @@ class CampaignFunctionalTests: XCTestCase {
     var testableNetworkService: TestableNetworkService!
     var datastore: NamedCollectionDataStore!
 
-    func waitForProcessing(interval: TimeInterval = 1) {
-        let expectation = XCTestExpectation()
-        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + interval - 0.1) {
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: interval)
-    }
-
     override func setUp() {
         UserDefaults.clear()
         FileManager.default.clearCache()
@@ -42,7 +34,7 @@ class CampaignFunctionalTests: XCTestCase {
         testableNetworkService = TestableNetworkService()
         ServiceProvider.shared.networkService = testableNetworkService
         mockRuntime.resetDispatchedEventAndCreatedSharedStates()
-        waitForProcessing()
+        sleep(2)
     }
 
     override func tearDown() {
@@ -98,15 +90,15 @@ class CampaignFunctionalTests: XCTestCase {
     }
 
     func getEcid() -> String {
-        let semaphore = DispatchSemaphore(value: 0)
-        var ecid = String()
+        let expectation = XCTestExpectation(description: "valid ecid is retrieved.")
+        var ecid = ""
         Identity.getExperienceCloudId { (retrievedEcid, _) in
             if let retrievedEcid = retrievedEcid, !retrievedEcid.isEmpty {
                 ecid = retrievedEcid
-                semaphore.signal()
+                expectation.fulfill()
             }
         }
-        _ = semaphore.wait(timeout: .now() + TimeInterval(5))
+        wait(for: [expectation], timeout: 5)
         return ecid
     }
 
@@ -114,7 +106,7 @@ class CampaignFunctionalTests: XCTestCase {
         var config = [String: Any]()
         config[CampaignConstants.Configuration.GLOBAL_CONFIG_BUILD_ENVIRONMENT] = environment
         MobileCore.updateConfigurationWith(configDict: config)
-        waitForProcessing()
+        sleep(1)
     }
 
     func updateTimestampInDatastore(timestamp: Int) {
@@ -130,11 +122,11 @@ class CampaignFunctionalTests: XCTestCase {
     }
 
     func setCampaignRulesFromBundleAsResponse(expectedUrlFragment: String, statusCode: Int, mockNetworkService: TestableNetworkService) {
-        guard let localRulesZipUrl = Bundle.main.url(forResource: "rules-localNotification", withExtension: "zip") else {
-            print("Failed to find local notification rules zip in bundle.")
+        guard let rulesZip = Bundle.main.url(forResource: "rules-testing", withExtension: "zip") else {
+            print("Failed to find rules zip in bundle.")
             return
         }
-        guard let responseData = try? Data(contentsOf: localRulesZipUrl) else {
+        guard let responseData = try? Data(contentsOf: rulesZip) else {
             print("Failed to convert the zipfile into data.")
             return
         }
@@ -154,7 +146,7 @@ class CampaignFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 3 requests expected:
         // 1. demdex hit
@@ -174,7 +166,7 @@ class CampaignFunctionalTests: XCTestCase {
         self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue])
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 0 requests expected
         let requests = testableNetworkService.requests
@@ -190,7 +182,7 @@ class CampaignFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 3 requests expected:
         // 1. demdex hit
@@ -211,7 +203,7 @@ class CampaignFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 3 requests expected:
         // 1. demdex hit
@@ -232,7 +224,7 @@ class CampaignFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 3 requests expected:
         // 1. demdex hit
@@ -259,7 +251,7 @@ class CampaignFunctionalTests: XCTestCase {
             "key3": "value3"
         ]
         Campaign.setLinkageFields(linkageFields: linkageFields)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -287,9 +279,9 @@ class CampaignFunctionalTests: XCTestCase {
             "key3": "value3"
         ]
         Campaign.setLinkageFields(linkageFields: linkageFields)
-        waitForProcessing()
+        sleep(1)
         Campaign.resetLinkageFields()
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -315,7 +307,7 @@ class CampaignFunctionalTests: XCTestCase {
         // test
         let linkageFields = [:] as [String: String]
         Campaign.setLinkageFields(linkageFields: linkageFields)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -337,7 +329,7 @@ class CampaignFunctionalTests: XCTestCase {
         // test
         let linkageFields = [:] as [String: String]
         Campaign.setLinkageFields(linkageFields: linkageFields)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         // 0 requests expected:
@@ -354,23 +346,22 @@ class CampaignFunctionalTests: XCTestCase {
         // test
         let linkageFields = [:] as [String: String]
         Campaign.setLinkageFields(linkageFields: linkageFields)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         // 0 requests expected:
         let requests = testableNetworkService.requests
         XCTAssertEqual(requests.count, 0)
         MobileCore.setPrivacyStatus(.optedIn)
-        waitForProcessing()
+        sleep(2)
     }
 
-    // TODO: revisit when opt-in issue is resolved
-    func skip_testSetLinkageFieldsThenPrivacyOptOutAndPrivacyOptedInTriggersNonPersonalizedRulesDownload() {
+    func testSetLinkageFieldsThenPrivacyOptOutAndPrivacyOptedInTriggersNonPersonalizedRulesDownload() {
         // setup
         initExtensionsAndWait()
         sleep(1)
         self.updateConfiguration()
-
+        let ecid = getEcid()
         // test
         let linkageFields = [
             "key": "value",
@@ -378,25 +369,25 @@ class CampaignFunctionalTests: XCTestCase {
             "key3": "value3"
         ]
         Campaign.setLinkageFields(linkageFields: linkageFields)
-        waitForProcessing()
+        sleep(1)
         MobileCore.setPrivacyStatus(.optedOut)
-        waitForProcessing()
+        sleep(1)
         MobileCore.setPrivacyStatus(.optedIn)
-        waitForProcessing()
+        sleep(1)
         // verify
-        let ecid = getEcid()
         // 6 requests expected:
         // 1. demdex hit
         // 2. non personalized campaign rules download
         // 3. personalized campaign rules download with linkage fields header
-        // 4. demdex opt out hit
+        // 4. demdex opt out hit with original mid
         // 5. 2nd demdex hit with new mid
-        // 6. non personalized campaign rules download
+        // 6. non personalized campaign rules download with new mid
         let requests = testableNetworkService.requests
-        XCTAssertEqual(requests.count, 5)
+        XCTAssertEqual(requests.count, 6)
         verifyDemdexHit(request: requests[0], ecid: ecid)
         verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
         verifyCampaignRulesDownloadRequest(request: requests[2], buildEnvironment: nil, ecid: ecid, isPersonalized: true)
+        verifyDemdexOptOutHit(request: requests[3], ecid: ecid)
         let newEcid = getEcid()
         verifyDemdexHit(request: requests[4], ecid: newEcid)
         verifyCampaignRulesDownloadRequest(request: requests[5], buildEnvironment: nil, ecid: newEcid, isPersonalized: false)
@@ -406,26 +397,31 @@ class CampaignFunctionalTests: XCTestCase {
     func testLocalNotificationImpressionTracking() {
         // setup
         setCampaignRulesFromBundleAsResponse(expectedUrlFragment: "https://mcias-server.com/mcias/", statusCode: 200, mockNetworkService: testableNetworkService)
-        waitForProcessing()
+        sleep(1)
         initExtensionsAndWait()
         sleep(1)
         self.updateConfiguration()
 
         // test
         MobileCore.track(action: "localImpression", data: nil)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
-        // 3 requests expected:
+        // 5 requests expected:
         // 1. demdex hit
         // 2. non personalized campaign rules download
-        // 3. local notification viewed track request
+        // 3. remote asset download (due to rules zip containing fullscreen message with assets)
+        // 4. local asset download (due to rules zip containing a fullscreen message with assets)
+        // 5. local notification viewed track request
         let requests = testableNetworkService.requests
-        XCTAssertEqual(requests.count, 3)
+        XCTAssertEqual(requests.count, 5)
         verifyDemdexHit(request: requests[0], ecid: ecid)
         verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
-        verifyMessageTrackRequest(request: requests[2], ecid: ecid, interactionType: "7")
+        XCTAssertEqual("https://as2.ftcdn.net/v2/jpg/03/38/75/33/1000_F_338753339_GeGEgDtV1MR4tcoZLX3KbyJW40wqCY6J.jpg", requests[2].url.absoluteString)
+        verifyAssetInCacheFor(url: requests[2].url.absoluteString)
+        XCTAssertEqual("local.jpg", requests[3].url.absoluteString)
+        verifyMessageTrackRequest(request: requests[4], ecid: ecid, interactionType: "7")
     }
 
     func testLocalNotificationImpressionTrackingViaCollectMessageInfo() {
@@ -440,7 +436,7 @@ class CampaignFunctionalTests: XCTestCase {
         messageData["deliveryId"] = "b670ea"
         messageData["action"] = "7"
         MobileCore.collectMessageInfo(messageData)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -467,7 +463,7 @@ class CampaignFunctionalTests: XCTestCase {
         messageData["deliveryId"] = "b670ea"
         messageData["action"] = "1"
         MobileCore.collectMessageInfo(messageData)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -494,7 +490,7 @@ class CampaignFunctionalTests: XCTestCase {
         messageData["deliveryId"] = "b670ea"
         messageData["action"] = "2"
         MobileCore.collectMessageInfo(messageData)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -520,7 +516,7 @@ class CampaignFunctionalTests: XCTestCase {
         messageData["deliveryId"] = "b670ea"
         messageData["action"] = "2"
         MobileCore.collectMessageInfo(messageData)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -544,7 +540,7 @@ class CampaignFunctionalTests: XCTestCase {
         messageData["broadlogId"] = "h153d80"
         messageData["action"] = "2"
         MobileCore.collectMessageInfo(messageData)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -568,7 +564,7 @@ class CampaignFunctionalTests: XCTestCase {
         messageData["broadlogId"] = "h153d80"
         messageData["deliveryId"] = "b670ea"
         MobileCore.collectMessageInfo(messageData)
-        waitForProcessing()
+        sleep(1)
 
         // verify
         let ecid = getEcid()
@@ -581,6 +577,35 @@ class CampaignFunctionalTests: XCTestCase {
         verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
     }
 
+    // MARK: fullscreen asset download tests
+    func testVerifyFullscreenAssetsAreDownloadedAndCached() {
+        // setup
+        setCampaignRulesFromBundleAsResponse(expectedUrlFragment: "https://mcias-server.com/mcias/", statusCode: 200, mockNetworkService: testableNetworkService)
+        sleep(1)
+        initExtensionsAndWait()
+        sleep(1)
+        self.updateConfiguration()
+
+        // test
+        MobileCore.track(action: "fullscreen", data: nil)
+        sleep(1)
+
+        // verify
+        let ecid = getEcid()
+        // 4 requests expected:
+        // 1. demdex hit
+        // 2. non personalized campaign rules download
+        // 3. remote asset download (as well as verify assets are cached for the remote asset)
+        // 4. local asset download
+        let requests = testableNetworkService.requests
+        XCTAssertEqual(requests.count, 4)
+        verifyDemdexHit(request: requests[0], ecid: ecid)
+        verifyCampaignRulesDownloadRequest(request: requests[1], buildEnvironment: nil, ecid: ecid, isPersonalized: false)
+        XCTAssertEqual("https://as2.ftcdn.net/v2/jpg/03/38/75/33/1000_F_338753339_GeGEgDtV1MR4tcoZLX3KbyJW40wqCY6J.jpg", requests[2].url.absoluteString)
+        verifyAssetInCacheFor(url: requests[2].url.absoluteString)
+        XCTAssertEqual("local.jpg", requests[3].url.absoluteString)
+    }
+
     // MARK: registration reduction tests
     func testVerifyNoProfileUpdateOnSecondLifecycleLaunchWithDefaultRegistrationDelay() {
         // setup
@@ -590,7 +615,7 @@ class CampaignFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // wait for lifecycle session timeout
         usleep(2500)
         MobileCore.lifecycleStart(additionalContextData: nil)
@@ -618,7 +643,7 @@ class CampaignFunctionalTests: XCTestCase {
         updateEcidInDatastore(ecid: ecid)
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 3 requests expected:
         // 1. demdex hit
@@ -644,7 +669,7 @@ class CampaignFunctionalTests: XCTestCase {
         updateEcidInDatastore(ecid: ecid)
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 3 requests expected:
         // 1. demdex hit
@@ -670,7 +695,7 @@ class CampaignFunctionalTests: XCTestCase {
         updateEcidInDatastore(ecid: ecid)
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 2 requests expected:
         // 1. demdex hit
@@ -690,7 +715,7 @@ class CampaignFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 2 requests expected:
         // 1. demdex hit
@@ -710,11 +735,11 @@ class CampaignFunctionalTests: XCTestCase {
         let ecid = getEcid()
         // test
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         MobileCore.lifecyclePause()
         sleep(3)
         MobileCore.lifecycleStart(additionalContextData: nil)
-        waitForProcessing()
+        sleep(1)
         // verify
         // 4 requests expected:
         // 1. demdex hit

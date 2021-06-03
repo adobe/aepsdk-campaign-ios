@@ -20,6 +20,7 @@ import AEPUserProfile
 import AEPSignal
 import AEPServices
 import AEPAssurance
+import AEPPlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -29,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
 
         MobileCore.setLogLevel(.trace)
-        MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self, Signal.self, AEPAssurance.self]) {
+        MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self, Signal.self, AEPAssurance.self, Places.self]) {
             // Use the App id assigned to this application via Adobe Launch
             MobileCore.configureWith(appId: self.LAUNCH_ENVIRONMENT_FILE_ID)
             AEPAssurance.startSession(URL(string: "default://swift-acs?adb_validation_sessionid=b98cafbb-f390-420a-9e78-09c37669df34")!)
@@ -43,6 +44,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
             // Enable or disable features based on the authorization.
         }
+
+        // set places authorization
+        Places.setAccuracyAuthorization(.fullAccuracy)
+        Places.setAuthorizationStatus(.authorizedAlways)
 
         return true
     }
