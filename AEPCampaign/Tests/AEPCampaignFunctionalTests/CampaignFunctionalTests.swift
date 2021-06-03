@@ -305,7 +305,7 @@ class CampaignFunctionalTests: XCTestCase {
         self.updateConfiguration()
 
         // test
-        let linkageFields = [:] as [String: String]
+        let linkageFields = [String: String]()
         Campaign.setLinkageFields(linkageFields: linkageFields)
         sleep(1)
 
@@ -327,7 +327,11 @@ class CampaignFunctionalTests: XCTestCase {
         self.updateConfiguration(customConfig: [CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue])
 
         // test
-        let linkageFields = [:] as [String: String]
+        let linkageFields = [
+            "key": "value",
+            "key2": "value2",
+            "key3": "value3"
+        ]
         Campaign.setLinkageFields(linkageFields: linkageFields)
         sleep(1)
 
