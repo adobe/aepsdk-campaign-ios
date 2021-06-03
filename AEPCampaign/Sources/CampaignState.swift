@@ -29,6 +29,14 @@ class CampaignState {
     private(set) var campaignPropertyId: String?
     private(set) var campaignRegistrationDelay: TimeInterval?
     private(set) var campaignRegistrationPaused: Bool?
+    private(set) var ecid: String?
+
+    // Campaign Persistent HitQueue
+    #if DEBUG
+        var hitQueue: HitQueuing?
+    #else
+        private(set) var hitQueue: HitQueuing?
+    #endif
     var campaignRulesDownloadUrl: URL? {
         if let mciasServer = campaignMciasServer, let campaignServer = campaignServer, let propertyId = campaignPropertyId, let ecid = ecid {
             return URL.getRulesDownloadUrl(mciasServer: mciasServer, campaignServer: campaignServer, propertyId: propertyId, ecid: ecid)
@@ -39,14 +47,6 @@ class CampaignState {
     }
 
     // Identity shared state
-    private(set) var ecid: String?
-
-    // Campaign Persistent HitQueue
-    #if DEBUG
-        var hitQueue: HitQueuing?
-    #else
-        private(set) var hitQueue: HitQueuing?
-    #endif
 
     /// Creates a new `CampaignState`.
     init() {
@@ -277,5 +277,12 @@ class CampaignState {
     /// - Parameter hit: The `CampaignHit` which was successfully sent
     private func handleSuccessfulNetworkRequest(hit: CampaignHit) {
         updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
+    }
+
+    ///Returns `true` if all required configurations for downloading rules all present else returns `false`
+    func canDownloadRules() -> Bool {
+        return privacyStatus == .optedIn
+            && !(ecid?.isEmpty ?? true) && !(campaignServer?.isEmpty ?? true)
+            && !(campaignMciasServer?.isEmpty ?? true) && !(campaignPropertyId?.isEmpty ?? true)
     }
 }

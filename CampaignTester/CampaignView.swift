@@ -15,6 +15,8 @@ import AEPCampaign
 import AEPCore
 import AEPServices
 import AEPAssurance
+import AEPPlaces
+import CoreLocation
 
 class LinkageFieldsError: ObservableObject {
     @Published var errorObserved: Bool = false
@@ -214,6 +216,22 @@ struct CampaignView: View {
                         AEPAssurance.startSession(url)
                     }) {
                         Text("Start Assurance Session")
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }.cornerRadius(5)
+                    /// Places Testing buttons
+                    Text("Places Testing").bold()
+                    Button(action: {
+                        // adobe san jose
+                        let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 37.3267956, longitude: -121.921026), radius: 100, identifier: "52623e65-0386-42f5-86fd-2671dd12bf27")
+
+                        Places.processRegionEvent(.entry, forRegion: region)
+                    }
+                    ) {
+                        Text("Places entry event (triggers alert message)")
                             .frame(minWidth: 0, maxWidth: .infinity)
                             .padding()
                             .background(Color.gray)
