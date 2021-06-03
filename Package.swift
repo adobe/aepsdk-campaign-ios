@@ -17,15 +17,10 @@ let package = Package(
     name: "AEPCampaign",
     platforms: [.iOS(.v10)],
     products: [
-        // default
-        .library(name: "AEPCampaign", targets: ["AEPCampaign"]),
-        // dynamic
-        .library(name: "AEPCampaignDynamic", type: .dynamic, targets: ["AEPCampaign"]),
-        // static
-        .library(name: "AEPCampaignStatic", type: .static, targets: ["AEPCampaign"]),
+        .library(name: "AEPCampaign", targets: ["AEPCampaign"])
     ],
     dependencies: [
-        .package(name: "AEPCore", url: "https://github.com/adobe/aepsdk-core-ios.git", from: "dev-3.1.4"),
+        .package(name: "AEPCore", url: "https://github.com/adobe/aepsdk-core-ios.git", from: "dev-v3.1.4"),
         .package(name: "AEPRulesEngine", url: "https://github.com:adobe/aepsdk-rulesengine-ios.git", from: "dev-v1.0.2"),
     ],
     targets: [
