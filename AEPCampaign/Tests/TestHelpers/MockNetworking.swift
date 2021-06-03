@@ -38,9 +38,3 @@ class MockNetworking: Networking {
         cachedNetworkRequests = []
     }
 }
-
-extension NetworkRequest {
-    func payloadAsString() -> String {
-        return String(data: connectPayload, encoding: .utf8) ?? ""
-    }
-}

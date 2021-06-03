@@ -48,7 +48,6 @@ class CampaignState {
 
     // Identity shared state
 
-
     /// Creates a new `CampaignState`.
     init() {
         self.dataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)

@@ -125,7 +125,7 @@ class CampaignStateTests: XCTestCase {
         state.update(dataMap: sharedStates)
 
         //Assert
-        XCTAssertTrue(state.canDownloadRules())        
+        XCTAssertTrue(state.canDownloadRules())
     }
 
     func testCanDownloadRulesFailureDueToServerMissing() {

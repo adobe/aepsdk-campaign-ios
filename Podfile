@@ -24,6 +24,10 @@ def user_profile
    pod 'AEPUserProfile', :git => 'git@github.com:adobe/aepsdk-userprofile-ios.git', :branch => 'dev-v3.0.0'
 end
 
+def places
+   pod 'AEPPlaces', :git => 'git@github.com:adobe/aepsdk-places-ios.git', :branch => 'main'
+end
+
 def core_additional_dependecies
    pod 'AEPLifecycle', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
    pod 'AEPSignal', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
@@ -52,4 +56,5 @@ target 'CampaignTester' do
    user_profile
    core_additional_dependecies   
    assurance
+   places
 end

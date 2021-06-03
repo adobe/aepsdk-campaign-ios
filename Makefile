@@ -29,7 +29,7 @@ open:
 
 test:
 	@echo "######################################################################"
-	@echo "### Unit Testing iOS"
+	@echo "### Unit & Functional Testing iOS"
 	@echo "######################################################################"
 	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 8' -derivedDataPath ./out -enableCodeCoverage YES
 
