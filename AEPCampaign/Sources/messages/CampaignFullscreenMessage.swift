@@ -79,7 +79,9 @@ class CampaignFullscreenMessage: CampaignMessaging {
         } else {
             finalHtml = htmlContent
         }
-        self.htmlPayload = finalHtml
+        #if DEBUG
+            self.htmlPayload = finalHtml
+        #endif
         self.fullscreenMessagePresentable = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
         self.fullscreenMessagePresentable?.show()
     }
