@@ -14,7 +14,6 @@ import Foundation
 import AEPCore
 import AEPServices
 
-// swiftlint:disable redundant_objc_attribute
 /// Defines the public interface for the Campaign extension
 @objc public extension Campaign {
     private static let LOG_TAG = "Campaign"
@@ -26,7 +25,8 @@ import AEPServices
     ///This method clears cached rules from previous download before triggering a rules download request to the configured Campaign server.
     ///If the current SDK privacy status is not OPT_IN, no rules download happens.
     /// - Parameters linkageFields: The Linkage fields key value pairs.
-    @objc static func setLinkageFields(linkageFields: [String: String]) {
+    @objc (setLinkageFields:)
+    static func setLinkageFields(linkageFields: [String: String]) {
         guard !linkageFields.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to set the linkage fields. The passed in linkage fields dictionary is empty.")
             return
@@ -40,7 +40,8 @@ import AEPServices
     ///Clears previously stored linkage fields in the mobile SDK and triggers Campaign rules download request to the configured Campaign server.
     ///This method unregisters any previously registered rules with the Event Hub and clears cached rules from previous download.
     ///If the current SDK privacy status is not `OPT_IN`, no rules download happens.
-    @objc static func resetLinkageFields() {
+    @objc (resetLinkageFields)
+    static func resetLinkageFields() {
         let event = Event(name: "ResetLinkageFields", type: EventType.campaign, source: EventSource.requestReset, data: nil)
         MobileCore.dispatch(event: event)
     }
