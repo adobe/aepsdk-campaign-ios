@@ -21,6 +21,6 @@ Pod::Spec.new do |s|
   s.dependency 'AEPServices'
   s.dependency 'AEPRulesEngine'
 
-  s.source_files     = 'AEPCampaign/Sources/*.swift'
+  s.source_files     = 'AEPCampaign/Sources/**/*.swift'
 
 end
