@@ -13,6 +13,7 @@
 import Foundation
 import AEPCore
 import AEPServices
+import UIKit
 
 struct AlertMessage: CampaignMessaging {
     private static let LOG_TAG = "AlertMessage"

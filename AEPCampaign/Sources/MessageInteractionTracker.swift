@@ -12,6 +12,7 @@
 
 import AEPCore
 import AEPServices
+import Foundation
 
 ///Helper class contains methods for tracking user's interaction with `Messages`
 class MessageInteractionTracker {

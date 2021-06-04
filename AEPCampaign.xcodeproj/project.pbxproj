@@ -218,6 +218,8 @@
 		D61AA9AC26575CE700D44D12 /* CampaignMessaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CampaignMessaging.swift; sourceTree = "<group>"; };
 		D61AA9AD26575CE700D44D12 /* AlertMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
 		D61AA9AE26575CE700D44D12 /* LocalNotificationMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNotificationMessage.swift; sourceTree = "<group>"; };
+		D655170E2667F6FB00A152CF /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		D655170F2667F72600A152CF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D65515642660685300A152CF /* TestableNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableNetworkService.swift; sourceTree = "<group>"; };
 		D655169B266695A900A152CF /* FunctionalTestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTestConstants.swift; sourceTree = "<group>"; };
 		D655175826681ED000A152CF /* Adobe-SanJose.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Adobe-SanJose.gpx"; sourceTree = "<group>"; };
@@ -357,6 +359,8 @@
 		3D10A5EB262581650049BDA1 = {
 			isa = PBXGroup;
 			children = (
+				D655170E2667F6FB00A152CF /* Package.swift */,
+				D655170F2667F72600A152CF /* README.md */,
 				3D10A5F7262581650049BDA1 /* AEPCampaign */,
 				D6E9787E2639D197003F3372 /* CampaignTester */,
 				D6B40602263C99EE002814FC /* UnitTestApp */,
