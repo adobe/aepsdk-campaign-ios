@@ -67,7 +67,9 @@ struct AlertMessage: CampaignMessaging {
         }
         Log.trace(label: Self.LOG_TAG, "\(#function) - Showing alert for message id \(messageId ?? "").")
         // store alert controller for unit tests
-        Self.uiAlertController = uiAlert
+        #if DEBUG
+            Self.uiAlertController = uiAlert
+        #endif
         // Dispatch message triggered event
         triggered()
         DispatchQueue.main.async {
