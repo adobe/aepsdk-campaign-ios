@@ -62,9 +62,9 @@ MobileCore.registerExtensions([Campaign.self])
 
 ### resetLinkageFields
 
-Clears previously stored linkage fields in the mobile SDK and triggers Campaign rules download request to the configured Campaign server.
+Clears previously stored linkage fields in the mobile SDK and triggers a Campaign rules download request to the configured Campaign server.
 
-This method unregisters any previously registered rules with the Event Hub and clears cached rules from previous download.
+This method unregisters any previously registered rules with the Event Hub and clears cached rules from the most recent rules download.
 
 ##### Swift
 
@@ -96,7 +96,7 @@ Campaign.resetLinkageFields()
 
 Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
 
-The set linkage fields are stored as base64 encoded JSON string in memory and they are sent in a custom HTTP header 'X-InApp-Auth'
+The set linkage fields are stored as a base64 encoded JSON string in memory and they are sent in a custom HTTP header 'X-InApp-Auth'
 
 ##### Swift
 
@@ -119,7 +119,7 @@ Campaign.setLinkageFields(linkageFields: ["cusFirstName": "John", "cusLastName":
 
 **Example Usage**
 ```objc
-[AEPMobileCampaign setLinkageFields:@{@"cusFirstName" : @"John", @"cusLastName": @"Doe", @"cusEmail": @"john.doe@email.com"}]
+[AEPMobileCampaign setLinkageFields:@{@"cusFirstName" : @"John", @"cusLastName": @"Doe", @"cusEmail": @"john.doe@email.com"}];
 ```
 
 ---
