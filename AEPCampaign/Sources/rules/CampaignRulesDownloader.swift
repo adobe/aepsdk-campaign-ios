@@ -145,7 +145,7 @@ struct CampaignRulesDownloader {
             }
         }
 
-        campaignMessageAssetsCache.clearCachedAssetsNotInList(filesToRetain: messageIdsWithAssets, pathRelativeToCacheDir: CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)
+        campaignMessageAssetsCache.clearCachedAssetsNotInList(filesToRetain: messageIdsWithAssets, pathRelativeToCacheDir: CampaignConstants.RulesDownloaderConstants.MESSAGE_CACHE_FOLDER)
     }
 
     /// Stores the requested rules.zip data in a temp directory
@@ -175,7 +175,7 @@ struct CampaignRulesDownloader {
             Log.warning(label: LOG_TAG, "\(#function) - Unable to Unzip Campaign rules. Cache directory URL is nil.")
             return nil
         }
-        let destination = cachedDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY, isDirectory: true)
+        let destination = cachedDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER, isDirectory: true)
         let unzippedItems = fileUnzipper.unzipItem(at: source, to: destination)
         // Find the unzipped item rules.json
         guard let _ = unzippedItems.firstIndex(of: CampaignConstants.Campaign.Rules.JSON_FILE_NAME) else {

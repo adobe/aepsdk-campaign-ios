@@ -73,12 +73,12 @@ struct CampaignRulesCache {
             return
         }
 
-        cacheDir.appendPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY)
+        cacheDir.appendPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER)
         do {
             try fileManager.removeItem(at: cacheDir)
-            Log.trace(label: LOG_TAG, "\(#function) - Successfully deleted the campaignrules folder")
+            Log.trace(label: LOG_TAG, "\(#function) - Successfully deleted the \(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER) folder")
         } catch {
-            Log.debug(label: LOG_TAG, "\(#function) - Error in deleting the campaignrules folder")
+            Log.debug(label: LOG_TAG, "\(#function) - Error in deleting the \(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER) folder")
         }
     }
 }
