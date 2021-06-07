@@ -1,6 +1,6 @@
 # AEPCampaign Public APIs
 
-This document contains usage information for the public functions, classes, and enums in `AEPCampaign`.
+This document contains usage information for the public functions and classes in `AEPCampaign`.
 
 ## Static functions
 
@@ -48,14 +48,18 @@ This API no longer exists in `AEPCampaign`. Instead, the extension should be reg
 
 **Example:**
 ```swift
-MobileCore.registerExtensions([Campaign.self])
+MobileCore.registerExtensions([Campaign.self, ...], {
+  // processing after registration
+})
 ```
 
 ##### Objective-C
 
 **Example:**
 ```objc
-[AEPMobileCore registerExtensions:@[AEPMobileCampaign.class] completion:nil];
+[AEPMobileCore registerExtensions:@[AEPMobileCampaign.class, ...] completion:^{
+  // processing after registration
+}];
 ```
 
 ---
@@ -64,7 +68,7 @@ MobileCore.registerExtensions([Campaign.self])
 
 Clears previously stored linkage fields in the mobile SDK and triggers a Campaign rules download request to the configured Campaign server.
 
-This method unregisters any previously registered rules with the Event Hub and clears cached rules from the most recent rules download.
+This method unregisters any previously registered rules with the Rules Engine and clears cached rules from the most recent rules download.
 
 ##### Swift
 

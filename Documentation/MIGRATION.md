@@ -2,7 +2,7 @@
 
 This document is a reference comparison of ACPCampaign (1.x) APIs against their equivalent APIs in AEPCampaign (3.x).
 
-If explanation beyond showing API differences is necessary, it will be captured as a "Note" within that API's section.  
+If an explanation beyond showing API differences is necessary, it will be captured as a "Note" within that API's section.  
 
 For example:
 
@@ -110,3 +110,4 @@ static func resetLinkageFields()
 ```swift
 static func setLinkageFields(linkageFields: [String: String])
 ```
+
