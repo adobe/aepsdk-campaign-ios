@@ -6,13 +6,13 @@ project 'AEPCampaign.xcodeproj'
 # POD groups
 
 def campaign_core_dependencies
-   pod 'AEPCore', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
-   pod 'AEPServices', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
-   pod 'AEPIdentity', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+   pod 'AEPCore', :git => 'git@github.com:adobe/aepsdk-core-ios.git'
+   pod 'AEPServices', :git => 'git@github.com:adobe/aepsdk-core-ios.git'
+   pod 'AEPIdentity', :git => 'git@github.com:adobe/aepsdk-core-ios.git'
 end
 
 def rulesengine
-   pod 'AEPRulesEngine', :git => 'git@github.com:adobe/aepsdk-rulesengine-ios.git', :branch => 'dev-v1.0.2'
+   pod 'AEPRulesEngine', :git => 'git@github.com:adobe/aepsdk-rulesengine-ios.git'
 end
 
 def assurance
@@ -29,8 +29,8 @@ def places
 end
 
 def core_additional_dependecies
-   pod 'AEPLifecycle', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
-   pod 'AEPSignal', :git => 'git@github.com:adobe/aepsdk-core-ios.git', :branch => 'dev-v3.1.4'
+   pod 'AEPLifecycle', :git => 'git@github.com:adobe/aepsdk-core-ios.git'
+   pod 'AEPSignal', :git => 'git@github.com:adobe/aepsdk-core-ios.git'
 end
 
 target 'AEPCampaign' do
