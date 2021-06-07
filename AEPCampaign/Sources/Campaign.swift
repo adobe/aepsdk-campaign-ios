@@ -14,7 +14,7 @@ import Foundation
 import AEPCore
 import AEPServices
 
-@objc(AEPCampaign)
+@objc(AEPMobileCampaign)
 public class Campaign: NSObject, Extension {
     private let LOG_TAG = "Campaign"
     public var name = CampaignConstants.EXTENSION_NAME

@@ -5,7 +5,7 @@
 [![SPM](https://img.shields.io/badge/SPM-Supported-orange.svg?logo=apple&logoColor=white)](https://swift.org/package-manager/)
 [![CircleCI](https://img.shields.io/circleci/project/github/adobe/aepsdk-campaign-ios/main.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/aepsdk-campaign-ios)
 [![Code Coverage](https://img.shields.io/codecov/c/github/adobe/aepsdk-campaign-ios/main.svg?logo=codecov)](https://codecov.io/gh/adobe/aepsdk-campaign-ios/branch/main)
--->
+uncomment the badges once the repo is public -->
 ## About this project
 
 The AEPCampaign extension represents the Campaign Standard Adobe Experience Platform SDK that is required for registering mobile devices with your Campaign instance as well as creating in-app messages for your mobile app. The extension also enables the setting of linkage fields for use in creating personalized in-app messages.
@@ -82,10 +82,10 @@ Include `AEPCampaign.xcodeproj` in the targeted Xcode project and link all neces
 
 Run `make archive` from the root directory to generate `.xcframeworks` for each module under the `build` folder. Drag and drop all `.xcframeworks` to your app target in Xcode.
 
-<!---## Documentation
+## Documentation
 
 Additional documentation for usage and SDK architecture can be found under the [Documentation](Documentation/README.md) directory.
--->
+
 ## Contributing
 
 Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
