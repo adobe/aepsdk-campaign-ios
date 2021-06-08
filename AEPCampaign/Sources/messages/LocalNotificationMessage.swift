@@ -31,7 +31,7 @@ struct LocalNotificationMessage: CampaignMessaging {
     private var title: String?
 
     // unused
-    internal var onFullscreenDismissed: (() -> Void)?
+    var onFullscreenDismissed: (() -> Void)?
 
     /// LocalNotification struct initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:

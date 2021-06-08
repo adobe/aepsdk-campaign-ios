@@ -26,7 +26,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     private var extractedAssets: [[String]]?
     private var isUsingLocalImage = false
     var fullscreenMessagePresentable: FullscreenPresentable?
-    internal var onFullscreenDismissed: (() -> Void)?
+    var onFullscreenDismissed: (() -> Void)?
 
     #if DEBUG
         // var for unit testing

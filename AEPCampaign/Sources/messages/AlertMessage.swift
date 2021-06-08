@@ -33,7 +33,7 @@ struct AlertMessage: CampaignMessaging {
     #endif
 
     // unused
-    internal var onFullscreenDismissed: (() -> Void)?
+    var onFullscreenDismissed: (() -> Void)?
 
     /// AlertMessage struct initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
