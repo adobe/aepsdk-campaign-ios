@@ -94,5 +94,6 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
 
     func onShowFailure() {
         Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Fullscreen message failed to show.")
+        onFullscreenMessageDismissed?()
     }
 }
