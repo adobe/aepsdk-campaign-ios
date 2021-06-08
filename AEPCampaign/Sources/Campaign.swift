@@ -280,6 +280,7 @@ public class Campaign: NSObject, Extension {
         state.removeRuleUrlFromDatastore()
     }
 
+    /// Helper function to clean the CampaignFullscreenMessage object when the fullscreen message has been dismissed.
     private func cleanFullscreenMessage() {
         fullscreenMessage = nil
     }
