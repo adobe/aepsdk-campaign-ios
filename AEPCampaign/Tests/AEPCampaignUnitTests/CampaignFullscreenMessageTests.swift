@@ -58,7 +58,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
         guard let cacheDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }
-        let messagesDir = cacheDir.appendingPathComponent(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER).appendingPathComponent(messageId)
+        let messagesDir = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.MESSAGE_CACHE_FOLDER).appendingPathComponent(messageId)
         let cachedRemoteImageFile = messagesDir.appendingPathComponent("httpsimagescomimagejpg")
         do {
             try fileManager.createDirectory(atPath: messagesDir.path, withIntermediateDirectories: true, attributes: nil)
@@ -83,7 +83,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
         }
         // clear cached files from previous tests
         clearContentsOf(cacheDir)
-        let htmlDir = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY).appendingPathComponent(CampaignConstants.Campaign.Rules.ASSETS_DIRECTORY)
+        let htmlDir = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER).appendingPathComponent(CampaignConstants.Campaign.Rules.ASSETS_DIRECTORY)
         // write html file to assets directory
         let file = htmlDir.appendingPathComponent("fullscreenIam").appendingPathExtension("html")
         do {
@@ -165,7 +165,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
         guard let cachedDir = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return
         }
-        let htmlDir = cachedDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY).appendingPathComponent(CampaignConstants.Campaign.Rules.ASSETS_DIRECTORY)
+        let htmlDir = cachedDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER).appendingPathComponent(CampaignConstants.Campaign.Rules.ASSETS_DIRECTORY)
         // clear cached html
         clearContentsOf(htmlDir)
         let details = ["html": "fullscreenIam.html", "template": "fullscreen"]
@@ -241,7 +241,7 @@ class CampaignFullscreenMessageTests: XCTestCase {
             XCTFail("no html payload found")
             return
         }
-        XCTAssertTrue(payload.contains("/Caches/messages/20761932/httpsimagescomimagejpg"))
+        XCTAssertTrue(payload.contains("/Caches/\(CampaignConstants.RulesDownloaderConstants.MESSAGE_CACHE_FOLDER)/20761932/httpsimagescomimagejpg"))
         let messageTriggeredEvent = dispatchedEvents[0]
         let messageParameters = ["event": messageTriggeredEvent as Any, "actionType": "triggered", "size": 2]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)

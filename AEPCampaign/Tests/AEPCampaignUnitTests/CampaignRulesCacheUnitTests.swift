@@ -158,7 +158,7 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         guard let cacheDir = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
             return
         }
-        let cachedAssetsUrl = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY)
+        let cachedAssetsUrl = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER)
         try? fileManager.createDirectory(at: cachedAssetsUrl, withIntermediateDirectories: true, attributes: nil)
         let assetsDirectoryCreated = fileManager.fileExists(atPath: cachedAssetsUrl.absoluteString)
 

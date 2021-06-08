@@ -39,7 +39,7 @@ struct CampaignMessageAssetsCache {
         let assetToRetainAlphaNumeric = assetsToRetain.map { url in
             url.absoluteString.alphanumeric
         }
-        clearCachedAssetsNotInList(filesToRetain: assetToRetainAlphaNumeric, pathRelativeToCacheDir: "\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)")
+        clearCachedAssetsNotInList(filesToRetain: assetToRetainAlphaNumeric, pathRelativeToCacheDir: "\(CampaignConstants.RulesDownloaderConstants.MESSAGE_CACHE_FOLDER)/\(messageId)")
         downloadAssets(urls: assetsToRetain, messageId: messageId)
     }
 
@@ -99,7 +99,7 @@ struct CampaignMessageAssetsCache {
             Log.debug(label: LOG_PREFIX, "\(#function) - \(#function) - Failed to retrieve cache directory URL.")
             return nil
         }
-        cacheUrl.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)/")
+        cacheUrl.appendPathComponent("\(CampaignConstants.RulesDownloaderConstants.MESSAGE_CACHE_FOLDER)/\(messageId)/")
         let cachePath = cacheUrl.path
         guard !fileManager.fileExists(atPath: cachePath) else {
             Log.trace(label: LOG_PREFIX, "\(#function) - Assets cache directory for message \(messageId) already exists.")

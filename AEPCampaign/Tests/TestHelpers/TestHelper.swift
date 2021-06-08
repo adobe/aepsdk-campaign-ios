@@ -131,7 +131,7 @@ extension XCTestCase {
             return
         }
         let expectedUrl = url.alphanumeric
-        cacheDir.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/56785213/\(expectedUrl)")
+        cacheDir.appendPathComponent("\(CampaignConstants.RulesDownloaderConstants.MESSAGE_CACHE_FOLDER)/56785213/\(expectedUrl)")
         if !fileManager.fileExists(atPath: cacheDir.path) {
             XCTFail("the cached message asset does not exist.")
             return

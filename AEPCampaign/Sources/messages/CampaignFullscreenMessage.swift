@@ -209,7 +209,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
                     Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace assets, the message cache directory does not exist.")
                     return nil
                 }
-                cacheDir.appendPathComponent("\(CampaignConstants.Campaign.MESSAGE_CACHE_FOLDER)/\(messageId)/\(url.absoluteString.alphanumeric)")
+                cacheDir.appendPathComponent("\(CampaignConstants.RulesDownloaderConstants.MESSAGE_CACHE_FOLDER)/\(messageId)/\(url.absoluteString.alphanumeric)")
                 if !fileManager.fileExists(atPath: cacheDir.path) {
                     Log.debug(label: Self.LOG_TAG, "\(#function) - Cannot replace asset, no cached image is present for \(asset)")
                     continue
@@ -239,7 +239,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         guard let cacheDir = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else {
             return nil
         }
-        let htmlInAssets = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_DIRECTORY).appendingPathComponent(CampaignConstants.RulesDownloaderConstants.ASSETS_DIR_NAME).appendingPathComponent(fileName)
+        let htmlInAssets = cacheDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER).appendingPathComponent(CampaignConstants.RulesDownloaderConstants.ASSETS_DIR_NAME).appendingPathComponent(fileName)
         guard let htmlFile = try? String(contentsOf: htmlInAssets) else {
             return nil
         }

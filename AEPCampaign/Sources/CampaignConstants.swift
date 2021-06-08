@@ -10,8 +10,6 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
-
 enum CampaignConstants {
     static let EXTENSION_NAME                           = "com.adobe.module.campaign"
     static let FRIENDLY_NAME                            = "Campaign"
@@ -20,7 +18,6 @@ enum CampaignConstants {
     static let LOG_TAG                                  = FRIENDLY_NAME
 
     enum Campaign {
-        static let MESSAGE_CACHE_FOLDER = "messages"
         static let IAM_CONSEQUENCE_TYPE = "iam"
         static let LINKAGE_FIELD_NETWORK_HEADER = "X-InApp-Auth"
         static let DEFAULT_TIMEOUT = 5
@@ -76,7 +73,6 @@ enum CampaignConstants {
         }
 
         enum Rules {
-            static let CACHE_FOLDER = "campaignRules"
             static let JSON_KEY = "rules"
             static let JSON_FILE_NAME = "rules.json"
             static let JSON_CONDITION_KEY = "condition"
@@ -161,7 +157,9 @@ enum CampaignConstants {
         static let RULES_CACHE_NAME = "campaign.rules.cache"
         static let RULES_ZIP_FILE_NAME = "rules.zip"
         static let RULES_TEMP_DIR = "com.adobe.rules.campaign" //A temp folder where Campaign rules.zip is downloaded
-        static let RULES_CACHE_DIRECTORY = "campaignrules" //Cache folder contains Campaign rules assets
+        static let CAMPAIGN_CACHE = "campaign"
+        static let RULES_CACHE_FOLDER = "\(CAMPAIGN_CACHE)/campaignrules"
+        static let MESSAGE_CACHE_FOLDER = "\(CAMPAIGN_CACHE)/messages"
         static let ASSETS_DIR_NAME = "assets"
         enum Keys {
             static let RULES_CACHE_PREFIX = "cached.campaignrules."
