@@ -30,6 +30,9 @@ struct LocalNotificationMessage: CampaignMessaging {
     private var fireDate: TimeInterval?
     private var title: String?
 
+    // unused
+    internal var onFullscreenDismissed: (() -> Void)?
+
     /// LocalNotification struct initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
     ///    - consequence: `RuleConsequence` containing a Message-defining payload

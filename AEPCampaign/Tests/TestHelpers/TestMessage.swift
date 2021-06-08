@@ -17,6 +17,7 @@ import AEPServices
 /// TestMessage struct for testing the CampaignMessaging Protocol's default implementation
 struct TestMessage: CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher?
+    var onFullscreenDismissed: (() -> Void)?
     var consequence: RuleConsequence
     var messageId: String?
     var state: CampaignState?

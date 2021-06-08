@@ -18,6 +18,7 @@ import AEPServices
 protocol CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher? {get set}
     var messageId: String? {get set}
+    var onFullscreenDismissed: (() -> Void)? {get set}
 
     /// Implemented by the Message subclass to create a Campaign Message object.
     ///  - Parameters:

@@ -279,6 +279,10 @@ public class Campaign: NSObject, Extension {
         campaignRulesCache.deleteCachedRules(url: storedRulesUrl)
         state.removeRuleUrlFromDatastore()
     }
+
+    private func cleanFullscreenMessage() {
+        fullscreenMessage = nil
+    }
 }
 
 // MARK: Functions to show IAMs
@@ -301,8 +305,9 @@ private extension Campaign {
             Log.debug(label: self.LOG_TAG, "\(#function) - Unable to show Fullscreen IAM for consequence '\(consequence.id)'. Message created was nil.")
             return
         }
-        self.fullscreenMessage = message
-        self.fullscreenMessage?.showMessage()
+        fullscreenMessage = message
+        fullscreenMessage?.onFullscreenDismissed = self.cleanFullscreenMessage
+        fullscreenMessage?.showMessage()
     }
 
     /// Triggers the local notification IAM

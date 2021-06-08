@@ -32,6 +32,9 @@ struct AlertMessage: CampaignMessaging {
         static var uiAlertController: UIAlertController?
     #endif
 
+    // unused
+    internal var onFullscreenDismissed: (() -> Void)?
+
     /// AlertMessage struct initializer. It is accessed via the `createMessageObject` method.
     ///  - Parameters:
     ///    - consequence: `RuleConsequence` containing a Message-defining payload
