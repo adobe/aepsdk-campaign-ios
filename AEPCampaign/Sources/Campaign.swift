@@ -29,7 +29,7 @@ public class Campaign: NSObject, Extension {
     private var hasToDownloadRules = false
     var rulesEngine: LaunchRulesEngine
     private var linkageFields: String?
-    private var fullscreenMessage: CampaignMessaging?
+    private var fullscreenMessage: CampaignFullscreenMessage?
 
     private let dependencies: [String] = [
         CampaignConstants.Configuration.EXTENSION_NAME,
@@ -306,8 +306,8 @@ private extension Campaign {
             Log.debug(label: self.LOG_TAG, "\(#function) - Unable to show Fullscreen IAM for consequence '\(consequence.id)'. Message created was nil.")
             return
         }
-        fullscreenMessage = message
-        fullscreenMessage?.onFullscreenDismissed = self.cleanFullscreenMessage
+        fullscreenMessage = message as? CampaignFullscreenMessage
+        fullscreenMessage?.onFullscreenMessageDismissed = self.cleanFullscreenMessage
         fullscreenMessage?.showMessage()
     }
 

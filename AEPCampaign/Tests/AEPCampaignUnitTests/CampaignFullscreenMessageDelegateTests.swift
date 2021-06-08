@@ -21,6 +21,7 @@ class CampaignFullscreenMessageDelegateTests: XCTestCase {
 
     var state: CampaignState!
     var dispatchedEvents: [Event] = []
+    var cleanFullscreenMessageCalled = false
     var mockFullscreenMessage: MockFullscreenMessage!
     var uiService: MockUIService!
     var rootViewController: UIViewController!
@@ -40,6 +41,9 @@ class CampaignFullscreenMessageDelegateTests: XCTestCase {
         campaignFullscreenMessageDelegate = CampaignFullscreenMessage.createMessageObject(consequence: fullscreenConsequence, state: state, eventDispatcher: { name, type, source, data in
             self.dispatchedEvents.append(Event(name: name, type: type, source: source, data: data))
         }) as? CampaignFullscreenMessage
+        campaignFullscreenMessageDelegate.onFullscreenMessageDismissed = {
+            self.cleanFullscreenMessageCalled = true
+        }
         mockFullscreenMessage = MockFullscreenMessage(payload: mockHtmlString, listener: campaignFullscreenMessageDelegate, isLocalImageUsed: false, messageMonitor: MessageMonitor())
     }
 
@@ -58,6 +62,16 @@ class CampaignFullscreenMessageDelegateTests: XCTestCase {
         state.update(dataMap: dataMap)
     }
 
+    func testOnShow() {
+        // test
+        campaignFullscreenMessageDelegate.onShow(message: mockFullscreenMessage)
+        // verify
+        let messageDismissedEvent = dispatchedEvents[0]
+        let messageParameters = ["event": messageDismissedEvent as Any, "actionType": "triggered", "size": 2]
+        verifyCampaignResponseEvent(expectedParameters: messageParameters)
+        XCTAssertFalse(cleanFullscreenMessageCalled)
+    }
+
     func testOnDismiss() {
         // test
         campaignFullscreenMessageDelegate.onDismiss(message: mockFullscreenMessage)
@@ -65,6 +79,7 @@ class CampaignFullscreenMessageDelegateTests: XCTestCase {
         let messageDismissedEvent = dispatchedEvents[0]
         let messageParameters = ["event": messageDismissedEvent as Any, "actionType": "viewed", "size": 2]
         verifyCampaignResponseEvent(expectedParameters: messageParameters)
+        XCTAssertTrue(cleanFullscreenMessageCalled)
     }
 
     func testOverrideUrlLoadConfirmPressed() {
