@@ -29,6 +29,7 @@ public class Campaign: NSObject, Extension {
     private var hasToDownloadRules = false
     var rulesEngine: LaunchRulesEngine
     private var linkageFields: String?
+    private var fullscreenMessage: CampaignFullscreenMessage?
 
     private let dependencies: [String] = [
         CampaignConstants.Configuration.EXTENSION_NAME,
@@ -278,6 +279,11 @@ public class Campaign: NSObject, Extension {
         campaignRulesCache.deleteCachedRules(url: storedRulesUrl)
         state.removeRuleUrlFromDatastore()
     }
+
+    /// Helper function to clean the CampaignFullscreenMessage object when the fullscreen message has been dismissed.
+    private func cleanFullscreenMessage() {
+        fullscreenMessage = nil
+    }
 }
 
 // MARK: Functions to show IAMs
@@ -300,8 +306,9 @@ private extension Campaign {
             Log.debug(label: self.LOG_TAG, "\(#function) - Unable to show Fullscreen IAM for consequence '\(consequence.id)'. Message created was nil.")
             return
         }
-        message.showMessage()
-
+        fullscreenMessage = message as? CampaignFullscreenMessage
+        fullscreenMessage?.onFullscreenMessageDismissed = self.cleanFullscreenMessage
+        fullscreenMessage?.showMessage()
     }
 
     /// Triggers the local notification IAM

@@ -21,13 +21,12 @@ class CampaignFullscreenMessage: CampaignMessaging {
     var eventDispatcher: Campaign.EventDispatcher?
     var messageId: String?
 
-    weak var fullscreenMessageDelegate: FullscreenMessageDelegate?
-
     private var state: CampaignState?
     private var html: String?
     private var extractedAssets: [[String]]?
     private var isUsingLocalImage = false
     private var fullscreenMessagePresentable: FullscreenPresentable?
+    var onFullscreenMessageDismissed: (() -> Void)?
 
     #if DEBUG
         // var for unit testing
@@ -82,7 +81,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         #if DEBUG
             self.htmlPayload = finalHtml
         #endif
-        self.fullscreenMessagePresentable = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self.fullscreenMessageDelegate ?? self, isLocalImageUsed: false)
+        self.fullscreenMessagePresentable = ServiceProvider.shared.uiService.createFullscreenMessage(payload: finalHtml, listener: self, isLocalImageUsed: false)
         self.fullscreenMessagePresentable?.show()
     }
 

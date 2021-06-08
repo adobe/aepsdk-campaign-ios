@@ -28,6 +28,7 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
     func onDismiss(message: FullscreenMessage) {
         Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Fullscreen on dismiss callback received.")
         viewed()
+        onFullscreenMessageDismissed?()
     }
 
     /// Invoked when a Campaign Fullscreen Message is attempting to load a URL.
@@ -87,10 +88,12 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
             processMessageInteraction(query: messageData)
         }
         message.dismiss()
+        onFullscreenMessageDismissed?()
         return true
     }
 
     func onShowFailure() {
         Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Fullscreen message failed to show.")
+        onFullscreenMessageDismissed?()
     }
 }
