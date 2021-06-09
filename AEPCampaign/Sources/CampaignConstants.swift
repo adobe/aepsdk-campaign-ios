@@ -10,6 +10,8 @@
  governing permissions and limitations under the License.
  */
 
+import Foundation
+
 enum CampaignConstants {
     static let EXTENSION_NAME                           = "com.adobe.module.campaign"
     static let FRIENDLY_NAME                            = "Campaign"
