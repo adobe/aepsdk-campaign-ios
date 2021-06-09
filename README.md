@@ -58,13 +58,13 @@ To add the AEPCampaign Package to your application, from the Xcode menu select:
 
 Enter the URL for the AEPCampaign package repository: `https://github.com/adobe/aepsdk-campaign-ios.git`.
 
-When prompted, make sure you change the branch to `3.0.0`.
+When prompted, make sure you change the version to `3.0.0`.
 
 Alternatively, if your project has a `Package.swift` file, you can add AEPCampaign directly to your dependencies:
 
 ```
 dependencies: [
-    .package(url: "https://github.com/adobe/aepsdk-campaign-ios.git", .branch("main"))
+    .package(url: "https://github.com/adobe/aepsdk-campaign-ios.git", from: "3.0.0")
 ]
 ```
 
