@@ -24,7 +24,7 @@ echo "Target version - ${BLUE}$1${NC}"
 echo "------------------AEPCampaign-------------------"
 PODSPEC_VERSION_IN_AEPCampaign=$(pod ipc spec ./AEPCampaign.podspec | jq '.version' | tr -d '"')
 echo "Local podspec version - ${BLUE}${PODSPEC_VERSION_IN_AEPCampaign}${NC}"
-SOURCE_CODE_VERSION_IN_AEPACampaign=$(cat ./AEPCampaign/Sources/CampaignConstants.swift | egrep '\s*EXTENSION_VERSION\s*=\s*\"(.*)\"' | ruby -e "puts gets.scan(/\"(.*)\"/)[0] " | tr -d '"')
+SOURCE_CODE_VERSION_IN_AEPCampaign=$(cat ./AEPCampaign/Sources/CampaignConstants.swift | egrep '\s*EXTENSION_VERSION\s*=\s*\"(.*)\"' | ruby -e "puts gets.scan(/\"(.*)\"/)[0] " | tr -d '"')
 echo "Source code version - ${BLUE}${SOURCE_CODE_VERSION_IN_AEPCampaign}${NC}"
 
 if [[ "$1" == "$PODSPEC_VERSION_IN_AEPCampaign" ]] && [[ "$1" == "$SOURCE_CODE_VERSION_IN_AEPCampaign" ]]; then

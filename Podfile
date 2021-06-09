@@ -21,7 +21,7 @@ def assurance
 end
 
 def user_profile
-   pod 'AEPUserProfile', :git => 'git@github.com:adobe/aepsdk-userprofile-ios.git', :branch => 'dev-v3.0.0'
+   pod 'AEPUserProfile', :git => 'git@github.com:adobe/aepsdk-userprofile-ios.git', :branch => 'main'
 end
 
 def places

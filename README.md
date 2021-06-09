@@ -1,11 +1,11 @@
 # Adobe Experience Platform Campaign SDK
 
-<!---[![Cocoapods](https://img.shields.io/cocoapods/v/AEPCampaign.svg?color=orange&label=AEPCampaign&logo=apple&logoColor=white)](https://cocoapods.org/pods/AEPCampaign)
+[![Cocoapods](https://img.shields.io/cocoapods/v/AEPCampaign.svg?color=orange&label=AEPCampaign&logo=apple&logoColor=white)](https://cocoapods.org/pods/AEPCampaign)
 
 [![SPM](https://img.shields.io/badge/SPM-Supported-orange.svg?logo=apple&logoColor=white)](https://swift.org/package-manager/)
 [![CircleCI](https://img.shields.io/circleci/project/github/adobe/aepsdk-campaign-ios/main.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/aepsdk-campaign-ios)
 [![Code Coverage](https://img.shields.io/codecov/c/github/adobe/aepsdk-campaign-ios/main.svg?logo=codecov)](https://codecov.io/gh/adobe/aepsdk-campaign-ios/branch/main)
-uncomment the badges once the repo is public -->
+
 ## About this project
 
 The AEPCampaign extension represents the Campaign Standard Adobe Experience Platform SDK that is required for registering mobile devices with your Campaign instance as well as creating in-app messages for your mobile app. The extension also enables the setting of linkage fields for use in creating personalized in-app messages.
@@ -58,19 +58,13 @@ To add the AEPCampaign Package to your application, from the Xcode menu select:
 
 Enter the URL for the AEPCampaign package repository: `https://github.com/adobe/aepsdk-campaign-ios.git`.
 
-When prompted, make sure you change the branch to `main`. (Once the repo is public, we will reference specific tags/versions instead of a branch)
-
-There are three options for selecting your dependencies as identified by the *suffix* of the library name:
-
-- "Dynamic" - the library will be linked dynamically
-- "Static" - the library will be linked statically
-- *(none)* - (default) SPM will determine whether the library will be linked dynamically or statically
+When prompted, make sure you change the version to `3.0.0`.
 
 Alternatively, if your project has a `Package.swift` file, you can add AEPCampaign directly to your dependencies:
 
 ```
 dependencies: [
-    .package(url: "https://github.com/adobe/aepsdk-campaign-ios.git", .branch("main"))
+    .package(url: "https://github.com/adobe/aepsdk-campaign-ios.git", from: "3.0.0")
 ]
 ```
 
