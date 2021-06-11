@@ -35,7 +35,7 @@ The class name containing public APIs is different depending on which SDK and la
 
 **AEPCampaign (Objective-C)**
 ```objc
-+ (nonnull NSString*) extensionVersion;
++ (NSString* _NonNull) extensionVersion;
 ```
 
 **AEPCampaign (Swift)**
@@ -102,7 +102,7 @@ static func resetLinkageFields()
 
 **AEPCampaign (Objective-C)**
 ```objc
-+ (void) setLinkageFields: (nonnull NSDictionary<NSString*, NSString*>*) linkageFields;
++ (void) setLinkageFields: (NSDictionary<NSString*, NSString*>* _NonNull);
 ```
 
 **AEPCampaign (Swift)**
