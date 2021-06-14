@@ -21,7 +21,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "AEPCore", url: "https://github.com/adobe/aepsdk-core-ios.git", .branch( "main")),
-        .package(name: "AEPRulesEngine", url: "https://github.com/adobe/aepsdk-rulesengine-ios.git", .branch("dev-v1.0.2")),
+        .package(name: "AEPRulesEngine", url: "https://github.com/adobe/aepsdk-rulesengine-ios.git", .branch("main")),
     ],
     targets: [
         .target(name: "AEPCampaign",

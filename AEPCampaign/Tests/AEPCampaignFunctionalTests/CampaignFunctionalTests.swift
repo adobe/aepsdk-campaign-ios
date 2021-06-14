@@ -250,7 +250,7 @@ class CampaignFunctionalTests: XCTestCase {
             "key2": "value2",
             "key3": "value3"
         ]
-        Campaign.setLinkageFields(linkageFields: linkageFields)
+        Campaign.setLinkageFields(linkageFields)
         sleep(1)
 
         // verify
@@ -278,7 +278,7 @@ class CampaignFunctionalTests: XCTestCase {
             "key2": "value2",
             "key3": "value3"
         ]
-        Campaign.setLinkageFields(linkageFields: linkageFields)
+        Campaign.setLinkageFields(linkageFields)
         sleep(1)
         Campaign.resetLinkageFields()
         sleep(1)
@@ -306,7 +306,7 @@ class CampaignFunctionalTests: XCTestCase {
 
         // test
         let linkageFields = [String: String]()
-        Campaign.setLinkageFields(linkageFields: linkageFields)
+        Campaign.setLinkageFields(linkageFields)
         sleep(1)
 
         // verify
@@ -332,7 +332,7 @@ class CampaignFunctionalTests: XCTestCase {
             "key2": "value2",
             "key3": "value3"
         ]
-        Campaign.setLinkageFields(linkageFields: linkageFields)
+        Campaign.setLinkageFields(linkageFields)
         sleep(1)
 
         // verify
@@ -349,7 +349,7 @@ class CampaignFunctionalTests: XCTestCase {
 
         // test
         let linkageFields = [:] as [String: String]
-        Campaign.setLinkageFields(linkageFields: linkageFields)
+        Campaign.setLinkageFields(linkageFields)
         sleep(1)
 
         // verify
@@ -373,7 +373,7 @@ class CampaignFunctionalTests: XCTestCase {
             "key2": "value2",
             "key3": "value3"
         ]
-        Campaign.setLinkageFields(linkageFields: linkageFields)
+        Campaign.setLinkageFields(linkageFields)
         sleep(1)
         MobileCore.setPrivacyStatus(.optedOut)
         sleep(1)

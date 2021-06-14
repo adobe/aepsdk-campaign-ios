@@ -38,7 +38,7 @@ DEPENDENCIES:
   - "AEPRulesEngine (from `git@github.com:adobe/aepsdk-rulesengine-ios.git`)"
   - "AEPServices (from `git@github.com:adobe/aepsdk-core-ios.git`)"
   - "AEPSignal (from `git@github.com:adobe/aepsdk-core-ios.git`)"
-  - "AEPUserProfile (from `git@github.com:adobe/aepsdk-userprofile-ios.git`, branch `dev-v3.0.0`)"
+  - "AEPUserProfile (from `git@github.com:adobe/aepsdk-userprofile-ios.git`, branch `main`)"
 
 SPEC REPOS:
   trunk:
@@ -64,7 +64,7 @@ EXTERNAL SOURCES:
   AEPSignal:
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPUserProfile:
-    :branch: dev-v3.0.0
+    :branch: main
     :git: "git@github.com:adobe/aepsdk-userprofile-ios.git"
 
 CHECKOUT OPTIONS:
@@ -93,7 +93,7 @@ CHECKOUT OPTIONS:
     :commit: 1ca8d8ed0dee38dbd8a00b08b236fad027cd3620
     :git: "git@github.com:adobe/aepsdk-core-ios.git"
   AEPUserProfile:
-    :commit: c7473e499f8fb1701c0f34aa1d6ea5f65172b639
+    :commit: 77d7cfaeb994f22b30a2888e3672476763aa0a6c
     :git: "git@github.com:adobe/aepsdk-userprofile-ios.git"
 
 SPEC CHECKSUMS:
@@ -108,6 +108,6 @@ SPEC CHECKSUMS:
   AEPSignal: b066f0f9a31dda84791451db9e54b1c648607092
   AEPUserProfile: d8702b2e3fc321febdc3854208db9bb1ad3b61c8
 
-PODFILE CHECKSUM: c533b93289ee23f82a04f0b38bb072b2ecf52f50
+PODFILE CHECKSUM: ef203111b0ad8a19ffdbbb26e0584d1bdeebbd59
 
 COCOAPODS: 1.10.1
