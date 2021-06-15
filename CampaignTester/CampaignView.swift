@@ -226,6 +226,10 @@ struct CampaignView: View {
                     Text("Places Testing").bold()
                     Button(action: {
                         // adobe san jose
+                        let location = CLLocation(latitude: 37.3267956, longitude: -121.921026)
+                        Places.getNearbyPointsOfInterest(forLocation: location, withLimit: 10) { (nearbyPois, responseCode) in
+                            print("responseCode: \(responseCode.rawValue) \nearbyPois: \(nearbyPois)")
+                        }
                         let region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 37.3267956, longitude: -121.921026), radius: 100, identifier: "52623e65-0386-42f5-86fd-2671dd12bf27")
 
                         Places.processRegionEvent(.entry, forRegion: region)
