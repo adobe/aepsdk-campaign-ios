@@ -264,7 +264,7 @@ struct CampaignView: View {
     func setLinkageFieldsAndUpdateAcsSubscriber() {
         // build user login data dictionary
         var loginData = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email]
-        Campaign.setLinkageFields(linkageFields: loginData)
+        Campaign.setLinkageFields(loginData)
         loginData["triggerKey"] = "collectPIIIOS"
         // update ACS subscriber table with login data
         MobileCore.collectPii(loginData)
