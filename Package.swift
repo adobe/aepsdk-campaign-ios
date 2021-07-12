@@ -20,15 +20,12 @@ let package = Package(
         .library(name: "AEPCampaign", targets: ["AEPCampaign"])
     ],
     dependencies: [
-        .package(name: "AEPCore", url: "https://github.com/adobe/aepsdk-core-ios.git", .branch( "main")),
-        .package(name: "AEPRulesEngine", url: "https://github.com/adobe/aepsdk-rulesengine-ios.git", .branch("dev-v1.0.2")),
+        .package(name: "AEPCore", url: "https://github.com/adobe/aepsdk-core-ios.git", .upToNextMajor(from: "3.2.0")),
+        .package(name: "AEPRulesEngine", url: "https://github.com/adobe/aepsdk-rulesengine-ios.git", .upToNextMajor(from: "1.0.1")),
     ],
     targets: [
         .target(name: "AEPCampaign",
                 dependencies: ["AEPCore", "AEPRulesEngine", .product(name: "AEPServices", package: "AEPCore"), .product(name: "AEPIdentity", package: "AEPCore")],
-                path: "AEPCampaign/Sources"),
-        .target(name: "AEPCampaignTests",
-                dependencies: ["AEPCampaign", "AEPCore", "AEPRulesEngine", .product(name: "AEPServices", package: "AEPCore"), .product(name: "AEPIdentity", package: "AEPCore")],
-                path: "AEPCampaign/Tests"),
+                path: "AEPCampaign/Sources")
     ]
 )
