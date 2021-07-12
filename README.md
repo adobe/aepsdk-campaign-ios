@@ -62,9 +62,14 @@ When prompted, make sure you change the version to `3.0.0`.
 
 Alternatively, if your project has a `Package.swift` file, you can add AEPCampaign directly to your dependencies:
 
-```
+```swift
 dependencies: [
-    .package(url: "https://github.com/adobe/aepsdk-campaign-ios.git", from: "3.0.0")
+    .package(name: "AEPCampaign", url: "https://github.com/adobe/aepsdk-campaign-ios.git", .upToNextMajor(from: "3.0.0"))
+],
+targets: [
+    .target(name: "YourTarget",
+            dependencies: ["AEPCampaign"],
+            path: "your/path")
 ]
 ```
 
