@@ -3,6 +3,8 @@ use_frameworks!
 
 project 'AEPCampaign.xcodeproj'
 
+pod 'SwiftLint', '0.44.0'
+
 # POD groups
 
 def campaign_core_dependencies
