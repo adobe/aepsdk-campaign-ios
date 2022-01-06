@@ -10,10 +10,10 @@ IOS_ARCHIVE_PATH = ./build/ios.xcarchive/Products/Library/Frameworks/
 IOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios.xcarchive/dSYMs/
 
 lint-autocorrect:
- 	./Pods/SwiftLint/swiftlint autocorrect --format
+	./Pods/SwiftLint/swiftlint autocorrect --format
 
 lint:
- 	./Pods/SwiftLint/swiftlint lint
+	./Pods/SwiftLint/swiftlint lint
 
 setup:
 	(pod install)
