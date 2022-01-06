@@ -51,10 +51,10 @@ clean:
 	rm -rf ./build
 
 checkFormat:
-	swiftformat . --lint --swiftversion 5.2
+	swiftformat --lint AEPCampaign/Sources --swiftversion 5.2
 
 format:
-	swiftformat . --swiftversion 5.2
+	swiftformat AEPCampaign/Sources --swiftversion 5.2
 
 # release checks
 check-version:
