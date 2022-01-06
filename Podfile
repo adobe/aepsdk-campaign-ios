@@ -14,7 +14,7 @@ def campaign_core_dependencies
 end
 
 def rulesengine
-   pod 'AEPRulesEngine', :git => 'git@github.com:adobe/aepsdk-rulesengine-ios.git'
+   pod 'AEPRulesEngine'
 end
 
 def assurance

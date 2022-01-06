@@ -26,7 +26,7 @@ import AEPServices
     ///If the current SDK privacy status is not OPT_IN, no rules download happens.
     /// - Parameters linkageFields: The Linkage fields key value pairs.
     @objc (setLinkageFields:)
-    static func setLinkageFields(linkageFields: [String: String]) {
+    static func setLinkageFields(_ linkageFields: [String: String]) {
         guard !linkageFields.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to set the linkage fields. The passed in linkage fields dictionary is empty.")
             return
