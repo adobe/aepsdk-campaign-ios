@@ -160,7 +160,7 @@ extension XCTestCase {
 
     func verifyMessageTrackRequest(request: NetworkRequest, ecid: String, interactionType: String) {
         let url = request.url.absoluteString
-        XCTAssertEqual(url, "https://prod.campaign.adobe.com/r?id=h153d80,b670ea,\(interactionType)&mcId=\(ecid)")
+        XCTAssertEqual(url, "https://prod.campaign.adobe.com/r/?id=h153d80,b670ea,\(interactionType)&mcId=\(ecid)")
     }
 }
 
