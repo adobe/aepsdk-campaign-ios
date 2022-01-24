@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 /*
  Copyright 2021 Adobe. All rights reserved.
@@ -20,15 +20,11 @@ let package = Package(
         .library(name: "AEPCampaign", targets: ["AEPCampaign"])
     ],
     dependencies: [
-        .package(name: "AEPCore", url: "https://github.com/adobe/aepsdk-core-ios.git", .upToNextMajor(from: "3.2.0")),
-        .package(name: "AEPRulesEngine", url: "https://github.com/adobe/aepsdk-rulesengine-ios.git", .upToNextMajor(from: "1.0.1")),
+        .package(url: "https://github.com/adobe/aepsdk-core-ios.git", .upToNextMajor(from: "3.2.0"))
     ],
     targets: [
         .target(name: "AEPCampaign",
-                dependencies: ["AEPCore", "AEPRulesEngine", .product(name: "AEPServices", package: "AEPCore"), .product(name: "AEPIdentity", package: "AEPCore")],
-                path: "AEPCampaign/Sources"),
-        .target(name: "AEPCampaignTests",
-                dependencies: ["AEPCampaign", "AEPCore", "AEPRulesEngine", .product(name: "AEPServices", package: "AEPCore"), .product(name: "AEPIdentity", package: "AEPCore")],
-                path: "AEPCampaign/Tests"),
+                dependencies: ["AEPCore", .product(name: "AEPServices", package: "AEPCore"), .product(name: "AEPIdentity", package: "AEPCore")],
+                path: "AEPCampaign/Sources")
     ]
 )
