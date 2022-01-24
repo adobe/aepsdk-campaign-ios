@@ -71,7 +71,7 @@ jobs:
 
       - run:
           name: Swift Formating
-          command: swiftformat . --lint --swiftversion 5.2
+          command: swiftformat --lint AEPCampaign/Sources --swiftversion 5.2
 
       # pre-start the simulator to prevent timeouts
       - run:
