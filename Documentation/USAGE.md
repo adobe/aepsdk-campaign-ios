@@ -106,12 +106,12 @@ The set linkage fields are stored as a base64 encoded JSON string in memory and 
 
 **Signature**
 ```swift
-static func setLinkageFields(linkageFields: [String: String])
+static func setLinkageFields(_ linkageFields: [String: String])
 ```
 
 **Example Usage**
 ```swift
-Campaign.setLinkageFields(linkageFields: ["cusFirstName": "John", "cusLastName": "Doe", "cusEmail": "john.doe@email.com"])
+Campaign.setLinkageFields(["cusFirstName": "John", "cusLastName": "Doe", "cusEmail": "john.doe@email.com"])
 ```
 
 ##### Objective-C
