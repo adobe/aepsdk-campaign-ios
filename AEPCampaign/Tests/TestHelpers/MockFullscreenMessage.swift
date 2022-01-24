@@ -14,19 +14,6 @@ import Foundation
 @testable import AEPServices
 
 class MockFullscreenMessage: FullscreenMessage {
-    var messageMonitor: MessageMonitoring
-    var htmlPayload = ""
-
-    private var messagingDelegate: MessagingDelegate? {
-        return ServiceProvider.shared.messagingDelegate
-    }
-
-    override init(payload: String, listener: FullscreenMessageDelegate?, isLocalImageUsed: Bool, messageMonitor: MessageMonitoring) {
-        self.messageMonitor = messageMonitor
-        self.htmlPayload = payload
-        super.init(payload: payload, listener: listener, isLocalImageUsed: isLocalImageUsed, messageMonitor: self.messageMonitor)
-    }
-
     public override func show() {
         self.listener?.onShow(message: self)
         self.messagingDelegate?.onShow(message: self)

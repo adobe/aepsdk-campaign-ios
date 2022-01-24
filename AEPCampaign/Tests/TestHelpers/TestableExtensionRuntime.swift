@@ -10,12 +10,13 @@
  governing permissions and limitations under the License.
  */
 
+@testable import AEPCore
 import Foundation
 
-@testable import AEPCore
-
-class TestableExtensionRuntime: ExtensionRuntime {
-
+/// Testable implementation for `ExtensionRuntime`
+///
+/// Enable easy setup for the input and verification of the output of an extension
+public class TestableExtensionRuntime: ExtensionRuntime {
     public var listeners: [String: EventListener] = [:]
     public var dispatchedEvents: [Event] = []
     public var createdSharedStates: [[String: Any]?] = []
@@ -26,6 +27,7 @@ class TestableExtensionRuntime: ExtensionRuntime {
     public init() {}
 
     // MARK: - ExtensionRuntime methods implementation
+
     public func unregisterExtension() {
         // no-op
     }
@@ -48,26 +50,26 @@ class TestableExtensionRuntime: ExtensionRuntime {
         }
     }
 
-    public func getSharedState(extensionName: String, event: Event?, barrier: Bool) -> SharedStateResult? {
-        // if there is an shared state setup for the specific (extension, event id) pair, return it. Otherwise, return the shared state that is setup for the extension.
+    public func getSharedState(extensionName: String, event: Event?, barrier _: Bool) -> SharedStateResult? {
+        // if there is a shared state setup for the specific (extension, event id) pair, return it. Otherwise, return the shared state that is setup for the extension.
         if let id = event?.id {
             return mockedSharedStates["\(extensionName)-\(id)"] ?? mockedSharedStates["\(extensionName)"]
         }
         return mockedSharedStates["\(extensionName)"]
     }
 
-    public func createXDMSharedState(data: [String: Any], event: Event?) {
+    public func createXDMSharedState(data: [String: Any], event _: Event?) {
         createdXdmSharedStates += [data]
     }
 
-    public func createPendingXDMSharedState(event: Event?) -> SharedStateResolver {
+    public func createPendingXDMSharedState(event _: Event?) -> SharedStateResolver {
         return { data in
             self.createdXdmSharedStates += [data]
         }
     }
 
-    public func getXDMSharedState(extensionName: String, event: Event?, barrier: Bool = false) -> SharedStateResult? {
-        // if there is an shared state setup for the specific (extension, event id) pair, return it. Otherwise, return the shared state that is setup for the extension.
+    public func getXDMSharedState(extensionName: String, event: Event?, barrier _: Bool) -> SharedStateResult? {
+        // if there is a shared state setup for the specific (extension, event id) pair, return it. Otherwise, return the shared state that is setup for the extension.
         if let id = event?.id {
             return mockedXdmSharedStates["\(extensionName)-\(id)"] ?? mockedXdmSharedStates["\(extensionName)"]
         }
@@ -136,30 +138,8 @@ class TestableExtensionRuntime: ExtensionRuntime {
         createdSharedStates = []
         createdXdmSharedStates = []
     }
-}
 
-extension TestableExtensionRuntime {
-    public var firstEvent: Event? {
-        dispatchedEvents[0]
-    }
-
-    public var secondEvent: Event? {
-        dispatchedEvents[1]
-    }
-
-    public var thirdEvent: Event? {
-        dispatchedEvents[2]
-    }
-
-    public var firstSharedState: [String: Any]? {
-        createdSharedStates[0]
-    }
-
-    public var secondSharedState: [String: Any]? {
-        createdSharedStates[1]
-    }
-
-    public var thirdSharedState: [String: Any]? {
-        createdSharedStates[2]
+    public func getHistoricalEvents(_ requests: [EventHistoryRequest], enforceOrder: Bool, handler: @escaping ([EventHistoryResult]) -> Void) {
+        // no-op for ACS
     }
 }

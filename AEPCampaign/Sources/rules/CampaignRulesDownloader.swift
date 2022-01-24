@@ -14,10 +14,10 @@ import Foundation
 import AEPCore
 import AEPServices
 
-///The `CampaignRulesDownloader` is responsible for downloading rules from remote server/retrieve them from cache and loading them into `Rules Engine`.
+/// The `CampaignRulesDownloader` is responsible for downloading rules from remote server/retrieve them from cache and loading them into `Rules Engine`.
 struct CampaignRulesDownloader {
 
-    ///Represents possible error during Rules downloading and saving.
+    /// Represents possible error during Rules downloading and saving.
     enum RulesDownloaderError: Error {
         case unableToCreateTempDirectory
         case unableToStoreDataInTempDirectory
@@ -39,7 +39,7 @@ struct CampaignRulesDownloader {
         self.dispatchQueue = dispatchQueue
     }
 
-    ///Load the Cached Campaign rules into Rules engine.
+    /// Load the Cached Campaign rules into Rules engine.
     /// - Parameter rulesUrlString: The String representation of the URL used for downloading the rules.
     func loadRulesFromCache(rulesUrlString: String) {
         guard let cachedRules = campaignRulesCache.getCachedRules(rulesUrl: rulesUrlString) else {
@@ -54,7 +54,7 @@ struct CampaignRulesDownloader {
         }
     }
 
-    ///Download the Campaign rules from the passed `rulesUrl`, caches them and load them into the Rules engine.
+    /// Download the Campaign rules from the passed `rulesUrl`, caches them and load them into the Rules engine.
     /// - Parameters:
     ///   - rulesUrl: The `URL` for downloading the Campaign rules.
     ///   - linkageFieldHeaders: The header with `linkageField` value
@@ -117,7 +117,7 @@ struct CampaignRulesDownloader {
         }
     }
 
-    ///Called after downloading the Campaign rules or reading cached rules. Loads the rules into rules engine.
+    /// Called after downloading the Campaign rules or reading cached rules. Loads the rules into rules engine.
     private func parseRulesDataAndLoadRules(data: Data) -> [LaunchRule]? {
         if let rules = JSONRulesParser.parse(data) {
             rulesEngine.replaceRules(with: rules)
@@ -127,7 +127,7 @@ struct CampaignRulesDownloader {
         return nil
     }
 
-    ///Downloads the Assets for fullscreen IAM
+    /// Downloads the Assets for fullscreen IAM
     private func downloadFullscreenIAMAssets(rules: [LaunchRule]) {
         guard let campaignMessageAssetsCache = campaignMessageAssetsCache else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to cache Message Assets. CampaignMessageAssetsCache is nil.")
@@ -192,7 +192,7 @@ struct CampaignRulesDownloader {
 
 private extension RuleConsequence {
 
-    ///Determines if the RuleConsequence have assets to download
+    /// Determines if the RuleConsequence have assets to download
     /// - Returns true if there are assets for downloading
     func hasAssetsToDownload() -> Bool {
         guard type == CampaignConstants.Campaign.IAM_CONSEQUENCE_TYPE else {
@@ -210,7 +210,7 @@ private extension RuleConsequence {
         return true
     }
 
-    ///Parses the value for `assets` key in Rule Consequence and return an array of assets URL that need to be cached.
+    /// Parses the value for `assets` key in Rule Consequence and return an array of assets URL that need to be cached.
     /// - Returns An array of assets URL that need to be downloaded and cached
     func createAssetUrlArray() -> [String]? {
         guard let assetsArray = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.REMOTE_ASSETS] as? [[String]]  else {

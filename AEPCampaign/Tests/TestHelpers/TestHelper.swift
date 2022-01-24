@@ -165,7 +165,7 @@ extension XCTestCase {
 }
 
 extension String {
-    ///Removes non alphanumeric character from `String`
+    /// Removes non alphanumeric character from `String`
     var alphanumeric: String {
         return components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
     }

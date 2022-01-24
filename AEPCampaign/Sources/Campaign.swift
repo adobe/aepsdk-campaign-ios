@@ -53,7 +53,7 @@ public class Campaign: NSObject, Extension {
         registerListener(type: EventType.configuration, source: EventSource.responseContent, listener: handleConfigurationEvents)
         registerListener(type: EventType.genericData, source: EventSource.os, listener: handleGenericDataEvents)
         registerListener(type: EventType.hub, source: EventSource.sharedState, listener: handleHubSharedState(event:))
-        //The wildcard listener for Rules Engine Processing
+        // The wildcard listener for Rules Engine Processing
         registerListener(type: EventType.wildcard, source: EventSource.wildcard, listener: handleWildCardEvents)
         registerListener(type: EventType.rulesEngine, source: EventSource.responseContent, listener: handleRulesEngineResponseEvent)
     }
@@ -135,7 +135,7 @@ public class Campaign: NSObject, Extension {
         }
     }
 
-    ///Handles `Configuration Response` events
+    /// Handles `Configuration Response` events
     private func handleConfigurationEvents(event: Event) {
         Log.trace(label: self.LOG_TAG, "An event of type '\(event.type)' has been received.")
         dispatchQueue.async { [weak self] in
@@ -152,13 +152,13 @@ public class Campaign: NSObject, Extension {
                 self.hasToDownloadRules = false
                 self.triggerRulesDownload()
             } else {
-                //Cannot download rules now. Most probably because Identity shared state hasn't received yet and we don't have ECID. Will try to download rules after receiving Identity shared state.
+                // Cannot download rules now. Most probably because Identity shared state hasn't received yet and we don't have ECID. Will try to download rules after receiving Identity shared state.
                 self.hasToDownloadRules = true
             }
         }
     }
 
-    ///Handles `Identity` shared state updates
+    /// Handles `Identity` shared state updates
     private func handleHubSharedState(event: Event) {
         guard let stateOwner = event.data?[CampaignConstants.EventDataKeys.STATE_OWNER] as? String, stateOwner == CampaignConstants.Identity.EXTENSION_NAME else {
             return
@@ -197,7 +197,7 @@ public class Campaign: NSObject, Extension {
         dispatch(event: event)
     }
 
-    ///Updates the `CampaignState` with the shared state of other required extensions
+    /// Updates the `CampaignState` with the shared state of other required extensions
     private func updateCampaignState(event: Event) {
         var sharedStates = [String: [String: Any]?]()
         for extensionName in dependencies {
@@ -206,18 +206,18 @@ public class Campaign: NSObject, Extension {
         state.update(dataMap: sharedStates)
     }
 
-    ///Handles the Privacy opt-out. The function takes the following actions to process privacy opt-out
-    ///1). Reset linkage field to empty string
-    ///2). Remove all the registered rules
-    ///3). Deletes all the cached Assets for the rules
-    ///4). Remove rules URL from data store
+    /// Handles the Privacy opt-out. The function takes the following actions to process privacy opt-out
+    /// 1). Reset linkage field to empty string
+    /// 2). Remove all the registered rules
+    /// 3). Deletes all the cached Assets for the rules
+    /// 4). Remove rules URL from data store
     private func handlePrivacyOptOut() {
         Log.debug(label: LOG_TAG, "\(#function) - Process the Privacy opt-out")
         resetRules()
         state.removeRuleUrlFromDatastore()
     }
 
-    ///Triggers the rules download and if successful, caches the downloaded rules.
+    /// Triggers the rules download and if successful, caches the downloaded rules.
     private func triggerRulesDownload() {
         guard let url = self.state.campaignRulesDownloadUrl else {
             Log.warning(label: self.LOG_TAG, "\(#function) - Unable to download Campaign Rules. URL is nil. Cached rules will be used if present.")
@@ -233,7 +233,7 @@ public class Campaign: NSObject, Extension {
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
     }
 
-    ///Loads the Cached Campaign rules on receiving the Configuration event first time.
+    /// Loads the Cached Campaign rules on receiving the Configuration event first time.
     private func loadCachedRules() {
         if !hasCachedRulesLoaded {
             Log.trace(label: LOG_TAG, "\(#function) - Attempting to load the Cached Campaign Rules.")
@@ -248,7 +248,7 @@ public class Campaign: NSObject, Extension {
         }
     }
 
-    ///Extracts the Linkage Fields from the event Data
+    /// Extracts the Linkage Fields from the event Data
     private func extractLinkageFields(event: Event) -> Bool {
         guard let linkageFields = event.linkageFields else {
             return false
@@ -257,7 +257,7 @@ public class Campaign: NSObject, Extension {
         return true
     }
 
-    ///Reset the Campaign Extension rules and linkage fields.
+    /// Reset the Campaign Extension rules and linkage fields.
     private func resetRules() {
         Log.debug(label: LOG_TAG, "\(#function) - Clearing set linkage fields, the currently loaded campaign rules, and the cached campaign rules file.")
         linkageFields = nil
@@ -265,10 +265,10 @@ public class Campaign: NSObject, Extension {
         clearCachedRules()
     }
 
-    ///The function does the following operations.
-    ///1). Clears the cached assets for the Campaign rules.
-    ///2). Remove the cached rules.json file.
-    ///3). Remove the rule url from Data store.
+    /// The function does the following operations.
+    /// 1). Clears the cached assets for the Campaign rules.
+    /// 2). Remove the cached rules.json file.
+    /// 3). Remove the rule url from Data store.
     private func clearCachedRules() {
         let campaignRulesCache = CampaignRulesCache()
         campaignRulesCache.deleteCachedAssets(fileManager: FileManager.default)

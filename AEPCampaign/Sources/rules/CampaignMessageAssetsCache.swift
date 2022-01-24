@@ -13,7 +13,7 @@
 import Foundation
 import AEPServices
 
-///A Type that downloads and caches the Assets(images) associated with a Fullscreen IAM.
+/// A Type that downloads and caches the Assets(images) associated with a Fullscreen IAM.
 struct CampaignMessageAssetsCache {
 
     private let LOG_PREFIX = "CampaignMessageAssetsCache"
@@ -23,8 +23,8 @@ struct CampaignMessageAssetsCache {
         dispatchQueue = DispatchQueue(label: "\(CampaignConstants.EXTENSION_NAME).messageassetscache")
     }
 
-    ///Download and Caches the Assets for a given messageId.
-    ///- Parameters:
+    /// Download and Caches the Assets for a given messageId.
+    /// - Parameters:
     ///  - urls: An array of URL of Assets
     ///  - messageId: The id of the message
     func downloadAssetsForMessage(from urls: [String], messageId: String) {
@@ -43,7 +43,7 @@ struct CampaignMessageAssetsCache {
         downloadAssets(urls: assetsToRetain, messageId: messageId)
     }
 
-    ///Iterate over the URL's array and triggers the download Network request
+    /// Iterate over the URL's array and triggers the download Network request
     private func downloadAssets(urls: [URL], messageId: String) {
         let networking = ServiceProvider.shared.networkService
         for url in urls {
@@ -60,7 +60,7 @@ struct CampaignMessageAssetsCache {
         }
     }
 
-    ///Caches the downloaded `Data` for Assets
+    /// Caches the downloaded `Data` for Assets
     /// - Parameters:
     ///  - data: The downloaded `Data`
     ///  - forKey: The Asset download URL. Used to name cache folder.
@@ -80,7 +80,7 @@ struct CampaignMessageAssetsCache {
         }
     }
 
-    ///Deletes all the files in `pathRelativeToCacheDir` that are not present in `filesToRetain` array. This is used to delete the cached assets that are no longer required.
+    /// Deletes all the files in `pathRelativeToCacheDir` that are not present in `filesToRetain` array. This is used to delete the cached assets that are no longer required.
     /// - Parameters:
     ///   - filesToRetain: An array of file names that have to retain.
     ///   - pathRelativeToCacheDir: The path of cache directory relative to `Library/Cache`
@@ -119,7 +119,7 @@ struct CampaignMessageAssetsCache {
 
 extension String {
 
-    ///Removes non alphanumeric character from `String`
+    /// Removes non alphanumeric character from `String`
     var alphanumeric: String {
         return components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
     }

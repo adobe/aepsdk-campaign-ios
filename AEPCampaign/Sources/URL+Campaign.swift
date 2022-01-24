@@ -107,7 +107,7 @@ extension URL {
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = host
-        urlComponent.path = "/r"
+        urlComponent.path = "/r/"
         urlComponent.queryItems = [
             URLQueryItem(name: "id", value: "\(broadLogId),\(deliveryId),\(action)"),
             URLQueryItem(name: "mcId", value: ecid)

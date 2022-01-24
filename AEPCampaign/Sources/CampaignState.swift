@@ -113,7 +113,7 @@ class CampaignState {
     }
 
     /// Determines if this `CampaignState` is valid for sending a registration request to Campaign.
-    ///- Returns true if the CampaignState is valid else return false
+    /// - Returns true if the CampaignState is valid else return false
     private func canRegisterWithCurrentState() -> Bool {
         guard privacyStatus != .optedOut else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Privacy status is Opted Out.")
@@ -138,8 +138,8 @@ class CampaignState {
         return true
     }
 
-    ///Determines if this `CampaignState` is valid for sending message track request to Campaign.
-    ///- Returns true if the CampaignState is valid else return false
+    /// Determines if this `CampaignState` is valid for sending message track request to Campaign.
+    /// - Returns true if the CampaignState is valid else return false
     func canSendTrackInfoWithCurrentState() -> Bool {
         guard privacyStatus == .optedIn else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. Privacy status is not OptedIn.")
@@ -159,7 +159,7 @@ class CampaignState {
         return true
     }
 
-    ///Determines if the registration request should send to Campaign. Returns true, if the ecid has changed or number of days passed since the last registration is greater than registrationDelay in obtained in Configuration shared state.
+    /// Determines if the registration request should send to Campaign. Returns true, if the ecid has changed or number of days passed since the last registration is greater than registrationDelay in obtained in Configuration shared state.
     func shouldSendRegistrationRequest(eventTimeStamp: TimeInterval) -> Bool {
         guard let ecid = ecid, let registrationDelay = campaignRegistrationDelay else {
             Log.debug(label: LOG_TAG, "\(#function) - Returning false. Required Campaign Configuration is not present.")
@@ -210,14 +210,14 @@ class CampaignState {
         processRequest(url: url, payload: body, event: event)
     }
 
-    ///Process the network requests
+    /// Process the network requests
     /// - Parameters:
     ///    - url: The request URL
     ///    - payload: The request payload
     ///    - event:The `Event` that triggered the network request
     func processRequest(url: URL, payload: String, event: Event) {
         // check if this request is a registration request by checking for the presence of a payload and if it is a registration request, determine if it should be sent.
-        if !payload.isEmpty { //Registration request
+        if !payload.isEmpty { // Registration request
             guard shouldSendRegistrationRequest(eventTimeStamp: event.timestamp.timeIntervalSince1970) else {
                 Log.warning(label: LOG_TAG, "\(#function) - Unable to process request.")
                 return
@@ -240,7 +240,7 @@ class CampaignState {
         dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
     }
 
-    ///Persist the rules url in data store
+    /// Persist the rules url in data store
     func updateRuleUrlInDataStore(url: String?) {
         guard let url = url else {
             Log.trace(label: LOG_TAG, "\(#function) - Updated URL is nil. Removing Rules URL from the data store.")
@@ -251,7 +251,7 @@ class CampaignState {
         dataStore.set(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY, value: url)
     }
 
-    ///Retrieves the rules url from the data store
+    /// Retrieves the rules url from the data store
     func getRulesUrlFromDataStore() -> String? {
         return dataStore[CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY]
     }
@@ -279,7 +279,7 @@ class CampaignState {
         updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
     }
 
-    ///Returns `true` if all required configurations for downloading rules all present else returns `false`
+    /// Returns `true` if all required configurations for downloading rules all present else returns `false`
     func canDownloadRules() -> Bool {
         return privacyStatus == .optedIn
             && !(ecid?.isEmpty ?? true) && !(campaignServer?.isEmpty ?? true)
