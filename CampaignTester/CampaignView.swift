@@ -213,7 +213,7 @@ struct CampaignView: View {
                             Log.debug(label: LOG_TAG, "Unable to start Assurance session. Invalid URL.")
                             return
                         }
-                        AEPAssurance.startSession(url)
+                        Assurance.startSession(url: url)
                     }) {
                         Text("Start Assurance Session")
                             .frame(minWidth: 0, maxWidth: .infinity)

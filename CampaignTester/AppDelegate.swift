@@ -24,16 +24,16 @@ import AEPPlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-    private let LAUNCH_ENVIRONMENT_FILE_ID = "31d8b0ad1f9f/3a905906efff/launch-cb3acd193018-development"
+    private let LAUNCH_ENVIRONMENT_FILE_ID = "31d8b0ad1f9f/98da4ef07438/launch-b7548c1d44a2-development"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UNUserNotificationCenter.current().delegate = self
 
         MobileCore.setLogLevel(.trace)
-        MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self, Signal.self, AEPAssurance.self, Places.self]) {
+        MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self, Signal.self, Assurance.self, Places.self]) {
             // Use the App id assigned to this application via Adobe Launch
             MobileCore.configureWith(appId: self.LAUNCH_ENVIRONMENT_FILE_ID)
-            AEPAssurance.startSession(URL(string: "default://swift-acs?adb_validation_sessionid=b98cafbb-f390-420a-9e78-09c37669df34")!)
+            Assurance.startSession(url: URL(string: "default://swift-acs?adb_validation_sessionid=b98cafbb-f390-420a-9e78-09c37669df34")!)
         }
 
         // request permission to display notifications

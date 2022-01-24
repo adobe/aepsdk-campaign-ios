@@ -104,6 +104,7 @@ extension URL {
             return nil
         }
 
+        // tracking url: https://{campaign-server}/r/?id={broadlogId},{deliveryId},{action}&mcId={mcid}
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = host
