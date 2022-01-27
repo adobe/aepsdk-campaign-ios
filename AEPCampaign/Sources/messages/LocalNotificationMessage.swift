@@ -206,6 +206,7 @@ struct LocalNotificationMessage: CampaignMessaging {
     }
 
     // no-op for local notifications
+    ///  - Returns: `false` as assets are not downloaded for local notifications.
     func shouldDownloadAssets() -> Bool {
         return false
     }

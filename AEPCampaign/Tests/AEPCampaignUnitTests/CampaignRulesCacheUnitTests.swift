@@ -165,7 +165,7 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         // Action
         campaignRulesCache.deleteCachedAssets(fileManager: fileManager)
 
-        // Assets
+        // Assert
         XCTAssertTrue(assetsDirectoryCreated)
         XCTAssertFalse(fileManager.fileExists(atPath: cachedAssetsUrl.absoluteString))
     }

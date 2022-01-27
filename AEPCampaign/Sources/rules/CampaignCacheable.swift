@@ -13,23 +13,23 @@
 import Foundation
 import AEPServices
 
-/// Represents an Object which is Cachable via the CacheService
+/// Represents an `Object` which is cacheable via the `CacheService`
 protocol CampaignCacheable {
     associatedtype T
-    /// The cachable Dictionary
+    /// The cacheable dictionary
     var cacheable: T { get }
 
-    /// Date this cachable was last modified on the server, read from the Last-Modified HTTP header
+    /// Date this cacheable was last modified on the server, read from the Last-Modified HTTP header
     /// Format: <day-name>, <day> <month> <year> <hour>:<minute>:<second> GMT
     var lastModified: String? { get }
 
-    /// ETag of the cachable on the server
+    /// ETag of the cacheable on the server
     var eTag: String? { get }
 }
 
 extension CampaignCacheable {
     /// Gets values required for checking if a remote value has been modified
-    /// - Returns: a Dictionary with values or empty string for `If-Modified-Since` and `If-None-Match`
+    /// - Returns: a dictionary with values or empty string for `If-Modified-Since` and `If-None-Match`
     func notModifiedHeaders() -> [String: String] {
         return [NetworkServiceConstants.Headers.IF_MODIFIED_SINCE: lastModified ?? "",
                 NetworkServiceConstants.Headers.IF_NONE_MATCH: eTag ?? ""]

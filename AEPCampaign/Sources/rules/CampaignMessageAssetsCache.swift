@@ -13,7 +13,7 @@
 import Foundation
 import AEPServices
 
-/// A Type that downloads and caches the Assets(images) associated with a Fullscreen IAM.
+/// A type that downloads and caches the Assets (images) associated with a Fullscreen IAM.
 struct CampaignMessageAssetsCache {
 
     private let LOG_PREFIX = "CampaignMessageAssetsCache"
@@ -23,7 +23,7 @@ struct CampaignMessageAssetsCache {
         dispatchQueue = DispatchQueue(label: "\(CampaignConstants.EXTENSION_NAME).messageassetscache")
     }
 
-    /// Download and Caches the Assets for a given messageId.
+    /// Downloads and caches the assets for a given messageId.
     /// - Parameters:
     ///  - urls: An array of URL of Assets
     ///  - messageId: The id of the message
@@ -43,7 +43,10 @@ struct CampaignMessageAssetsCache {
         downloadAssets(urls: assetsToRetain, messageId: messageId)
     }
 
-    /// Iterate over the URL's array and triggers the download Network request
+    /// Iterates over the urls array and triggers the network requests to download assets from each URL in the array.
+    /// - Parameters:
+    ///  - urls: An array of asset `URL`s
+    ///  - messageId: The id of the message
     private func downloadAssets(urls: [URL], messageId: String) {
         let networking = ServiceProvider.shared.networkService
         for url in urls {
@@ -60,11 +63,11 @@ struct CampaignMessageAssetsCache {
         }
     }
 
-    /// Caches the downloaded `Data` for Assets
+    /// Caches the provided asset `Data` downloaded from the given url for the given message Id.
     /// - Parameters:
     ///  - data: The downloaded `Data`
-    ///  - forKey: The Asset download URL. Used to name cache folder.
-    ///  - messageId: The id of message
+    ///  - forKey: The asset download URL. Used to name the cache folder.
+    ///  - messageId: The id of the message
     private func cacheAssetData(_ data: Data, forKey url: URL, messageId: String) {
         guard var cacheUrl = createDirectoryIfNeeded(messageId: messageId) else {
             Log.debug(label: LOG_PREFIX, "Unable to cache Asset for URL: (\(url). Unable to create cache directory.")
@@ -82,7 +85,7 @@ struct CampaignMessageAssetsCache {
 
     /// Deletes all the files in `pathRelativeToCacheDir` that are not present in `filesToRetain` array. This is used to delete the cached assets that are no longer required.
     /// - Parameters:
-    ///   - filesToRetain: An array of file names that have to retain.
+    ///   - filesToRetain: An array of file names to be retained.
     ///   - pathRelativeToCacheDir: The path of cache directory relative to `Library/Cache`
     func clearCachedAssetsNotInList(filesToRetain: [String], pathRelativeToCacheDir: String) {
         Log.trace(label: LOG_PREFIX, "\(#function) - Attempt to delete \(filesToRetain.count) non required cached assets from directory '\(pathRelativeToCacheDir)'")
@@ -90,8 +93,8 @@ struct CampaignMessageAssetsCache {
     }
 
     /// Creates the directory to store the cache if it does not exist
-    /// - Parameters messageId: The message Id
-    /// - Returns the `URL` to the Message Cache folder, Returns nil if cache folder does not exist or unable to create message cache folder
+    /// - Parameters messageId: The id of the message
+    /// - Returns the `URL` to the Message Cache folder. Returns nil if the cache folder does not exist or if the function was unable to create the message cache folder.
     private func createDirectoryIfNeeded(messageId: String) -> URL? {
         let fileManager = FileManager.default
         guard var cacheUrl = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
@@ -119,7 +122,7 @@ struct CampaignMessageAssetsCache {
 
 extension String {
 
-    /// Removes non alphanumeric character from `String`
+    /// Removes non alphanumeric characters from the `String`
     var alphanumeric: String {
         return components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
     }

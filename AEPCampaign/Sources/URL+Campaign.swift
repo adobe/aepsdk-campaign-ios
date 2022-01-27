@@ -38,7 +38,7 @@ extension URL {
 
     /// Builds the `URL` responsible for sending a Campaign rules download request to MCIAS
     /// - Parameters:
-    ///    - mciasServer: Campaign Mcias server
+    ///    - mciasServer: Campaign MCIAS server
     ///    - campaignServer: Campaign server
     ///    - propertyId: Campaign property id
     ///    - ecid: The experience cloud id of user

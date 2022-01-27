@@ -63,12 +63,13 @@ public class Campaign: NSObject, Extension {
 
     /// Called before each `Event` processed by the Campaign extension
     /// - Parameter event: event that will be processed next
-    /// - Returns: *true* if Configuration and Identity shared states are available
+    /// - Returns: `true` if Configuration and Identity shared states are available
     public func readyForEvent(_ event: Event) -> Bool {
         return getSharedState(extensionName: CampaignConstants.Configuration.EXTENSION_NAME, event: event)?.status == .set && getSharedState(extensionName: CampaignConstants.Identity.EXTENSION_NAME, event: event)?.status == .set
     }
 
     /// Handles events of type `Campaign`
+    /// - Parameter event: the Campaign `Event` to be handled
     private func handleCampaignEvents(event: Event) {
         Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async {[weak self] in
@@ -93,6 +94,7 @@ public class Campaign: NSObject, Extension {
     }
 
     /// Handles events of type `Lifecycle`
+    /// - Parameter event: the Lifecycle `Event` to be handled
     private func handleLifecycleEvents(event: Event) {
         Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async { [weak self] in
@@ -103,11 +105,13 @@ public class Campaign: NSObject, Extension {
     }
 
     /// A wildcard listener for all the events. Pass the received events to `Rules Engine` for processing.
+    /// - Parameter event: the Wildcard `Event` to be handled
     private func handleWildCardEvents(event: Event) {
         _ = rulesEngine.process(event: event)
     }
 
     /// Handles the `Rules engine response` event, when a rule matches
+    /// - Parameter event: the Rules Engine `Event` to be handled
     private func handleRulesEngineResponseEvent(event: Event) {
         Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async { [weak self] in
@@ -136,6 +140,7 @@ public class Campaign: NSObject, Extension {
     }
 
     /// Handles `Configuration Response` events
+    /// - Parameter event: the Configuration `Event` to be handled
     private func handleConfigurationEvents(event: Event) {
         Log.trace(label: self.LOG_TAG, "An event of type '\(event.type)' has been received.")
         dispatchQueue.async { [weak self] in
@@ -159,6 +164,7 @@ public class Campaign: NSObject, Extension {
     }
 
     /// Handles `Identity` shared state updates
+    /// - Parameter event: the Identity `Event` to be handled
     private func handleHubSharedState(event: Event) {
         guard let stateOwner = event.data?[CampaignConstants.EventDataKeys.STATE_OWNER] as? String, stateOwner == CampaignConstants.Identity.EXTENSION_NAME else {
             return
@@ -177,6 +183,7 @@ public class Campaign: NSObject, Extension {
     }
 
     /// Handles `Generic Data OS` events
+    /// - Parameter event: the Generic Data `Event` to be handled
     private func handleGenericDataEvents(event: Event) {
         Log.trace(label: self.LOG_TAG, "An event of type \(event.type) has been received.")
         dispatchQueue.async { [weak self] in
@@ -198,6 +205,7 @@ public class Campaign: NSObject, Extension {
     }
 
     /// Updates the `CampaignState` with the shared state of other required extensions
+    /// - Parameter event: the `Event`containing the shared state of other required extensions
     private func updateCampaignState(event: Event) {
         var sharedStates = [String: [String: Any]?]()
         for extensionName in dependencies {
@@ -206,11 +214,11 @@ public class Campaign: NSObject, Extension {
         state.update(dataMap: sharedStates)
     }
 
-    /// Handles the Privacy opt-out. The function takes the following actions to process privacy opt-out
-    /// 1). Reset linkage field to empty string
-    /// 2). Remove all the registered rules
-    /// 3). Deletes all the cached Assets for the rules
-    /// 4). Remove rules URL from data store
+    /// Handles the privacy opt-out. The function takes the following actions to process the opt-out:
+    /// 1). Resets the linkage field to empty string
+    /// 2). Removes all the registered rules
+    /// 3). Deletes all the cached assets for the rules
+    /// 4). Remove the rules URL from the data store
     private func handlePrivacyOptOut() {
         Log.debug(label: LOG_TAG, "\(#function) - Process the Privacy opt-out")
         resetRules()
@@ -233,7 +241,7 @@ public class Campaign: NSObject, Extension {
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: linkageFieldsHeader, state: self.state)
     }
 
-    /// Loads the Cached Campaign rules on receiving the Configuration event first time.
+    /// Loads the cached Campaign rules upon receiving the Configuration event for the first time.
     private func loadCachedRules() {
         if !hasCachedRulesLoaded {
             Log.trace(label: LOG_TAG, "\(#function) - Attempting to load the Cached Campaign Rules.")
@@ -248,7 +256,9 @@ public class Campaign: NSObject, Extension {
         }
     }
 
-    /// Extracts the Linkage Fields from the event Data
+    /// Extracts the linkage fields from the passed in event's data.
+    /// - Parameter event: the Campaign `Event`containing linkage fields
+    /// - Returns `true` if the event contained linkage fields, otherwise returns `false`
     private func extractLinkageFields(event: Event) -> Bool {
         guard let linkageFields = event.linkageFields else {
             return false
@@ -268,7 +278,7 @@ public class Campaign: NSObject, Extension {
     /// The function does the following operations.
     /// 1). Clears the cached assets for the Campaign rules.
     /// 2). Remove the cached rules.json file.
-    /// 3). Remove the rule url from Data store.
+    /// 3). Remove the rules URL from the Data store.
     private func clearCachedRules() {
         let campaignRulesCache = CampaignRulesCache()
         campaignRulesCache.deleteCachedAssets(fileManager: FileManager.default)
@@ -290,6 +300,7 @@ public class Campaign: NSObject, Extension {
 private extension Campaign {
 
     /// Triggers the alert IAM
+    /// - Parameter consequence: the `RuleConsequence` containing an alert message
     func showAlertMessage(forConsequence consequence: RuleConsequence) {
         Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing an alert message.")
         guard let message = AlertMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
@@ -300,6 +311,7 @@ private extension Campaign {
     }
 
     /// Triggers the fullscreen IAM
+    /// - Parameter consequence: the `RuleConsequence` containing a fullscreen message
     func showFullScreenMessage(forConsequence consequence: RuleConsequence) {
         Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing a fullscreen message.")
         guard let message = CampaignFullscreenMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:)) else {
@@ -312,6 +324,7 @@ private extension Campaign {
     }
 
     /// Triggers the local notification IAM
+    /// - Parameter consequence: the `RuleConsequence` containing a local notification message
     func showLocalNotification(forConsequence consequence: RuleConsequence) {
         Log.debug(label: self.LOG_TAG, "\(#function) - Received a Rules Response content event containing a local notification. Scheduling the received local notification.")
         guard let message = LocalNotificationMessage.createMessageObject(consequence: consequence, state: self.state, eventDispatcher: self.dispatchEvent(eventName:eventType:eventSource:eventData:)) else {

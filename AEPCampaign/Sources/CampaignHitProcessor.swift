@@ -23,7 +23,7 @@ class CampaignHitProcessor: HitProcessing {
 
     /// Creates a new `CampaignHitProcessor` where the `responseHandler` will be invoked after the successful sending of a hit
     /// - Parameters:
-    ///   - timeout: the configured Campaign request timeout
+    ///   - timeout: A `TimeInterval` containing the configured Campaign request timeout
     ///   - responseHandler: a function to be invoked with the successfully sent `CampaignHit`
     init(timeout: TimeInterval?, responseHandler: @escaping (CampaignHit) -> Void) {
         self.dispatchQueue = DispatchQueue(label: CampaignConstants.FRIENDLY_NAME)
@@ -32,10 +32,18 @@ class CampaignHitProcessor: HitProcessing {
     }
 
     // MARK: HitProcessing
+    /// Returns the interval at which network requests should be retried.
+    /// - Parameters:
+    ///   - entity: A `DataEntity` containing a network request to be retried
+    /// - Returns: a 30 second `TimeInterval`
     func retryInterval(for entity: DataEntity) -> TimeInterval {
         return TimeInterval(30)
     }
 
+    /// Processes and attempts to send a network request contained in the provided `DataEntity`.
+    /// - Parameters:
+    ///   - entity: A `DataEntity` containing a network request to be sent
+    ///   - completion: a completion block to invoke after we have processed the hit. The block is invoked with true if a hit was processed and false if it should be retried.
     func processHit(entity: DataEntity, completion: @escaping (Bool) -> Void) {
         guard let data = entity.data, let campaignHit = try? JSONDecoder().decode(CampaignHit.self, from: data) else {
             // Failed to convert data to hit, unrecoverable error, move to next hit

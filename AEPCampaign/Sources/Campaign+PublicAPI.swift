@@ -23,8 +23,8 @@ import AEPServices
     /// in all future Campaign rules download requests until `resetLinkageFields` is invoked. These in-memory variables are also
     /// lost in the wake of an Application crash event or upon graceful Application termination or when the privacy status is updated to OPT_OUT.
     /// This method clears cached rules from previous download before triggering a rules download request to the configured Campaign server.
-    /// If the current SDK privacy status is not OPT_IN, no rules download happens.
-    /// - Parameters linkageFields: The Linkage fields key value pairs.
+    /// If the current SDK privacy status is not OPT_IN, no rules download occurs.
+    /// - Parameters linkageFields: The linkage fields key value pairs.
     @objc (setLinkageFields:)
     static func setLinkageFields(_ linkageFields: [String: String]) {
         guard !linkageFields.isEmpty else {
@@ -37,9 +37,9 @@ import AEPServices
         MobileCore.dispatch(event: event)
     }
 
-    /// Clears previously stored linkage fields in the mobile SDK and triggers Campaign rules download request to the configured Campaign server.
-    /// This method unregisters any previously registered rules with the Event Hub and clears cached rules from previous download.
-    /// If the current SDK privacy status is not `OPT_IN`, no rules download happens.
+    /// Clears previously stored linkage fields in the mobile SDK and triggers a Campaign rules download request to the configured Campaign server.
+    /// This method unregisters any previously registered rules with the Event Hub and clears cached rules from the previous download.
+    /// If the current SDK privacy status is not `OPT_IN`, no rules download occurs.
     @objc (resetLinkageFields)
     static func resetLinkageFields() {
         let event = Event(name: "ResetLinkageFields", type: EventType.campaign, source: EventSource.requestReset, data: nil)
