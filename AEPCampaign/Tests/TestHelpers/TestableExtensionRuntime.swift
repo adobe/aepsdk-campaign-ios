@@ -15,7 +15,7 @@ import Foundation
 @testable import AEPCore
 
 class TestableExtensionRuntime: ExtensionRuntime {
-
+    
     public var listeners: [String: EventListener] = [:]
     public var dispatchedEvents: [Event] = []
     public var createdSharedStates: [[String: Any]?] = []
@@ -162,4 +162,6 @@ extension TestableExtensionRuntime {
     public var thirdSharedState: [String: Any]? {
         createdSharedStates[2]
     }
+    
+    func getHistoricalEvents(_ requests: [EventHistoryRequest], enforceOrder: Bool, handler: @escaping ([EventHistoryResult]) -> Void) {}
 }
