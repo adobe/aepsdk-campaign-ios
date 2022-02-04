@@ -50,6 +50,9 @@ archive:
 clean:
 	rm -rf ./build
 
+install-swiftformat:
+	(brew install swiftformat) 
+
 checkFormat:
 	swiftformat --lint AEPCampaign/Sources --swiftversion 5.2
 

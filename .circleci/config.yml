@@ -63,11 +63,11 @@ jobs:
 
       - run:
           name: Install nicklockwood/SwiftFormat
-          command: brew install swiftformat
+          command: make install-swiftformat
 
       - run:
-          name: Swift Formating
-          command: swiftformat . --lint --swiftversion 5.2
+          name: Check Source Code formatting
+          command: make check-format
 
       # pre-start the simulator to prevent timeouts
       - run:
