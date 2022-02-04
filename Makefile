@@ -53,11 +53,11 @@ clean:
 install-swiftformat:
 	(brew install swiftformat) 
 
-checkFormat:
-	swiftformat --lint AEPCampaign/Sources --swiftversion 5.2
+check-format:
+	(swiftformat --lint $(PROJECT_NAME)/Sources --swiftversion 5.2)
 
 format:
-	swiftformat AEPCampaign/Sources --swiftversion 5.2
+	(swiftformat $(PROJECT_NAME)/Sources --swiftversion 5.2)
 
 # release checks
 check-version:
