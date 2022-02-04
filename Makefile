@@ -54,10 +54,10 @@ install-swiftformat:
 	(brew install swiftformat) 
 
 check-format:
-	(swiftformat --lint $(PROJECT_NAME)/Sources --swiftversion 5.2)
+	(swiftformat --lint $(PROJECT_NAME)/Sources --swiftversion 5.1)
 
 format:
-	(swiftformat $(PROJECT_NAME)/Sources --swiftversion 5.2)
+	(swiftformat $(PROJECT_NAME)/Sources --swiftversion 5.1)
 
 # release checks
 check-version:
