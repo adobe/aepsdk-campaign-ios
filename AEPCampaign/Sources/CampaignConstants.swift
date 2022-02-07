@@ -118,7 +118,7 @@ enum CampaignConstants {
         static let MESSAGE_CLICKED = "a.message.clicked"
         static let MESSAGE_VIEWED = "a.message.viewed"
         static let MESSAGE_ID = "a.message.id"
-        static let MESSAGE_ACTION_VALUE = "1"
+        static let MESSAGE_ACTION_EXISTS_VALUE = "1"
     }
 
     // MARK: EventDataKeys

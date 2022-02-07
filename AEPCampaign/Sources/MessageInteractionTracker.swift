@@ -101,7 +101,7 @@ class MessageInteractionTracker {
 
         let contextData = [
             CampaignConstants.ContextDataKeys.MESSAGE_ID: "\(decimalDeliveryId)",
-            actionKey: CampaignConstants.ContextDataKeys.MESSAGE_ACTION_VALUE
+            actionKey: CampaignConstants.ContextDataKeys.MESSAGE_ACTION_EXISTS_VALUE
         ]
         dispatchMessageInteraction(data: contextData, eventDispatcher: eventDispatcher)
     }
