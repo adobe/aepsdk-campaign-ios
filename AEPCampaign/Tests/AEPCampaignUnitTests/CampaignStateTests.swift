@@ -121,10 +121,10 @@ class CampaignStateTests: XCTestCase {
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
 
-        //Action
+        // Action
         state.update(dataMap: sharedStates)
 
-        //Assert
+        // Assert
         XCTAssertTrue(state.canDownloadRules())
     }
 
@@ -145,15 +145,15 @@ class CampaignStateTests: XCTestCase {
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
 
-        //Action
+        // Action
         state.update(dataMap: sharedStates)
 
-        //Assert
+        // Assert
         XCTAssertFalse(state.canDownloadRules())
     }
 
     func testCanDownloadRulesFailureDueToMciasMissing() {
-        //setup
+        // setup
         let server = "campaign_server"
         let pkey = "pkey"
         let propertyId = "propertyId"
@@ -169,10 +169,10 @@ class CampaignStateTests: XCTestCase {
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
 
-        //Action
+        // Action
         state.update(dataMap: sharedStates)
 
-        //Assert
+        // Assert
         XCTAssertFalse(state.canDownloadRules())
     }
 
@@ -193,10 +193,10 @@ class CampaignStateTests: XCTestCase {
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
 
-        //Action
+        // Action
         state.update(dataMap: sharedStates)
 
-        //Assert
+        // Assert
         XCTAssertFalse(state.canDownloadRules())
     }
 
@@ -217,10 +217,10 @@ class CampaignStateTests: XCTestCase {
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
 
-        //Action
+        // Action
         state.update(dataMap: sharedStates)
 
-        //Assert
+        // Assert
         XCTAssertFalse(state.canDownloadRules())
     }
 
@@ -242,10 +242,10 @@ class CampaignStateTests: XCTestCase {
         sharedStates[CampaignConstants.Identity.EXTENSION_NAME] = identityData
         sharedStates[CampaignConstants.Configuration.EXTENSION_NAME] = configurationData
 
-        //Action
+        // Action
         state.update(dataMap: sharedStates)
 
-        //Assert
+        // Assert
         XCTAssertFalse(state.canDownloadRules())
     }
 

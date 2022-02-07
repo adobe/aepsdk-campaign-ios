@@ -14,7 +14,7 @@ import Foundation
 
 extension FileManager {
 
-    ///Deletes all the cached files in folder `parentFolder` except the ones in `except` array.
+    /// Deletes all the cached files in folder `parentFolder` except the ones in `except` array.
     /// - Parameters:
     ///   - except: `Array` of the file names that doesn't have to be deleted.
     ///   - parentFolderRelativeToCache: Path of parent folder relative to Cache folder.

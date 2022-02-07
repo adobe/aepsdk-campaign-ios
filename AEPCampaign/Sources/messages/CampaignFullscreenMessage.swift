@@ -86,6 +86,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     }
 
     /// Returns true as the Campaign Fullscreen Message class should download assets
+    ///  - Returns: A `Bool` containing `true` as Campaign fullscreen message assets should always be downloaded
     func shouldDownloadAssets() -> Bool {
         return true
     }
@@ -231,7 +232,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
         return nil
     }
 
-    /// Returns the html as a `String` from the download rule.zip's assets directory (/campaignrules/assets/)
+    /// Returns the html as a `String` from the downloaded rule.zip's assets directory (/campaignrules/assets/)
     ///  - Parameter fileName: A `String` containing the HTML filename.
     ///  - Returns: A `String` containing the HTML file contents for this message.
     private func getHtmlFromCache(fileName: String) -> String? {

@@ -13,17 +13,17 @@
 import AEPServices
 import Foundation
 
-/// Struct which represents an Campaign hit
+/// Struct which represents a Campaign hit
 struct CampaignHit: Codable {
-    /// URL for the Campaign Hit
+    /// URL for the Campaign hit
     let url: URL
     /// Payload of the Campaign hit
     let payload: String
-    /// Timestamp of Campaign hit
+    /// Timestamp of the Campaign hit
     let timestamp: TimeInterval
 
     /// Determines the Http command based off the request payload
-    /// - Returns: HttpCommandType.POST if the payload has content, otherwise HttpCommandType.GET
+    /// - Returns: a `HttpMethod` containing HttpCommandType.POST if the payload has content, otherwise HttpCommandType.GET
     func getHttpCommand() -> HttpMethod {
         return !payload.isEmpty ? HttpMethod.post : HttpMethod.get
     }

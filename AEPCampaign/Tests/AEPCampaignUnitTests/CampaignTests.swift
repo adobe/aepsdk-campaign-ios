@@ -32,7 +32,7 @@ class CampaignTests: XCTestCase {
     let propertyId = "propertId"
     let pkey = "pkey"
 
-    ///Shared states
+    /// Shared states
     var identitySharedState: [String: Any]!
     var configurationSharedState: [String: Any]!
 
@@ -85,7 +85,7 @@ class CampaignTests: XCTestCase {
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         let action = "1"
-        //Setup
+        // Setup
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
@@ -93,10 +93,10 @@ class CampaignTests: XCTestCase {
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
-        //Assertion
+        // Assertion
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count > 0)
         let dataEntity = hitProcessor.processedEntities[0]
@@ -106,23 +106,23 @@ class CampaignTests: XCTestCase {
         }
         let hit = try? JSONDecoder().decode(CampaignHit.self, from: data)
         XCTAssert(hit != nil)
-        XCTAssertEqual(hit?.url.absoluteString, "https://\(campaignServer)/r?id=\(broadLogId),\(deliveryId),\(action)&mcId=\(ecid)")
+        XCTAssertEqual(hit?.url.absoluteString, "https://\(campaignServer)/r/?id=\(broadLogId),\(deliveryId),\(action)&mcId=\(ecid)")
     }
 
     func testGenericDataOSEventFailsWhenNoBroadLogId() {
         let deliveryId = "deliveryId"
         let action = "1"
-        //Setup
+        // Setup
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION: action
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
-        //Assertion
+        // Assertion
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
@@ -130,17 +130,17 @@ class CampaignTests: XCTestCase {
     func testGenericDataOSEventFailsWhenNoAction() {
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
-        //Setup
+        // Setup
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID: deliveryId
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
-        //Assertion
+        // Assertion
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
@@ -148,17 +148,17 @@ class CampaignTests: XCTestCase {
     func testGenericDataOSEventFailsWhenNoDeliveryId() {
         let broadLogId = "broadlogId"
         let action = "1"
-        //Setup
+        // Setup
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION: action
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
-        //Assertion
+        // Assertion
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
@@ -167,7 +167,7 @@ class CampaignTests: XCTestCase {
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         let action = "1"
-        //Setup
+        // Setup
         let configurationSharedState = [
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
             CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
@@ -182,10 +182,10 @@ class CampaignTests: XCTestCase {
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
-        //Assertion
+        // Assertion
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
@@ -194,7 +194,7 @@ class CampaignTests: XCTestCase {
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         let action = "1"
-        //Setup
+        // Setup
         setUpSharedStates(configuration: nil, identity: [String: Any]())
         let eventData = [
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID: broadLogId,
@@ -203,10 +203,10 @@ class CampaignTests: XCTestCase {
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
-        //Assertion
+        // Assertion
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
@@ -215,7 +215,7 @@ class CampaignTests: XCTestCase {
         let broadLogId = "broadlogId"
         let deliveryId = "deliveryId"
         let action = "1"
-        //Setup
+        // Setup
         let configurationSharedState = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue,
@@ -231,10 +231,10 @@ class CampaignTests: XCTestCase {
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
-        //Assertion
+        // Assertion
         Thread.sleep(forTimeInterval: 0.5)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
@@ -259,7 +259,7 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenCampaignServerIsNil() {
-        //setup
+        // setup
         let configurationSharedState = [
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
             CampaignConstants.Configuration.CAMPAIGN_MCIAS: mcias,
@@ -277,7 +277,7 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenCampaignPkeyIsNil() {
-        //setup
+        // setup
         let configurationSharedState = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedIn.rawValue,
@@ -295,7 +295,7 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenPrivacyIsOptedOut() {
-        //setup
+        // setup
         let configurationSharedState = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.optedOut.rawValue,
@@ -314,7 +314,7 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventQueuedCampaignRegistrationRequestWhenPrivacyIsUnknown() {
-        //setup
+        // setup
         let configurationSharedState = [
             CampaignConstants.Configuration.CAMPAIGN_SERVER: campaignServer,
             CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY: PrivacyStatus.unknown.rawValue,
@@ -335,7 +335,7 @@ class CampaignTests: XCTestCase {
     }
 
     func testLifecycleResponseEventNoCampaignRegistrationRequestWhenThereIsNoECIDInSharedState() {
-        //setup
+        // setup
         setUpSharedStates(configuration: nil, identity: [String: Any]())
         // test
         let lifecycleResponseEvent = Event(name: "Lifecycle Response Event", type: EventType.lifecycle, source: EventSource.responseContent, data: nil)
@@ -360,11 +360,11 @@ class CampaignTests: XCTestCase {
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
         Thread.sleep(forTimeInterval: 1)
 
-        //Assert
+        // Assert
         XCTAssertTrue(mockDiskCache.isRemoveCacheItemCalled)
         XCTAssertEqual(networking.cachedNetworkRequests.count, 1)
         let networkRequest = networking.cachedNetworkRequests[0]
@@ -384,16 +384,16 @@ class CampaignTests: XCTestCase {
     func testCampaignRequestIdentityEventFailure() {
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: nil)
 
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
 
-        //Asserts
+        // Asserts
         XCTAssertFalse(mockDiskCache.isRemoveCacheItemCalled)
         XCTAssertEqual(networking.cachedNetworkRequests.count, 0)
     }
 
     func testCampaignRequestResetEvent() {
-        //setup
+        // setup
         let httpConnection = HttpConnection(data: nil, response: nil, error: nil)
         networking.expectedResponse = httpConnection
 
@@ -404,14 +404,14 @@ class CampaignTests: XCTestCase {
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
-        //Action
+        // Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
         Thread.sleep(forTimeInterval: 1)
         let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)
         extensionRuntime.simulateComingEvents(campaignRequestResetEvent)
         Thread.sleep(forTimeInterval: 1)
 
-        //Assert
+        // Assert
         XCTAssertEqual(networking.cachedNetworkRequests.count, 2)
         XCTAssertNotNil(networking.cachedNetworkRequests[0].httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
         XCTAssertTrue(mockDiskCache.isRemoveCacheItemCalled)

@@ -160,12 +160,12 @@ extension XCTestCase {
 
     func verifyMessageTrackRequest(request: NetworkRequest, ecid: String, interactionType: String) {
         let url = request.url.absoluteString
-        XCTAssertEqual(url, "https://prod.campaign.adobe.com/r?id=h153d80,b670ea,\(interactionType)&mcId=\(ecid)")
+        XCTAssertEqual(url, "https://prod.campaign.adobe.com/r/?id=h153d80,b670ea,\(interactionType)&mcId=\(ecid)")
     }
 }
 
 extension String {
-    ///Removes non alphanumeric character from `String`
+    /// Removes non alphanumeric character from `String`
     var alphanumeric: String {
         return components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
     }
