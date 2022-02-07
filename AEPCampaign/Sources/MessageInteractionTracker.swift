@@ -83,7 +83,7 @@ class MessageInteractionTracker {
     private static func dispatchMessageEvent(action: String, deliveryId: String, eventDispatcher: Campaign.EventDispatcher) {
 
         guard action == CampaignConstants.EventDataKeys.MESSAGE_CLICKED_ACTION_VALUE
-                || action == CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE else { // Dispatch only when action is clicked(2) or viewed(1)
+            || action == CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE else { // Dispatch only when action is clicked(2) or viewed(1)
             Log.trace(label: LOG_TAG, "\(#function) - Action received is other than viewed or clicked, so cannot dispatch Message Event.")
             return
         }
