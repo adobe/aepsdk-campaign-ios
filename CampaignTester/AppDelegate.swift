@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         MobileCore.registerExtensions([Identity.self, Campaign.self, Lifecycle.self, UserProfile.self, Signal.self, Assurance.self, Places.self]) {
             // Use the App id assigned to this application via Adobe Launch
             MobileCore.configureWith(appId: self.LAUNCH_ENVIRONMENT_FILE_ID)
-            Assurance.startSession(url: URL(string: "YOUR-GRIFFON-DEEPLINK")!)
+            Assurance.startSession(url: URL(string: "YOUR-ASSURANCE-DEEPLINK")!)
         }
 
         // request permission to display notifications

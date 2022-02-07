@@ -13,7 +13,7 @@
 import Foundation
 import AEPServices
 
-/// Represents an `Object` which is cacheable via the `CacheService`
+/// Represents an `object` which is cacheable via the `CacheService`
 protocol CampaignCacheable {
     associatedtype T
     /// The cacheable dictionary

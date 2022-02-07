@@ -82,7 +82,8 @@ class MessageInteractionTracker {
     ///    - eventDispatcher: The Campaign event dispatcher
     private static func dispatchMessageEvent(action: String, deliveryId: String, eventDispatcher: Campaign.EventDispatcher) {
 
-        guard action == "2" || action == "1" else { // Dispatch only when action is clicked(2) or viewed(1)
+        guard action == CampaignConstants.EventDataKeys.MESSAGE_CLICKED_ACTION_VALUE
+                || action == CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE else { // Dispatch only when action is clicked(2) or viewed(1)
             Log.trace(label: LOG_TAG, "\(#function) - Action received is other than viewed or clicked, so cannot dispatch Message Event.")
             return
         }
@@ -92,7 +93,7 @@ class MessageInteractionTracker {
             return
         }
         let actionKey: String
-        if action == "1" {
+        if action == CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE {
             actionKey = CampaignConstants.ContextDataKeys.MESSAGE_VIEWED
         } else {
             actionKey = CampaignConstants.ContextDataKeys.MESSAGE_CLICKED
@@ -100,7 +101,7 @@ class MessageInteractionTracker {
 
         let contextData = [
             CampaignConstants.ContextDataKeys.MESSAGE_ID: "\(decimalDeliveryId)",
-            actionKey: "1"
+            actionKey: CampaignConstants.ContextDataKeys.MESSAGE_ACTION_VALUE
         ]
         dispatchMessageInteraction(data: contextData, eventDispatcher: eventDispatcher)
     }

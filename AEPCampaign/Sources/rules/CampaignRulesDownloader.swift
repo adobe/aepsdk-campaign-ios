@@ -54,11 +54,11 @@ struct CampaignRulesDownloader {
         }
     }
 
-    /// Download the Campaign rules from the passed in `rulesUrl`, caches them, and loadsthem into the Rules engine.
+    /// Download the Campaign rules from the passed in `rulesUrl`, caches them, and loads them into the Rules engine.
     /// - Parameters:
     ///   - rulesUrl: The `URL` for downloading the Campaign rules
     ///   - linkageFieldHeaders: The header with `linkageField` values
-    ///   - state: Instance of `CampaignState` for storing rules download url
+    ///   - state: Instance of `CampaignState` for storing the rules download URL
     func loadRulesFromUrl(rulesUrl: URL, linkageFieldHeaders: [String: String]?, state: CampaignState) {
         /// 304 - Not Modified support
         var headers = [String: String]()
@@ -215,7 +215,7 @@ private extension RuleConsequence {
     }
 
     /// Parses the assets key in the rule consequence into an array of asset URLs to be downloaded and cached.
-    /// - Returns An array to asset URLs that need to be downloaded and cached
+    /// - Returns An array of asset URLs that need to be downloaded and cached
     func createAssetUrlArray() -> [String]? {
         guard let assetsArray = details[CampaignConstants.EventDataKeys.RulesEngine.Detail.REMOTE_ASSETS] as? [[String]]  else {
             return nil

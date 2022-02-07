@@ -118,11 +118,14 @@ enum CampaignConstants {
         static let MESSAGE_CLICKED = "a.message.clicked"
         static let MESSAGE_VIEWED = "a.message.viewed"
         static let MESSAGE_ID = "a.message.id"
+        static let MESSAGE_ACTION_VALUE = "1"
     }
 
     // MARK: EventDataKeys
     enum EventDataKeys {
         static let MESSAGE_TRIGGERED_ACTION_VALUE = "7"
+        static let MESSAGE_CLICKED_ACTION_VALUE = "2"
+        static let MESSAGE_VIEWED_ACTION_VALUE = "1"
         static let STATE_OWNER = "stateowner"
         static let LINKAGE_FIELDS = "linkagefields"
         static let TRACK_INFO_KEY_BROADLOG_ID  = "broadlogId"

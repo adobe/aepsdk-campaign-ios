@@ -158,7 +158,9 @@ class CampaignState {
         return true
     }
 
-    /// Determines if a registration request should be sent to Campaign. Returns true if the ECID has changed or if the registrationDelay specified in the Configuration shared state has elapsed.
+    /// Determines if a registration request should be sent to Campaign.
+    ///
+    /// Returns true if the ECID has changed or if the registration delay specified in the Configuration shared state has elapsed.
     /// - Parameters:
     ///   - eventTimeStamp: The timestamp of the Lifecycle `Event` which triggered a Campaign registration to be sent
     /// - Returns: `true` if the registration request should be sent, otherwise returns `false`

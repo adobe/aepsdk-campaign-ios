@@ -17,8 +17,8 @@ struct CampaignRulesCache {
     private let LOG_TAG = "CampaignRulesCache"
     private let cache = Cache(name: CampaignConstants.RulesDownloaderConstants.RULES_CACHE_NAME)
 
-    /// Builds the cache key from the rules url and the rules cache prefix
-    /// - Parameter rulesUrl: A `String` containing the rules url
+    /// Builds the cache key from the rules URL and the rules cache prefix
+    /// - Parameter rulesUrl: A `String` containing the rules URL
     /// - Returns: A `String` containing the built cache key for the rules
     private func buildCacheKey(rulesUrl: String) -> String {
         let utf8RulesUrl = rulesUrl.data(using: .utf8)
@@ -31,7 +31,7 @@ struct CampaignRulesCache {
 
     /// Caches the given rules
     /// - Parameters:
-    ///    - rulesUrl: A `String` containing the rules url. It is used for building the key for the cache entry.
+    ///    - rulesUrl: A `String` containing the rules URL. It is used for building the key for the cache entry.
     ///    - cachedRules: The `CampaignCachedRules` to be set in cache
     /// - Returns: `true` if caching succeeded, `false` otherwise
     func setCachedRules(rulesUrl: String, cachedRules: CampaignCachedRules) -> Bool {
@@ -46,9 +46,9 @@ struct CampaignRulesCache {
         }
     }
 
-    /// Gets the cached rules for the given rules url.
-    /// - Parameter rulesUrl: A `String` containing the rules url. It is used a key to get the matching cached rules.
-    /// - Returns: The `CampaignCachedRules` for the given rules url
+    /// Gets the cached rules for the given `rulesUrl`.
+    /// - Parameter rulesUrl: A `String` containing the rules URL. It's used as a key to get the matching cached rules.
+    /// - Returns: The `CampaignCachedRules` for the given rules URL
     func getCachedRules(rulesUrl: String) -> CampaignCachedRules? {
         guard let cachedEntry = cache.get(key: buildCacheKey(rulesUrl: rulesUrl)) else {
             return nil
@@ -57,7 +57,7 @@ struct CampaignRulesCache {
     }
 
     /// Deletes the cached campaign rules.json from the Cache Service.
-    /// - Parameter url: A `String` containing the rules url. It is used as a key to get the matching cached rules.
+    /// - Parameter url: A `String` containing the rules URL. It's used as a key to get the matching cached rules.
     func deleteCachedRules(url: String) {
         let cacheKey = buildCacheKey(rulesUrl: url)
         do {

@@ -25,7 +25,7 @@ struct CampaignMessageAssetsCache {
 
     /// Downloads and caches the assets for a given messageId.
     /// - Parameters:
-    ///  - urls: An array of URL of Assets
+    ///  - urls: An array of asset `URL`s
     ///  - messageId: The id of the message
     func downloadAssetsForMessage(from urls: [String], messageId: String) {
         Log.trace(label: LOG_PREFIX, "\(#function) - Will attempt to download assets for Message (\(messageId) from URLs: \(urls)")
@@ -43,7 +43,7 @@ struct CampaignMessageAssetsCache {
         downloadAssets(urls: assetsToRetain, messageId: messageId)
     }
 
-    /// Iterates over the urls array and triggers the network requests to download assets from each URL in the array.
+    /// Iterates over the `urls` array and triggers the network requests to download assets from each URL in the array.
     /// - Parameters:
     ///  - urls: An array of asset `URL`s
     ///  - messageId: The id of the message
@@ -63,7 +63,7 @@ struct CampaignMessageAssetsCache {
         }
     }
 
-    /// Caches the provided asset `Data` downloaded from the given url for the given message Id.
+    /// Caches the provided asset `Data` downloaded from the given URL for the given message Id.
     /// - Parameters:
     ///  - data: The downloaded `Data`
     ///  - forKey: The asset download URL. Used to name the cache folder.

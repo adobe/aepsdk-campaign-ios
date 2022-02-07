@@ -86,7 +86,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
     }
 
     /// Returns true as the Campaign Fullscreen Message class should download assets
-    ///  - Returns: A `true` as Campaign  fullscreen message assets should always be downloaded
+    ///  - Returns: A `Bool` containing `true` as Campaign fullscreen message assets should always be downloaded
     func shouldDownloadAssets() -> Bool {
         return true
     }
