@@ -71,7 +71,7 @@ jobs:
       if: ${{ github.event.inputs.release_AEPCampaign == 'yes' }}
       run: |
         set -eo pipefail
-        pod trunk push AEPCampaign.podspec --allow-warnings --synchronous --swift-version=5.1
+        pod trunk push AEPCampaign.podspec --allow-warnings --swift-version=5.1
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
 

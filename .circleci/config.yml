@@ -58,20 +58,16 @@ jobs:
             - ~/.cocoapods
 
       - run:
-          name: Install SwiftLint
-          command: make install-swiftlint
-
-      - run:
           name: Lint Source Code
           command: make lint
 
       - run:
           name: Install nicklockwood/SwiftFormat
-          command: brew install swiftformat
+          command: make install-swiftformat
 
       - run:
-          name: Swift Formating
-          command: swiftformat --lint AEPCampaign/Sources --swiftversion 5.1
+          name: Check Source Code formatting
+          command: make check-format
 
       # pre-start the simulator to prevent timeouts
       - run:
