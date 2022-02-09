@@ -12,7 +12,7 @@
 
 import Foundation
 
-/// Represents a Cached rules type which has some additional metadata on top of the rules
+/// Represents a cached rules type which has some additional metadata on top of the rules
 struct CampaignCachedRules: CampaignCacheable, Codable {
     let cacheable: Data
 

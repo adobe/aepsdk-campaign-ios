@@ -14,12 +14,12 @@ import AEPCore
 import AEPServices
 import Foundation
 
-///Helper class contains methods for tracking user's interaction with `Messages`
+/// Helper class containing methods for tracking user interactions with `Messages`
 class MessageInteractionTracker {
 
     private static let LOG_TAG = "MessageInteractionTracker"
 
-    ///Processes `Generic Data` event to send message tracking request to the configured Campaign server. If the current Configuration properties do not allow sending track requests, no request is sent.
+    /// Processes `Generic Data` events to send message tracking requests to the configured Campaign server. If the current Configuration properties do not allow sending track requests, no request is sent.
     /// - Parameters:
     ///    - event: `Event`to be processed
     ///    - state: Current `Campaign State`
@@ -75,10 +75,15 @@ class MessageInteractionTracker {
         eventDispatcher("InternalGenericDataEvent", EventType.genericData, EventSource.os, eventData)
     }
 
-    ///Dispatches an event with action `viewed` or `clicked` and message `deliveryId`. This is to mark that a notification is interacted by user.
+    /// Dispatches an event with action `viewed` or `clicked` and message `deliveryId`. This is to mark that a notification was interacted by a user.
+    /// - Parameters:
+    ///    - action: The tracked message's interaction type
+    ///    - deliveryId: The tracked message's delivery id
+    ///    - eventDispatcher: The Campaign event dispatcher
     private static func dispatchMessageEvent(action: String, deliveryId: String, eventDispatcher: Campaign.EventDispatcher) {
 
-        guard action == "2" || action == "1" else { //Dispatch only when action is clicked(2) or viewed(1)
+        guard action == CampaignConstants.EventDataKeys.MESSAGE_CLICKED_ACTION_VALUE
+            || action == CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE else { // Dispatch only when action is clicked(2) or viewed(1)
             Log.trace(label: LOG_TAG, "\(#function) - Action received is other than viewed or clicked, so cannot dispatch Message Event.")
             return
         }
@@ -88,7 +93,7 @@ class MessageInteractionTracker {
             return
         }
         let actionKey: String
-        if action == "1" {
+        if action == CampaignConstants.EventDataKeys.MESSAGE_VIEWED_ACTION_VALUE {
             actionKey = CampaignConstants.ContextDataKeys.MESSAGE_VIEWED
         } else {
             actionKey = CampaignConstants.ContextDataKeys.MESSAGE_CLICKED
@@ -96,7 +101,7 @@ class MessageInteractionTracker {
 
         let contextData = [
             CampaignConstants.ContextDataKeys.MESSAGE_ID: "\(decimalDeliveryId)",
-            actionKey: "1"
+            actionKey: CampaignConstants.ContextDataKeys.MESSAGE_ACTION_EXISTS_VALUE
         ]
         dispatchMessageInteraction(data: contextData, eventDispatcher: eventDispatcher)
     }

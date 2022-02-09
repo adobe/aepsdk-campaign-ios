@@ -18,15 +18,15 @@ import AEPServices
 @objc public extension Campaign {
     private static let LOG_TAG = "Campaign"
 
-    ///Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
-    ///The set linkage fields are stored as base64 encoded JSON string in memory and they are sent in a custom HTTP header 'X-InApp-Auth'
-    ///in all future Campaign rules download requests until `resetLinkageFields` is invoked. These in-memory variables are also
-    ///lost in the wake of an Application crash event or upon graceful Application termination or when the privacy status is updated to OPT_OUT.
-    ///This method clears cached rules from previous download before triggering a rules download request to the configured Campaign server.
-    ///If the current SDK privacy status is not OPT_IN, no rules download happens.
-    /// - Parameters linkageFields: The Linkage fields key value pairs.
+    /// Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
+    /// The set linkage fields are stored as base64 encoded JSON string in memory and they are sent in a custom HTTP header 'X-InApp-Auth'
+    /// in all future Campaign rules download requests until `resetLinkageFields` is invoked. These in-memory variables are also
+    /// lost in the wake of an Application crash event or upon graceful Application termination or when the privacy status is updated to OPT_OUT.
+    /// This method clears cached rules from previous download before triggering a rules download request to the configured Campaign server.
+    /// If the current SDK privacy status is not OPT_IN, no rules download occurs.
+    /// - Parameters linkageFields: The linkage fields key value pairs.
     @objc (setLinkageFields:)
-    static func setLinkageFields(linkageFields: [String: String]) {
+    static func setLinkageFields(_ linkageFields: [String: String]) {
         guard !linkageFields.isEmpty else {
             Log.debug(label: LOG_TAG, "\(#function) - Unable to set the linkage fields. The passed in linkage fields dictionary is empty.")
             return
@@ -37,9 +37,9 @@ import AEPServices
         MobileCore.dispatch(event: event)
     }
 
-    ///Clears previously stored linkage fields in the mobile SDK and triggers Campaign rules download request to the configured Campaign server.
-    ///This method unregisters any previously registered rules with the Event Hub and clears cached rules from previous download.
-    ///If the current SDK privacy status is not `OPT_IN`, no rules download happens.
+    /// Clears previously stored linkage fields in the mobile SDK and triggers a Campaign rules download request to the configured Campaign server.
+    /// This method unregisters any previously registered rules with the Event Hub and clears cached rules from the previous download.
+    /// If the current SDK privacy status is not `OPT_IN`, no rules download occurs.
     @objc (resetLinkageFields)
     static func resetLinkageFields() {
         let event = Event(name: "ResetLinkageFields", type: EventType.campaign, source: EventSource.requestReset, data: nil)

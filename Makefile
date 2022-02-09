@@ -2,14 +2,23 @@ export EXTENSION_NAME = AEPCampaign
 PROJECT_NAME = $(EXTENSION_NAME)
 TARGET_NAME_XCFRAMEWORK = $(EXTENSION_NAME).xcframework
 SCHEME_NAME_XCFRAMEWORK = AEPCampaign
+CURR_DIR := ${CURDIR}
 
 SIMULATOR_ARCHIVE_PATH = ./build/ios_simulator.xcarchive/Products/Library/Frameworks/
+SIMULATOR_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios_simulator.xcarchive/dSYMs/
 IOS_ARCHIVE_PATH = ./build/ios.xcarchive/Products/Library/Frameworks/
+IOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios.xcarchive/dSYMs/
+
+lint-autocorrect:
+	./Pods/SwiftLint/swiftlint autocorrect --format
+
+lint:
+	./Pods/SwiftLint/swiftlint lint
 
 setup:
 	(pod install)
 
-setup-tools: install-swiftlint install-githook
+setup-tools: install-githook
 
 pod-repo-update:
 	(pod repo update)
@@ -33,28 +42,22 @@ test:
 	@echo "######################################################################"
 	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination 'platform=iOS Simulator,name=iPhone 8' -derivedDataPath ./out -enableCodeCoverage YES
 
-install-swiftlint:
-	HOMEBREW_NO_AUTO_UPDATE=1 brew install swiftlint && brew cleanup swiftlint
-
 archive:
 	xcodebuild archive -workspace $(PROJECT_NAME).xcworkspace -scheme $(SCHEME_NAME_XCFRAMEWORK) -archivePath "./build/ios.xcarchive" -sdk iphoneos -destination="iOS" SKIP_INSTALL=NO BUILD_LIBRARIES_FOR_DISTRIBUTION=YES
 	xcodebuild archive -workspace $(PROJECT_NAME).xcworkspace -scheme $(SCHEME_NAME_XCFRAMEWORK) -archivePath "./build/ios_simulator.xcarchive" -sdk iphonesimulator -destination="iOS Simulator" SKIP_INSTALL=NO BUILD_LIBRARIES_FOR_DISTRIBUTION=YES
-	xcodebuild -create-xcframework -framework $(SIMULATOR_ARCHIVE_PATH)$(EXTENSION_NAME).framework -framework $(IOS_ARCHIVE_PATH)$(EXTENSION_NAME).framework -output ./build/$(TARGET_NAME_XCFRAMEWORK)
+	xcodebuild -create-xcframework -framework $(SIMULATOR_ARCHIVE_PATH)$(EXTENSION_NAME).framework -debug-symbols $(SIMULATOR_ARCHIVE_DSYM_PATH)$(EXTENSION_NAME).framework.dSYM -framework $(IOS_ARCHIVE_PATH)$(EXTENSION_NAME).framework -debug-symbols $(IOS_ARCHIVE_DSYM_PATH)$(EXTENSION_NAME).framework.dSYM -output ./build/$(TARGET_NAME_XCFRAMEWORK)
 
 clean:
 	rm -rf ./build
 
-lint:
-	swiftlint lint
+install-swiftformat:
+	(brew install swiftformat) 
 
-lint-autocorrect:
-	swiftlint autocorrect
-
-checkFormat:
-	swiftformat . --lint --swiftversion 5.2
+check-format:
+	(swiftformat --lint $(PROJECT_NAME)/Sources --swiftversion 5.1)
 
 format:
-	swiftformat . --swiftversion 5.2
+	(swiftformat $(PROJECT_NAME)/Sources --swiftversion 5.1)
 
 # release checks
 check-version:
@@ -65,6 +68,3 @@ test-SPM-integration:
 
 test-podspec:
 	(sh ./Script/test-podspec.sh)
-
-pod-lint:
-	(pod lib lint --allow-warnings --verbose --swift-version=5.1)

@@ -38,7 +38,7 @@ extension URL {
 
     /// Builds the `URL` responsible for sending a Campaign rules download request to MCIAS
     /// - Parameters:
-    ///    - mciasServer: Campaign Mcias server
+    ///    - mciasServer: Campaign MCIAS server
     ///    - campaignServer: Campaign server
     ///    - propertyId: Campaign property id
     ///    - ecid: The experience cloud id of user
@@ -104,10 +104,11 @@ extension URL {
             return nil
         }
 
+        // tracking url: https://{campaign-server}/r/?id={broadlogId},{deliveryId},{action}&mcId={mcid}
         var urlComponent = URLComponents()
         urlComponent.scheme = "https"
         urlComponent.host = host
-        urlComponent.path = "/r"
+        urlComponent.path = "/r/"
         urlComponent.queryItems = [
             URLQueryItem(name: "id", value: "\(broadLogId),\(deliveryId),\(action)"),
             URLQueryItem(name: "mcId", value: ecid)

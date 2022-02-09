@@ -80,6 +80,7 @@ struct AlertMessage: CampaignMessaging {
     }
 
     /// Creates the `UIAlertController` object to be presented
+    ///  - Returns: The created `UIAlertController` or nil if the creation failed
     private func createUIAlertController() -> UIAlertController? {
         guard let title = self.title, let content = self.content, let cancelText = self.cancel else {
             return nil
@@ -95,6 +96,8 @@ struct AlertMessage: CampaignMessaging {
     }
 
     /// Dispatches the alert message tracking events
+    ///  - Parameters:
+    ///    - action: `UIAlertAction` to be tracked
     private func handleTracking(action: UIAlertAction) {
         if action.style == .cancel {
             viewed()

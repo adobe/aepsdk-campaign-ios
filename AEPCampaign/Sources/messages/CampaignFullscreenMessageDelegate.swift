@@ -42,7 +42,7 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
     ///  - Parameters:
     ///    - message: the Campaign Fullscreen Message object
     ///    - url: A `String` containing the URL being loaded by the Message
-    ///  - Returns: true if the SDK wants to handle the URL, false otherwise
+    ///  - Returns: `true` if the SDK wants to handle the URL, `false` otherwise
     func overrideUrlLoad(message: FullscreenMessage, url: String?) -> Bool {
         guard let urlString = url, !urlString.isEmpty else {
             Log.error(label: CampaignConstants.LOG_TAG, "\(#function) - Cannot process provided URL string, it is nil or empty.")
@@ -92,6 +92,7 @@ extension CampaignFullscreenMessage: FullscreenMessageDelegate {
         return true
     }
 
+    /// Invoked when a Campaign Fullscreen Message failed to be shown.
     func onShowFailure() {
         Log.debug(label: CampaignConstants.LOG_TAG, "\(#function) - Fullscreen message failed to show.")
         onFullscreenMessageDismissed?()

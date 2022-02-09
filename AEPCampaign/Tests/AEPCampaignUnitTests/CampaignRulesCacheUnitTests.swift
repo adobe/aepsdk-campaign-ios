@@ -41,7 +41,7 @@ class CampaignRulesCacheUnitTests: XCTestCase {
     }
 
     func testSetCacheRulesSuccess() {
-        //Setup
+        // Setup
         guard let rulesUrl = Self.campaignRulesJsonUrl else {
             XCTFail("Unable to retrieve bundled rules.json URL")
             return
@@ -52,15 +52,15 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         }
         let campaignCachedRules = CampaignCachedRules(cacheable: rulesData, lastModified: nil, eTag: nil)
 
-        //Action
+        // Action
         let hasSuccessfullyCachedRules = campaignRulesCache.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: campaignCachedRules)
 
-        //Assert
+        // Assert
         XCTAssertTrue(hasSuccessfullyCachedRules)
     }
 
     func testGetCacheRulesSuccess() {
-        //Setup
+        // Setup
         guard let rulesUrl = Self.campaignRulesJsonUrl else {
             XCTFail("Unable to retrieve bundled rules.json URL")
             return
@@ -72,17 +72,17 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         }
         let campaignCachedRules = CampaignCachedRules(cacheable: rulesData, lastModified: nil, eTag: nil)
 
-        //Action
+        // Action
         let hasSuccessfullyCachedRules = campaignRulesCache.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: campaignCachedRules)
         let retrievedCampaignCachedRule = campaignRulesCache.getCachedRules(rulesUrl: rulesUrl.absoluteString)
 
-        //Assert
+        // Assert
         XCTAssertTrue(hasSuccessfullyCachedRules)
         XCTAssertNotNil(retrievedCampaignCachedRule)
     }
 
     func testGetCacheRulesFailure() {
-        //Setup
+        // Setup
         guard let rulesUrl = Self.campaignRulesJsonUrl else {
             XCTFail("Unable to retrieve bundled rules.json URL")
             return
@@ -93,19 +93,19 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         }
         let campaignCachedRules = CampaignCachedRules(cacheable: rulesData, lastModified: nil, eTag: nil)
 
-        //Action
+        // Action
         let hasSuccessfullyCachedRules = campaignRulesCache.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: campaignCachedRules)
 
         let invalidUrl = "\(rulesUrl.absoluteString) invalid string"
         let retrievedCampaignCachedRule = campaignRulesCache.getCachedRules(rulesUrl: invalidUrl)
 
-        //Assert
+        // Assert
         XCTAssertTrue(hasSuccessfullyCachedRules)
         XCTAssertNil(retrievedCampaignCachedRule)
     }
 
     func testDeleteCacheRuleSuccess() {
-        //Setup
+        // Setup
         guard let rulesUrl = Self.campaignRulesJsonUrl else {
             XCTFail("Unable to retrieve bundled rules.json URL")
             return
@@ -116,19 +116,19 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         }
         let campaignCachedRules = CampaignCachedRules(cacheable: rulesData, lastModified: nil, eTag: nil)
 
-        //Action
+        // Action
         let hasSuccessfullyCachedRules = campaignRulesCache.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: campaignCachedRules)
         campaignRulesCache.deleteCachedRules(url: rulesUrl.absoluteString)
 
         let retrievedCampaignCachedRule = campaignRulesCache.getCachedRules(rulesUrl: rulesUrl.absoluteString)
 
-        //Assert
+        // Assert
         XCTAssertTrue(hasSuccessfullyCachedRules)
         XCTAssertNil(retrievedCampaignCachedRule)
     }
 
     func testDeleteCacheRuleFailure() {
-        //Setup
+        // Setup
         guard let rulesUrl = Self.campaignRulesJsonUrl else {
             XCTFail("Unable to retrieve bundled rules.json URL")
             return
@@ -139,7 +139,7 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         }
         let campaignCachedRules = CampaignCachedRules(cacheable: rulesData, lastModified: nil, eTag: nil)
 
-        //Action
+        // Action
         let hasSuccessfullyCachedRules = campaignRulesCache.setCachedRules(rulesUrl: rulesUrl.absoluteString, cachedRules: campaignCachedRules)
 
         let invalidUrl = "\(rulesUrl.absoluteString) invalid string"
@@ -147,13 +147,13 @@ class CampaignRulesCacheUnitTests: XCTestCase {
 
         let retrievedCampaignCachedRule = campaignRulesCache.getCachedRules(rulesUrl: rulesUrl.absoluteString)
 
-        //Assert
+        // Assert
         XCTAssertTrue(hasSuccessfullyCachedRules)
         XCTAssertNotNil(retrievedCampaignCachedRule)
     }
 
     func testDeleteCachedAssets() {
-        //Setup
+        // Setup
         let fileManager = MockFileManager()
         guard let cacheDir = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
             return
@@ -162,10 +162,10 @@ class CampaignRulesCacheUnitTests: XCTestCase {
         try? fileManager.createDirectory(at: cachedAssetsUrl, withIntermediateDirectories: true, attributes: nil)
         let assetsDirectoryCreated = fileManager.fileExists(atPath: cachedAssetsUrl.absoluteString)
 
-        //Action
+        // Action
         campaignRulesCache.deleteCachedAssets(fileManager: fileManager)
 
-        //Assets
+        // Assert
         XCTAssertTrue(assetsDirectoryCreated)
         XCTAssertFalse(fileManager.fileExists(atPath: cachedAssetsUrl.absoluteString))
     }

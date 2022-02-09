@@ -47,7 +47,6 @@ class CampaignState {
     }
 
     // Identity shared state
-
     /// Creates a new `CampaignState`.
     init() {
         self.dataStore = NamedCollectionDataStore(name: CampaignConstants.DATASTORE_NAME)
@@ -58,7 +57,7 @@ class CampaignState {
     }
 
     /// Takes the shared states map and updates the data within the Campaign State.
-    /// - Parameter dataMap: The map contains the shared state data required by the Campaign Extension.
+    /// - Parameter dataMap: The map containing the shared state data required by the Campaign Extension.
     func update(dataMap: [String: [String: Any]?]) {
         for key in dataMap.keys {
             guard let sharedState = dataMap[key] else {
@@ -76,7 +75,7 @@ class CampaignState {
     }
 
     /// Extracts the configuration data from the provided shared state data.
-    /// - Parameter configurationData the data map from `Configuration` shared state.
+    /// - Parameter configurationData the data map from the `Configuration` shared state.
     private func extractConfigurationInfo(from configurationData: [String: Any]) {
         self.privacyStatus = PrivacyStatus.init(rawValue: configurationData[CampaignConstants.Configuration.GLOBAL_CONFIG_PRIVACY] as? PrivacyStatus.RawValue ?? PrivacyStatus.unknown.rawValue) ?? .unknown
         self.campaignServer = configurationData[CampaignConstants.Configuration.CAMPAIGN_SERVER] as? String
@@ -93,7 +92,7 @@ class CampaignState {
         createHitQueue()
     }
 
-    // create the hitqueue if not yet created. otherwise, update the hitQueue with the latest privacy status.
+    /// Creates the hit queue if not yet created. otherwise, update the hit queue with the latest privacy status.
     private func createHitQueue() {
         if let hitQueue = hitQueue {
             hitQueue.handlePrivacyChange(status: self.privacyStatus)
@@ -103,7 +102,7 @@ class CampaignState {
     }
 
     /// Extracts the identity data from the provided shared state data.
-    /// - Parameter identityData the data map from `Identity` shared state.
+    /// - Parameter identityData the data map from the `Identity` shared state.
     private func extractIdentityInfo(from identityData: [String: Any]?) {
         guard let identityData = identityData else {
             Log.trace(label: LOG_TAG, "\(#function) - Failed to extract identity data (event data was nil).")
@@ -113,7 +112,7 @@ class CampaignState {
     }
 
     /// Determines if this `CampaignState` is valid for sending a registration request to Campaign.
-    ///- Returns true if the CampaignState is valid else return false
+    /// - Returns `true` if the CampaignState is valid, otherwise returns `false`
     private func canRegisterWithCurrentState() -> Bool {
         guard privacyStatus != .optedOut else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send registration request to Campaign. Privacy status is Opted Out.")
@@ -138,8 +137,8 @@ class CampaignState {
         return true
     }
 
-    ///Determines if this `CampaignState` is valid for sending message track request to Campaign.
-    ///- Returns true if the CampaignState is valid else return false
+    /// Determines if this `CampaignState` is valid for sending message track request to Campaign.
+    /// - Returns `true` if the CampaignState is valid, otherwise returns `false`
     func canSendTrackInfoWithCurrentState() -> Bool {
         guard privacyStatus == .optedIn else {
             Log.debug(label: LOG_TAG, "\(#function) Unable to send message track info to Campaign. Privacy status is not OptedIn.")
@@ -159,7 +158,12 @@ class CampaignState {
         return true
     }
 
-    ///Determines if the registration request should send to Campaign. Returns true, if the ecid has changed or number of days passed since the last registration is greater than registrationDelay in obtained in Configuration shared state.
+    /// Determines if a registration request should be sent to Campaign.
+    ///
+    /// Returns true if the ECID has changed or if the registration delay specified in the Configuration shared state has elapsed.
+    /// - Parameters:
+    ///   - eventTimeStamp: The timestamp of the Lifecycle `Event` which triggered a Campaign registration to be sent
+    /// - Returns: `true` if the registration request should be sent, otherwise returns `false`
     func shouldSendRegistrationRequest(eventTimeStamp: TimeInterval) -> Bool {
         guard let ecid = ecid, let registrationDelay = campaignRegistrationDelay else {
             Log.debug(label: LOG_TAG, "\(#function) - Returning false. Required Campaign Configuration is not present.")
@@ -210,14 +214,14 @@ class CampaignState {
         processRequest(url: url, payload: body, event: event)
     }
 
-    ///Process the network requests
+    /// Prepares and queues a pending network request.
     /// - Parameters:
     ///    - url: The request URL
     ///    - payload: The request payload
     ///    - event:The `Event` that triggered the network request
     func processRequest(url: URL, payload: String, event: Event) {
         // check if this request is a registration request by checking for the presence of a payload and if it is a registration request, determine if it should be sent.
-        if !payload.isEmpty { //Registration request
+        if !payload.isEmpty { // Registration request
             guard shouldSendRegistrationRequest(eventTimeStamp: event.timestamp.timeIntervalSince1970) else {
                 Log.warning(label: LOG_TAG, "\(#function) - Unable to process request.")
                 return
@@ -240,7 +244,9 @@ class CampaignState {
         dataStore.set(key: CampaignConstants.Campaign.Datastore.ECID_KEY, value: ecid)
     }
 
-    ///Persist the rules url in data store
+    /// Persist the rules url in the Campaign Datastore
+    /// - Parameters:
+    ///   - url: A `String` containing the rules url to be stored in the Campaign Datastore
     func updateRuleUrlInDataStore(url: String?) {
         guard let url = url else {
             Log.trace(label: LOG_TAG, "\(#function) - Updated URL is nil. Removing Rules URL from the data store.")
@@ -251,7 +257,8 @@ class CampaignState {
         dataStore.set(key: CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY, value: url)
     }
 
-    ///Retrieves the rules url from the data store
+    /// Retrieves the rules url from the Campaign Datastore
+    /// - Returns: A `String` containing the rules url retrieved from the Campaign Datastore
     func getRulesUrlFromDataStore() -> String? {
         return dataStore[CampaignConstants.Campaign.Datastore.REMOTE_URL_KEY]
     }
@@ -279,7 +286,8 @@ class CampaignState {
         updateDatastoreWithSuccessfulRegistrationInfo(timestamp: hit.timestamp)
     }
 
-    ///Returns `true` if all required configurations for downloading rules all present else returns `false`
+    /// Determines if the necessary configuration is present for downloading rules.
+    /// - Returns: `true` if all required configurations are present, otherwise returns `false`
     func canDownloadRules() -> Bool {
         return privacyStatus == .optedIn
             && !(ecid?.isEmpty ?? true) && !(campaignServer?.isEmpty ?? true)

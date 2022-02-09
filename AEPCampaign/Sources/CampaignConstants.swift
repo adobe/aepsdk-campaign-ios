@@ -15,7 +15,7 @@ import Foundation
 enum CampaignConstants {
     static let EXTENSION_NAME                           = "com.adobe.module.campaign"
     static let FRIENDLY_NAME                            = "Campaign"
-    static let EXTENSION_VERSION                        = "3.0.0"
+    static let EXTENSION_VERSION                        = "3.0.1"
     static let DATASTORE_NAME                           = EXTENSION_NAME
     static let LOG_TAG                                  = FRIENDLY_NAME
 
@@ -118,11 +118,14 @@ enum CampaignConstants {
         static let MESSAGE_CLICKED = "a.message.clicked"
         static let MESSAGE_VIEWED = "a.message.viewed"
         static let MESSAGE_ID = "a.message.id"
+        static let MESSAGE_ACTION_EXISTS_VALUE = "1"
     }
 
     // MARK: EventDataKeys
     enum EventDataKeys {
         static let MESSAGE_TRIGGERED_ACTION_VALUE = "7"
+        static let MESSAGE_CLICKED_ACTION_VALUE = "2"
+        static let MESSAGE_VIEWED_ACTION_VALUE = "1"
         static let STATE_OWNER = "stateowner"
         static let LINKAGE_FIELDS = "linkagefields"
         static let TRACK_INFO_KEY_BROADLOG_ID  = "broadlogId"
@@ -158,7 +161,7 @@ enum CampaignConstants {
     enum RulesDownloaderConstants {
         static let RULES_CACHE_NAME = "campaign.rules.cache"
         static let RULES_ZIP_FILE_NAME = "rules.zip"
-        static let RULES_TEMP_DIR = "com.adobe.rules.campaign" //A temp folder where Campaign rules.zip is downloaded
+        static let RULES_TEMP_DIR = "com.adobe.rules.campaign" // A temp folder where Campaign rules.zip is downloaded
         static let CAMPAIGN_CACHE = "campaign"
         static let RULES_CACHE_FOLDER = "\(CAMPAIGN_CACHE)/campaignrules"
         static let MESSAGE_CACHE_FOLDER = "\(CAMPAIGN_CACHE)/messages"
