@@ -16,7 +16,7 @@ jobs:
 
   build-and-test:
     macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
+      xcode: 13.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -52,7 +52,7 @@ jobs:
       # save pods related files
       - save_cache:
           name: Saving CocoaPods Cache
-          key: cocoapods-cache-v4-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
+          key: cocoapods-cache-v5-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
           paths:
             - ./Pods
             - ~/.cocoapods
@@ -89,7 +89,7 @@ jobs:
                shasum -a $i -c --ignore-missing <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM") ||
                shasum -a $i -c <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM" | grep -w "codecov")
              done  
-             bash ./codecov -v -X s3 -c -D "./out/Build/ProfileData" -J "AEPCampaign" -t ${CODECOV_TOKEN}
+             bash ./codecov -v -X s3 -c -D "./out/Build/ProfileData" -J "AEPCampaign"
 
       # verify XCFramework archive builds
       - run:
