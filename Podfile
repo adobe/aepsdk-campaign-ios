@@ -18,7 +18,7 @@ def rulesengine
 end
 
 def assurance   
-   pod 'AEPAssurance', '~> 4.0.0'
+   pod 'AEPAssurance'
 end
 
 def user_profile
