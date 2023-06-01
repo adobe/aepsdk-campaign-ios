@@ -1,4 +1,4 @@
-platform :ios, '10.0'
+platform :ios, '11.0'
 use_frameworks!
 
 project 'AEPCampaign.xcodeproj'
@@ -18,7 +18,7 @@ def rulesengine
 end
 
 def assurance   
-   pod 'AEPAssurance', '~> 3.0.0'
+   pod 'AEPAssurance', '~> 4.0.0'
 end
 
 def user_profile

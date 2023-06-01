@@ -20,7 +20,7 @@ let package = Package(
     name: \"TestProject\",
     defaultLocalization: \"en-US\",
     platforms: [
-        .iOS(.v10)
+        .iOS(.v11)
     ],
     products: [
         .library(
@@ -29,7 +29,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: \"AEPCore\", url: \"https://github.com/adobe/aepsdk-core-ios.git\", .branch(\"main\")),
+        .package(url: \"https://github.com/adobe/aepsdk-core-ios.git\", .upToNextMajor(from:\"4.0.0\")),
         .package(name: \"AEPCampaign\", path: \"../\"),
     ],
     targets: [
