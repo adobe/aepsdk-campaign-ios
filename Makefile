@@ -49,8 +49,7 @@ test: clean
 	@echo "######################################################################"
 	xcodebuild test -workspace $(PROJECT_NAME).xcworkspace -scheme $(PROJECT_NAME) -destination $(IOS_DESTINATION) -derivedDataPath build/out -resultBundlePath build/$(PROJECT_NAME).xcresult -enableCodeCoverage YES
 
-archive:
-	clean pod-install build
+archive: clean pod-install build
 	xcodebuild -create-xcframework -framework $(SIMULATOR_ARCHIVE_PATH)$(EXTENSION_NAME).framework -debug-symbols $(SIMULATOR_ARCHIVE_DSYM_PATH)$(EXTENSION_NAME).framework.dSYM -framework $(IOS_ARCHIVE_PATH)$(EXTENSION_NAME).framework -debug-symbols $(IOS_ARCHIVE_DSYM_PATH)$(EXTENSION_NAME).framework.dSYM -output ./build/$(TARGET_NAME_XCFRAMEWORK)
 
 build:
@@ -77,10 +76,6 @@ check-version:
 
 test-SPM-integration:
 	(sh ./script/test-SPM.sh)
-
-codecov:
-	(./script/codecov_downloader.sh)
-	(bash codecov -v -X s3 -c -D "./build/out" -J "AEPCampaign")
 
 test-podspec:
 	(sh ./script/test-podspec.sh)
