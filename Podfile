@@ -8,17 +8,17 @@ pod 'SwiftLint', '0.52.0'
 # POD groups
 
 def campaign_core_dependencies
-   pod 'AEPCore', '~> 4.0.0'
-   pod 'AEPServices', '~> 4.0.0'
-   pod 'AEPIdentity', '~> 4.0.0'
+   pod 'AEPCore', '~> 4.0'
+   pod 'AEPServices', '~> 4.0'
+   pod 'AEPIdentity', '~> 4.0'
 end
 
 def rulesengine
-   pod 'AEPRulesEngine', '~> 4.0.0'
+   pod 'AEPRulesEngine', '~> 4.0'
 end
 
 def assurance   
-   pod 'AEPAssurance', '~> 4.0.0'
+   pod 'AEPAssurance', '~> 4.0'
 end
 
 def user_profile
@@ -30,8 +30,8 @@ def places
 end
 
 def core_additional_dependecies
-   pod 'AEPLifecycle', '~> 4.0.0'
-   pod 'AEPSignal', '~> 4.0.0'
+   pod 'AEPLifecycle', '~> 4.0'
+   pod 'AEPSignal', '~> 4.0'
 end
 
 target 'AEPCampaign' do

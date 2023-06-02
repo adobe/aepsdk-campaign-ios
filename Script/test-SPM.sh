@@ -49,6 +49,10 @@ let package = Package(
 
 swift package update
 
+# This is a workaround for SPM issue https://github.com/apple/swift-package-manager/issues/5767
+swift package dump-pif > /dev/null || true
+xcodebuild clean -scheme TestProject -destination 'generic/platform=iOS' > /dev/null || true
+
 # Archive for generic iOS device
 echo '############# Archive for generic iOS device ###############'
 xcodebuild archive -scheme TestProject -destination 'generic/platform=iOS'
