@@ -10,8 +10,8 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPServices
+import Foundation
 
 /// A type that downloads and caches the Assets (images) associated with a Fullscreen IAM.
 struct CampaignMessageAssetsCache {

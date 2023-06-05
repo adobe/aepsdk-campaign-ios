@@ -11,10 +11,10 @@ IOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios.xcarchive/dSYMs/
 IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 14'
 
 lint-autocorrect:
-	./Pods/SwiftLint/swiftlint autocorrect --format
+	./Pods/SwiftLint/swiftlint --fix
 
 lint:
-	./Pods/SwiftLint/swiftlint lint
+	./Pods/SwiftLint/swiftlint lint Sources TestApps
 
 check-format:
 	swiftformat --lint AEPCampaign/Sources --swiftversion 5.1

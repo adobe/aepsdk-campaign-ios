@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 
 class CampaignFullscreenMessage: CampaignMessaging {
     private static let LOG_TAG = "FullscreenMessage"
@@ -110,6 +110,7 @@ class CampaignFullscreenMessage: CampaignMessaging {
              CampaignConstants.Campaign.MessageData.TAG_ID_BUTTON_X: // adbinapp://confirm/?id=h11901a,86f10d,5
             clickedWithData(data: query)
             viewed()
+
         default:
             Log.debug(label: Self.LOG_TAG, "\(#function) - Unsupported tag Id found in the id field in the given query: \(tagId)")
         }
