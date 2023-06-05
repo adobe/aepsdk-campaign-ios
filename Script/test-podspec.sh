@@ -18,7 +18,7 @@ echo "
 platform :ios, '11.0'
 target '$PROJECT_NAME' do
   use_frameworks!
-  pod 'AEPCampaign', :path => '../../AEPCampaign.podspec'
+  pod 'AEPCampaign', :path => '../AEPCampaign.podspec'
 end
 " >>Podfile
 
