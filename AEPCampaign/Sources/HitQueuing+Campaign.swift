@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 
 extension HitQueuing {
     /// Creates a Campaign Hit then queues the hit in the Campaign extension's `HitQueue`.

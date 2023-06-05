@@ -1,28 +1,30 @@
-# For a detailed guide to building and testing on iOS, read the docs:
-# https://circleci.com/docs/2.0/testing-ios/
+# Use the latest 2.1 version of CircleCI pipeline process engine. 
+# See: https://circleci.com/docs/2.0/configuration-reference
 
 version: 2.1
 
-# Workflows orchestrate a set of jobs to be run;
+orbs:
+  codecov: codecov/codecov@3.2.5
+  macos: circleci/macos@2
+
 workflows:
   version: 2
-  build-test-deploy:
+  build-test:
     jobs:
-      - build-and-test
-orbs:
-  slack: circleci/slack@4.0.2
+      - validate-code
+      - test-ios:
+          requires:
+            - validate-code
+      - test-spm-podspec-archive:
+          requires:
+            - validate-code
 
-jobs:
-
-  build-and-test:
-    macos:
-      xcode: 12.0.0 # Specify the Xcode version to use
-
+commands:
+  install_dependencies:
     steps:
-      - checkout
-
       # restore pods related caches
       - restore_cache:
+          name: Restore Gemfile Cache
           keys:
             - 1-gems-{{ checksum "Gemfile.lock" }}
 
@@ -33,16 +35,18 @@ jobs:
 
       # save cocoapods version gem data
       - save_cache:
+          name: Save Gemfile Cache
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 
       # restore pods related caches
       - restore_cache:
+          name: Restore CocoaPods Cache
           keys:
             - cocoapods-cache-v5-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
             - cocoapods-cache-v5-{{ arch }}-{{ .Branch }}
-            - cocoapods-cache-v5 
+            - cocoapods-cache-v5
 
       # install CocoaPods - using default CocoaPods version, not the bundle
       - run:
@@ -51,46 +55,66 @@ jobs:
 
       # save pods related files
       - save_cache:
-          name: Saving CocoaPods Cache
-          key: cocoapods-cache-v4-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
+          name: Save CocoaPods Cache
+          key: cocoapods-cache-v5-{{ arch }}-{{ .Branch }}-{{ checksum "Podfile.lock" }}
           paths:
             - ./Pods
             - ~/.cocoapods
 
-      - run:
-          name: Lint Source Code
-          command: make lint
+  prestart_ios_simulator:
+    steps:
+      - macos/preboot-simulator:
+          platform: "iOS"
+          version: "16.1"
+          device: "iPhone 14"
+
+jobs:
+  validate-code:
+    macos:
+      xcode: 14.1.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+
+      - install_dependencies
 
       - run:
-          name: Install nicklockwood/SwiftFormat
+          name: Install SwiftFormat
           command: make install-swiftformat
 
       - run:
-          name: Check Source Code formatting
-          command: make check-format
+          name: Lint Source Code
+          command: make lint; make check-format
 
-      # pre-start the simulator to prevent timeouts
-      - run:
-          name: Pre-start Simulator
-          command: xcrun instruments -w "iPhone 8 (13.1) [" || true
+
+  test-ios:
+    macos:
+      xcode: 14.1.0 # Specify the Xcode version to use
+
+    steps:
+      - checkout
+
+      - install_dependencies
+
+      - prestart_ios_simulator
 
       - run:
-          name: Run Tests
+          name: Run AEPCampaign Tests
           command: make test
 
-      # code coverage
-      - run:
-          name: Upload Code Coverage Report
-          command: |
-             curl -s https://codecov.io/bash > codecov;
-             VERSION=$(grep 'VERSION=\"[0-9\.]*\"' codecov | cut -d'"' -f2);
-             for i in 1 256 512
-             do
-               shasum -a $i -c --ignore-missing <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM") ||
-               shasum -a $i -c <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM" | grep -w "codecov")
-             done  
-             bash ./codecov -v -X s3 -c -D "./out/Build/ProfileData" -J "AEPCampaign" -t ${CODECOV_TOKEN}
+      # Code coverage upload using Codecov
+      # See options explanation here: https://docs.codecov.com/docs/codecov-uploader
+      - codecov/upload:
+          flags: aepcampaign-ios-tests
+          upload_name: Coverage Report for AEPCampaign iOS Tests
+          xtra_args: -c -v --xc --xp build/AEPCampaign.xcresult
 
+  test-spm-podspec-archive:  
+    macos:
+      xcode: 14.1.0 # Specify the Xcode version to use
+    
+    steps:
+      - checkout
       # verify XCFramework archive builds
       - run:
           name: Build XCFramework
@@ -98,108 +122,17 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               make archive
             fi
-      # slack notification
-      - slack/notify:
-          channel: ${SLACK_DEFAULT_CHANNEL}
-          event: fail
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "AEPCampaign[iOS] -> Build Failed :x:",
-                    "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n${CIRCLE_PROJECT_REPONAME}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*When:*\n$(date +'%m/%d/%Y %T')"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n${CIRCLE_USERNAME}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n${CIRCLE_BRANCH}"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "emoji": true,
-                        "text": "View Job"
-                      },
-                      "url": "${CIRCLE_BUILD_URL}",
-                      "style": "primary"
-                    }
-                  ]
-                }
-              ]
-            }
-      - slack/notify:
-          channel: ${SLACK_DEFAULT_CHANNEL}
-          event: pass
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "AEPCampaign[iOS] -> Build Successful :tada:",
-                    "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:*\n${CIRCLE_PROJECT_REPONAME}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*When:*\n$(date +'%m/%d/%Y %T')"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Author:*\n${CIRCLE_USERNAME}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n${CIRCLE_BRANCH}"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "emoji": true,
-                        "text": "View Job"
-                      },
-                      "url": "${CIRCLE_BUILD_URL}",
-                      "style": "primary"
-                    }
-                  ]
-                }
-              ]
-            }
+      # verify podspec is valid
+      - run:
+          name: Test Podspec
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+              make test-podspec
+            fi
+      # verify SPM works
+      - run:
+          name: Test SPM 
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+              make test-SPM-integration
+            fi

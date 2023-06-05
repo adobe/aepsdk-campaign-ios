@@ -1,17 +1,16 @@
 # Adobe Experience Platform Campaign SDK
 
-[![Cocoapods](https://img.shields.io/cocoapods/v/AEPCampaign.svg?color=orange&label=AEPCampaign&logo=apple&logoColor=white)](https://cocoapods.org/pods/AEPCampaign)
-
-[![SPM](https://img.shields.io/badge/SPM-Supported-orange.svg?logo=apple&logoColor=white)](https://swift.org/package-manager/)
-[![CircleCI](https://img.shields.io/circleci/project/github/adobe/aepsdk-campaign-ios/main.svg?logo=circleci)](https://circleci.com/gh/adobe/workflows/aepsdk-campaign-ios)
-[![Code Coverage](https://img.shields.io/codecov/c/github/adobe/aepsdk-campaign-ios/main.svg?logo=codecov)](https://codecov.io/gh/adobe/aepsdk-campaign-ios/branch/main)
+[![Cocoapods](https://img.shields.io/github/v/release/adobe/aepsdk-campaign-ios?color=orange&label=CocoaPods&logo=apple&logoColor=white&sort=semver)](https://cocoapods.org/pods/AEPCampaign)
+[![SPM](https://img.shields.io/github/v/release/adobe/aepsdk-campaign-ios?color=orange&label=SPM&logo=apple&logoColor=white&sort=semver)](https://github.com/adobe/aepsdk-campaign-ios/releases)
+[![CircleCI](https://img.shields.io/circleci/project/github/adobe/aepsdk-campaign-ios/main.svg?logo=circleci&label=Build)](https://circleci.com/gh/adobe/workflows/aepsdk-campaign-ios)
+[![Code Coverage](https://img.shields.io/codecov/c/github/adobe/aepsdk-campaign-ios/main.svg?logo=codecov&label=Coverage)](https://codecov.io/gh/adobe/aepsdk-campaign-ios/branch/main)
 
 ## About this project
 
 The AEPCampaign extension represents the Campaign Standard Adobe Experience Platform SDK that is required for registering mobile devices with your Campaign instance as well as creating in-app messages for your mobile app. The extension also enables the setting of linkage fields for use in creating personalized in-app messages.
 
 ## Requirements
-- Xcode 11.x
+- Xcode 14.1 (or newer)
 - Swift 5.x
 
 ## Installation
@@ -64,7 +63,7 @@ Alternatively, if your project has a `Package.swift` file, you can add AEPCampai
 
 ```swift
 dependencies: [
-    .package(name: "AEPCampaign", url: "https://github.com/adobe/aepsdk-campaign-ios.git", .upToNextMajor(from: "3.0.0"))
+    .package(name: "AEPCampaign", url: "https://github.com/adobe/aepsdk-campaign-ios.git", .upToNextMajor(from: "4.0.0"))
 ],
 targets: [
     .target(name: "YourTarget",

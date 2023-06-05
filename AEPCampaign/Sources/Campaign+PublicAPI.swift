@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 
 /// Defines the public interface for the Campaign extension
 @objc public extension Campaign {

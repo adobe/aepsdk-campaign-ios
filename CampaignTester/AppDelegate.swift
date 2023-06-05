@@ -37,12 +37,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
 
         // request permission to display notifications
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] authorized, error in
             if let error = error {
-                print("error encountered when requesting notification authorization: \(error)")
+                print("Error encountered when requesting push notification authorization: \(error)")
                 // Handle the error here.
             }
             // Enable or disable features based on the authorization.
+            guard authorized else {
+                print("Not authorized to show push notifications.")
+                return
+            }
+            
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                guard settings.authorizationStatus == .authorized else {
+                    print("User did not grant permissions to show push notifications.")
+                    return
+                }
+                DispatchQueue.main.async {
+                    // Register with Apple Push Notification service
+                    // iOS will invoke didRegisterForRemoteNotificationsWithDeviceToken if the registration is successful, or didFailToRegisterForRemoteNotificationsWithError if it fails.
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
         }
 
         // set places authorization
@@ -85,5 +101,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         guard let deeplink = userInfo["adb_deeplink"] as? String, let url = URL(string: deeplink) else { return }
         ServiceProvider.shared.urlService.openUrl(url)
     }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let token = deviceToken
+            .map { String(format: "%02.2hhx", $0) }
+            .joined()
+        print("Device token: \(token)")
+        
+        MobileCore.setPushIdentifier(deviceToken)
+    }
 
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register for push notifications with error: \(error).")
+    }
 }
