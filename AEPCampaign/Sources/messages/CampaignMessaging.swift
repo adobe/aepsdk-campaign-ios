@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 
 /// Defines Message Protocol for ACS In-App Messages.
 protocol CampaignMessaging {

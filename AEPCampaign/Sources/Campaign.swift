@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 
 @objc(AEPMobileCampaign)
 public class Campaign: NSObject, Extension {
@@ -84,6 +84,7 @@ public class Campaign: NSObject, Extension {
                 } else {
                     Log.debug(label: self.LOG_TAG, "\(#function) - Dropping Campaign RequestIdentity event '\(event.name)'. Unable to extract Linkage fields.")
                 }
+
             case EventSource.requestReset:
                 self.resetRules()
                 self.updateCampaignState(event: event)

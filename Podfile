@@ -1,24 +1,24 @@
-platform :ios, '10.0'
+platform :ios, '11.0'
 use_frameworks!
 
 project 'AEPCampaign.xcodeproj'
 
-pod 'SwiftLint', '0.44.0'
+pod 'SwiftLint', '0.52.0'
 
 # POD groups
 
 def campaign_core_dependencies
-   pod 'AEPCore'
-   pod 'AEPServices'
-   pod 'AEPIdentity'
+   pod 'AEPCore', '~> 4.0'
+   pod 'AEPServices', '~> 4.0'
+   pod 'AEPIdentity', '~> 4.0'
 end
 
 def rulesengine
-   pod 'AEPRulesEngine'
+   pod 'AEPRulesEngine', '~> 4.0'
 end
 
 def assurance   
-   pod 'AEPAssurance', '~> 3.0.0'
+   pod 'AEPAssurance', '~> 4.0'
 end
 
 def user_profile
@@ -30,8 +30,8 @@ def places
 end
 
 def core_additional_dependecies
-   pod 'AEPLifecycle'
-   pod 'AEPSignal'
+   pod 'AEPLifecycle', '~> 4.0'
+   pod 'AEPSignal', '~> 4.0'
 end
 
 target 'AEPCampaign' do

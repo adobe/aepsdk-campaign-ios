@@ -10,8 +10,8 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPServices
+import Foundation
 
 /// Represents an `object` which is cacheable via the `CacheService`
 protocol CampaignCacheable {

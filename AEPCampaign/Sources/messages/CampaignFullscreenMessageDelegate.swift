@@ -10,8 +10,8 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPServices
+import Foundation
 
 extension CampaignFullscreenMessage: FullscreenMessageDelegate {
     /// Invoked when a Campaign Fullscreen Message is displayed.

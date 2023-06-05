@@ -15,7 +15,7 @@ import Foundation
 enum CampaignConstants {
     static let EXTENSION_NAME                           = "com.adobe.module.campaign"
     static let FRIENDLY_NAME                            = "Campaign"
-    static let EXTENSION_VERSION                        = "3.0.1"
+    static let EXTENSION_VERSION                        = "4.0.0"
     static let DATASTORE_NAME                           = EXTENSION_NAME
     static let LOG_TAG                                  = FRIENDLY_NAME
 
@@ -27,7 +27,7 @@ enum CampaignConstants {
         static let PROFILE_REQUEST_EXPERIENCE_CLOUD_ID = "marketingCloudId"
         static let DEFAULT_REGISTRATION_DELAY = TimeInterval(60 * 60 * 24 * 7) // 7 days
         static let DEFAULT_TIMESTAMP_VALUE = TimeInterval(-1)
-        static let SECONDS_IN_A_DAY = 86400
+        static let SECONDS_IN_A_DAY = 86_400
         static let SERVER_TOKEN =
             "{%~state.com.adobe.module.configuration/campaign.server%}"
         static let PROPERTY_TOKEN =
@@ -56,8 +56,8 @@ enum CampaignConstants {
 
         enum MessagePayload {
             static let DEEPLINK_SCHEME = "adbinapp"
-            static let INTERACTION_URL  = "url"
-            static let INTERACTION_TYPE  = "type"
+            static let INTERACTION_URL = "url"
+            static let INTERACTION_TYPE = "type"
         }
 
         enum MessageData {
@@ -88,7 +88,7 @@ enum CampaignConstants {
         static let GLOBAL_CONFIG_PRIVACY = "global.privacy"
         static let GLOBAL_CONFIG_BUILD_ENVIRONMENT = "build.environment"
         static let PROPERTY_ID = "property.id"
-        static let CAMPAIGN_SERVER  = "campaign.server"
+        static let CAMPAIGN_SERVER = "campaign.server"
         static let DEV_CAMPAIGN_SERVER = "__dev__campaign.server"
         static let STAGE_CAMPAIGN_SERVER = "__stage__campaign.server"
         static let CAMPAIGN_PKEY = "campaign.pkey"
