@@ -10,8 +10,8 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPServices
+import Foundation
 
 struct CampaignRulesCache {
     private let LOG_TAG = "CampaignRulesCache"

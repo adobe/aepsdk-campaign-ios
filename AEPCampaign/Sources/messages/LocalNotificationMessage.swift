@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 import UIKit
 
 struct LocalNotificationMessage: CampaignMessaging {

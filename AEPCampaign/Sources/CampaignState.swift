@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 
 class CampaignState {
     private let LOG_TAG = "CampaignState"
@@ -66,8 +66,10 @@ class CampaignState {
             switch key {
             case CampaignConstants.Configuration.EXTENSION_NAME:
                 extractConfigurationInfo(from: sharedState ?? [:])
+
             case CampaignConstants.Identity.EXTENSION_NAME:
                 extractIdentityInfo(from: sharedState)
+
             default:
                 break
             }

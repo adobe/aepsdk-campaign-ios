@@ -10,9 +10,9 @@
  governing permissions and limitations under the License.
  */
 
-import Foundation
 import AEPCore
 import AEPServices
+import Foundation
 
 /// The `CampaignRulesDownloader` is responsible for downloading rules from remote server/retrieve them from cache and loading them into `Rules Engine`.
 struct CampaignRulesDownloader {
@@ -109,6 +109,7 @@ struct CampaignRulesDownloader {
                         Log.warning(label: self.LOG_TAG, "\(#function) - Failed to parse downloaded rules.json file.")
                     }
                     return
+
                 case let .failure(error):
                     Log.warning(label: self.LOG_TAG, error.localizedDescription)
                     return
