@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
                         The Campaign library provides APIs that allow use of the Campaign Standard product in the Adobe Experience Platform SDK.
                         DESC
-  s.homepage         = "https://github.com/adobe/aepsdk-campaign-ios"
+  s.homepage         = "https://github.com/adobe/aepsdk-campaign-ios.git"
   s.license          = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
   s.author           = "Adobe Experience Platform SDK Team"
   s.source           = { :git => "https://github.com/adobe/aepsdk-campaign-ios", :tag => s.version.to_s }
