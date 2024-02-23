@@ -43,13 +43,15 @@ end
 target 'AEPCampaignUnitTests' do
    campaign_core_dependencies
    rulesengine
+   pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-testutils-ios.git', :tag => 'v5.0.0-beta'
 end
 
 target 'AEPCampaignFunctionalTests' do
   campaign_core_dependencies
   rulesengine
   user_profile
-  core_additional_dependecies 
+  core_additional_dependecies
+  pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-testutils-ios.git', :tag => 'v5.0.0-beta'
 end
 
 target 'CampaignTester' do

@@ -13,6 +13,7 @@ import XCTest
 @testable import AEPCore
 @testable import AEPServices
 @testable import AEPCampaign
+import AEPTestUtils
 
 extension EventHub {
     static func reset() {
@@ -78,7 +79,7 @@ extension FileManager {
     }
 }
 
-extension XCTestCase {
+extension XCTestCase: AnyCodableAsserts {
     func verifyCampaignResponseEvent(expectedParameters: [String: Any]) {
         let event = expectedParameters["event"] as? Event
         let actionType = expectedParameters["actionType"] as? String ?? ""
@@ -157,17 +158,25 @@ extension XCTestCase {
     }
 
     func verifyCampaignRulesDownloadRequest(request: NetworkRequest, buildEnvironment: String?, ecid: String, isPersonalized: Bool) {
-        let expectedBase64EncodedLinkageFields = "eyJrZXkiOiJ2YWx1ZSIsImtleTMiOiJ2YWx1ZTMiLCJrZXkyIjoidmFsdWUyIn0="
+        let expectedLinkageFieldsData = Data(base64Encoded: "eyJrZXkiOiJ2YWx1ZSIsImtleTMiOiJ2YWx1ZTMiLCJrZXkyIjoidmFsdWUyIn0=".data(using: .utf8)!)
+        let expectedLinkageFieldsString = String(data: expectedLinkageFieldsData ?? Data(), encoding: .utf8)
+        
         let buildEnvironment = buildEnvironment ?? ""
         let url = request.url.absoluteString
         let headers = request.httpHeaders
+        XCTAssertFalse(headers.isEmpty)
+        let xInAppAuthHeader = headers["X-InApp-Auth"] ?? "fail"
+        let actualLinkageFieldsData = Data(base64Encoded: xInAppAuthHeader.data(using: .utf8)!)
+        let actualLinkageFieldsString = String(data: actualLinkageFieldsData ?? Data(), encoding: .utf8)
+        
         if !buildEnvironment.isEmpty {
             XCTAssertEqual(url, "https://mcias-server.com/mcias/\(buildEnvironment).campaign.adobe.com/propertyId/\(ecid)/rules.zip")
         } else {
             XCTAssertEqual(url, "https://mcias-server.com/mcias/prod.campaign.adobe.com/propertyId/\(ecid)/rules.zip")
         }
         if isPersonalized {
-            XCTAssertEqual(headers["X-InApp-Auth"], expectedBase64EncodedLinkageFields)
+            XCTAssertNotNil(actualLinkageFieldsString)
+            assertExactMatch(expected: expectedLinkageFieldsString.toAnyCodable()!, actual: actualLinkageFieldsString.toAnyCodable(), pathOptions: [])
         } else {
             XCTAssertNil(headers["X-InApp-Auth"])
         }

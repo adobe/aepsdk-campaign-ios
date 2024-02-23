@@ -10,6 +10,9 @@ PODS:
   - AEPServices (5.0.0)
   - AEPSignal (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
+  - AEPTestUtils (1.0.0-beta):
+    - AEPCore (>= 4.0.0)
+    - AEPServices (>= 4.0.0)
   - AEPUserProfile (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
   - SwiftLint (0.52.0)
@@ -21,6 +24,7 @@ DEPENDENCIES:
   - AEPRulesEngine (from `https://github.com/adobe/aepsdk-rulesengine-ios.git`, branch `dev-v5.0.0`)
   - AEPServices (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `dev-v5.0.0`)
   - AEPSignal (from `https://github.com/adobe/aepsdk-core-ios.git`, branch `dev-v5.0.0`)
+  - AEPTestUtils (from `https://github.com/adobe/aepsdk-testutils-ios.git`, tag `v5.0.0-beta`)
   - AEPUserProfile (from `https://github.com/adobe/aepsdk-userprofile-ios.git`, branch `dev-v5.0.0`)
   - SwiftLint (= 0.52.0)
 
@@ -47,6 +51,9 @@ EXTERNAL SOURCES:
   AEPSignal:
     :branch: dev-v5.0.0
     :git: https://github.com/adobe/aepsdk-core-ios.git
+  AEPTestUtils:
+    :git: https://github.com/adobe/aepsdk-testutils-ios.git
+    :tag: v5.0.0-beta
   AEPUserProfile:
     :branch: dev-v5.0.0
     :git: https://github.com/adobe/aepsdk-userprofile-ios.git
@@ -70,6 +77,9 @@ CHECKOUT OPTIONS:
   AEPSignal:
     :commit: ff1f00c9895be50f87414a2085ef234edd63081b
     :git: https://github.com/adobe/aepsdk-core-ios.git
+  AEPTestUtils:
+    :git: https://github.com/adobe/aepsdk-testutils-ios.git
+    :tag: v5.0.0-beta
   AEPUserProfile:
     :commit: e59d13b4055209ad6df6d8ed010341632d25f811
     :git: https://github.com/adobe/aepsdk-userprofile-ios.git
@@ -81,9 +91,10 @@ SPEC CHECKSUMS:
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
   AEPServices: e42e5118128e81c0f797fdfb1dc9c4a714d644b8
   AEPSignal: b146a3d4e5af51ff588f4f1ffbd40f1541325143
+  AEPTestUtils: 756e5997318be74584057d7628941c737d358640
   AEPUserProfile: cf36305d683d993d528337a46b7a269029b63e5d
   SwiftLint: 13280e21cdda6786ad908dc6e416afe5acd1fcb7
 
-PODFILE CHECKSUM: 33665a99c50e23fe94307020e0da01681ff0f124
+PODFILE CHECKSUM: 0f3ec363553969e582985b30e2b97c76aaca1089
 
 COCOAPODS: 1.15.2
