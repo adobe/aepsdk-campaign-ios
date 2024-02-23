@@ -25,7 +25,7 @@ class CampaignFunctionalTests: XCTestCase {
     var datastore: NamedCollectionDataStore!
 
     override func setUp() {
-        UserDefaults.clear()
+        NamedCollectionDataStore.clear()
         FileManager.default.clearCache()
         ServiceProvider.shared.reset()
         EventHub.reset()

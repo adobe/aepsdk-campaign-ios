@@ -20,15 +20,30 @@ extension EventHub {
     }
 }
 
-extension UserDefaults {
-    public static func clear() {
-        for _ in 0 ... 5 {
-            for key in UserDefaults.standard.dictionaryRepresentation().keys {
-                UserDefaults.standard.removeObject(forKey: key)
+extension NamedCollectionDataStore {
+    static func clear(appGroup: String? = nil) {
+        if let appGroup = appGroup, !appGroup.isEmpty {
+            guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)?.appendingPathComponent("com.adobe.aep.datastore", isDirectory: true).path else {
+                return
+            }
+            guard let filePaths = try? FileManager.default.contentsOfDirectory(atPath: directory) else {
+                return
+            }
+            for filePath in filePaths {
+                try? FileManager.default.removeItem(atPath: directory + "/" + filePath)
+            }
+        } else {
+            let directory = FileManager.default.urls(for: .libraryDirectory, in: .allDomainsMask)[0].appendingPathComponent("com.adobe.aep.datastore", isDirectory: true).path
+            guard let filePaths = try? FileManager.default.contentsOfDirectory(atPath: directory) else {
+                return
+            }
+            for filePath in filePaths {
+                try? FileManager.default.removeItem(atPath: directory + "/" + filePath)
             }
         }
     }
 }
+
 extension FileManager {
     func clearCache() {
         if let _ = self.urls(for: .cachesDirectory, in: .userDomainMask).first {
