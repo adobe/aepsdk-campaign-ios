@@ -15,7 +15,8 @@ import AEPServices
 import Foundation
 
 /// Defines the public interface for the Campaign extension
-@objc public extension Campaign {
+@objc
+public extension Campaign {
     private static let LOG_TAG = "Campaign"
 
     /// Sets the Campaign linkage fields (CRM IDs) in the mobile SDK to be used for downloading personalized messages from Campaign.
