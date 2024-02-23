@@ -71,7 +71,7 @@ CHECKOUT OPTIONS:
     :commit: ff1f00c9895be50f87414a2085ef234edd63081b
     :git: https://github.com/adobe/aepsdk-core-ios.git
   AEPUserProfile:
-    :commit: bf706a2105f5196d0945c7a0fa5ed1b3ed033af3
+    :commit: e59d13b4055209ad6df6d8ed010341632d25f811
     :git: https://github.com/adobe/aepsdk-userprofile-ios.git
 
 SPEC CHECKSUMS:
