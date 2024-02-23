@@ -11,7 +11,7 @@ def campaign_core_dependencies
   pod 'AEPCore', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v5.0.0'
   pod 'AEPServices', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v5.0.0'
   pod 'AEPRulesEngine', :git => 'https://github.com/adobe/aepsdk-rulesengine-ios.git', :branch => 'dev-v5.0.0'
-  pod 'AEPIdentity'
+  pod 'AEPIdentity', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v5.0.0'
 end
 
 def rulesengine
@@ -23,7 +23,7 @@ def assurance
 end
 
 def user_profile
-   pod 'AEPUserProfile'
+   pod 'AEPUserProfile', :git => 'https://github.com/adobe/aepsdk-userprofile-ios.git', :branch => 'dev-v5.0.0'
 end
 
 def places
@@ -31,8 +31,8 @@ def places
 end
 
 def core_additional_dependecies
-   pod 'AEPLifecycle'
-   pod 'AEPSignal'
+   pod 'AEPLifecycle', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v5.0.0'
+   pod 'AEPSignal', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :branch => 'dev-v5.0.0'
 end
 
 target 'AEPCampaign' do
@@ -57,6 +57,6 @@ target 'CampaignTester' do
    rulesengine
    user_profile
    core_additional_dependecies   
-   assurance
-   places
+#   assurance
+#   places
 end
