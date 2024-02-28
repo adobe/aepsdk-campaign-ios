@@ -27,7 +27,7 @@ def user_profile
 end
 
 def places
-   pod 'AEPPlaces'
+   pod 'AEPPlaces', :git => 'https://github.com/adobe/aepsdk-places-ios.git', :branch => 'dev-v5.0.0'
 end
 
 def core_additional_dependecies
@@ -60,5 +60,5 @@ target 'CampaignTester' do
    user_profile
    core_additional_dependecies   
 #   assurance
-#   places
+   places
 end
