@@ -97,7 +97,9 @@ class CampaignHitProcessor: HitProcessing {
             }
         } else {
             // unrecoverable error. delete the hit from the database and continue
-            Log.warning(label: LOG_TAG, "\(#function) - Dropping Campaign hit, request with url \(hit.url.absoluteString) failed with error \(connection.error?.localizedDescription ?? "") and unrecoverable status code \(connection.responseCode ?? -1)")
+            Log.warning(label: LOG_TAG, """
+                \(#function) - Dropping Campaign hit, request with url \(hit.url.absoluteString) failed with error \(connection.error?.localizedDescription ?? "") and unrecoverable status code \(connection.responseCode ?? -1)
+            """)
             completion(true)
         }
     }

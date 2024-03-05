@@ -89,7 +89,9 @@ public class Campaign: NSObject, Extension {
                 self.resetRules()
                 self.updateCampaignState(event: event)
                 self.triggerRulesDownload()
-            default: Log.debug(label: self.LOG_TAG, "\(#function) - Dropping Campaign event '\(event.id)'. The event source '\(event.source)' is unknown.")
+
+            default:
+                Log.debug(label: self.LOG_TAG, "\(#function) - Dropping Campaign event '\(event.id)'. The event source '\(event.source)' is unknown.")
             }
         }
     }
@@ -133,9 +135,14 @@ public class Campaign: NSObject, Extension {
             let consequence = RuleConsequence(id: event.consequenceId ?? "", type: event.consequenceType ?? "", details: details)
 
             switch iamType {
-            case .fullscreen: self.showFullScreenMessage(forConsequence: consequence)
-            case .alert: self.showAlertMessage(forConsequence: consequence)
-            case .local: self.showLocalNotification(forConsequence: consequence)
+            case .fullscreen:
+                self.showFullScreenMessage(forConsequence: consequence)
+
+            case .alert:
+                self.showAlertMessage(forConsequence: consequence)
+
+            case .local:
+                self.showLocalNotification(forConsequence: consequence)
             }
         }
     }

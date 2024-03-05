@@ -14,8 +14,8 @@ import AEPCore
 import AEPServices
 import Foundation
 
-/// Helper class containing methods for tracking user interactions with `Messages`
-class MessageInteractionTracker {
+/// Helper enum containing methods for tracking user interactions with `Messages`
+enum MessageInteractionTracker {
 
     private static let LOG_TAG = "MessageInteractionTracker"
 

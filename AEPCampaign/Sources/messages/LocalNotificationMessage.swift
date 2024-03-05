@@ -69,7 +69,11 @@ struct LocalNotificationMessage: CampaignMessaging {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, user data is nil or empty.")
             return
         }
-        guard let deliveryId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String, let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String, !deliveryId.isEmpty, !broadlogId.isEmpty else {
+        guard let deliveryId =
+            userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_DELIVERY_ID] as? String,
+            let broadlogId = userData[CampaignConstants.EventDataKeys.TRACK_INFO_KEY_BROADLOG_ID] as? String,
+            !deliveryId.isEmpty,
+            !broadlogId.isEmpty else {
             Log.trace(label: Self.LOG_TAG, "\(#function) - Cannot dispatch message info event, delivery id or broadlog id is nil or empty.")
             return
         }

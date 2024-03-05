@@ -8,7 +8,7 @@ SIMULATOR_ARCHIVE_PATH = $(CURR_DIR)/build/ios_simulator.xcarchive/Products/Libr
 SIMULATOR_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios_simulator.xcarchive/dSYMs/
 IOS_ARCHIVE_PATH = $(CURR_DIR)/build/ios.xcarchive/Products/Library/Frameworks/
 IOS_ARCHIVE_DSYM_PATH = $(CURR_DIR)/build/ios.xcarchive/dSYMs/
-IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 14'
+IOS_DESTINATION = 'platform=iOS Simulator,name=iPhone 15'
 
 lint-autocorrect:
 	./Pods/SwiftLint/swiftlint --fix
