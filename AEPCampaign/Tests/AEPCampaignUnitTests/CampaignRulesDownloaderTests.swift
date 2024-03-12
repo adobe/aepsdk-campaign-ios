@@ -23,6 +23,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
     var mockDiskCache: MockDiskCache!
     var mockNetworking = MockNetworking()
     var campaignRulesCache = CampaignRulesCache()
+    let ASYNC_TIMEOUT = 2.0
 
     static var bundle: Bundle {
         Bundle(for: self)
@@ -231,12 +232,12 @@ class CampaignRulesDownloaderTests: XCTestCase {
         _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
         mockNetworking.expectedResponse = createHttpConnection(statusCode: 200, url: url, data: dataZip)
 
-        mockDiskCache.reset()
-
         // Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
 
-        Thread.sleep(forTimeInterval: 2)
+        // first set call is a few lines above
+        mockDiskCache.testExpectationSet.expectedFulfillmentCount = 2
+        wait(for: [mockDiskCache.testExpectationSet, mockNetworking.testExpectation], timeout: ASYNC_TIMEOUT)
 
         // Assert
         XCTAssertTrue(mockDiskCache.isSetCacheCalled)
@@ -280,7 +281,9 @@ class CampaignRulesDownloaderTests: XCTestCase {
         // Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: CampaignState())
 
-        Thread.sleep(forTimeInterval: 2)
+        // first set call is a few lines above
+        mockDiskCache.testExpectationSet.expectedFulfillmentCount = 2
+        wait(for: [mockDiskCache.testExpectationSet, mockNetworking.testExpectation, ruleEngine.testExpectationReplaceRules], timeout: ASYNC_TIMEOUT)
 
         // Assert
         XCTAssertTrue(mockNetworking.connectAsyncCalled)
@@ -326,7 +329,7 @@ class CampaignRulesDownloaderTests: XCTestCase {
         // Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: campaignState)
 
-        Thread.sleep(forTimeInterval: 1)
+        wait(for: [mockNetworking.testExpectation], timeout: ASYNC_TIMEOUT)
 
         // Assert
         XCTAssertTrue(campaignState.getRulesUrlFromDataStore()?.contains(url.absoluteString) ?? false)
@@ -364,6 +367,8 @@ class CampaignRulesDownloaderTests: XCTestCase {
         let campaignState = CampaignState()
         let campaignMessageAssetsCache = CampaignMessageAssetsCache()
 
+        mockNetworking.testExpectation.expectedFulfillmentCount = 2
+        
         let campaignCachedRules = CampaignCachedRules(cacheable: dataJson, lastModified: nil, eTag: nil)
         campaignRulesDownloader = CampaignRulesDownloader(campaignRulesCache: campaignRulesCache, ruleEngine: ruleEngine, campaignMessageAssetsCache: campaignMessageAssetsCache, dispatchQueue: dispatchQueue)
         _ = campaignRulesCache.setCachedRules(rulesUrl: url.absoluteString, cachedRules: campaignCachedRules)
@@ -371,13 +376,13 @@ class CampaignRulesDownloaderTests: XCTestCase {
 
         // Action
         campaignRulesDownloader.loadRulesFromUrl(rulesUrl: url, linkageFieldHeaders: nil, state: campaignState)
-
-        Thread.sleep(forTimeInterval: 2)
+        
+        wait(for: [mockNetworking.testExpectation], timeout: ASYNC_TIMEOUT)
 
         // Assert
         let networkRequests = mockNetworking.cachedNetworkRequests
-        let imageDownloadRequest = networkRequests[networkRequests.count - 1]
         XCTAssertEqual(networkRequests.count, 2)
+        let imageDownloadRequest = networkRequests[networkRequests.count - 1]
         XCTAssertEqual(imageDownloadRequest.url.absoluteString, assetURL)
     }
 }

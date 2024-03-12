@@ -14,6 +14,7 @@ import XCTest
 @testable import AEPCampaign
 import AEPServices
 import AEPCore
+import AEPTestUtils
 
 class CampaignTests: XCTestCase {
 
@@ -31,6 +32,7 @@ class CampaignTests: XCTestCase {
     let mcias = "mciasServer"
     let propertyId = "propertId"
     let pkey = "pkey"
+    let ASYNC_TIMEOUT = 1.0
 
     /// Shared states
     var identitySharedState: [String: Any]!
@@ -92,12 +94,12 @@ class CampaignTests: XCTestCase {
             CampaignConstants.EventDataKeys.TRACK_INFO_KEY_ACTION: action
         ]
         let genericDataOsEvent = Event(name: "Generic data os", type: EventType.genericData, source: EventSource.os, data: eventData)
-
+        
         // Action
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         // Assertion
-        Thread.sleep(forTimeInterval: 0.5)
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count > 0)
         let dataEntity = hitProcessor.processedEntities[0]
         guard let data = dataEntity.data else {
@@ -123,7 +125,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         // Assertion
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -141,7 +144,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         // Assertion
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -159,7 +163,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         // Assertion
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -186,7 +191,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         // Assertion
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -207,7 +213,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         // Assertion
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -235,7 +242,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(genericDataOsEvent)
 
         // Assertion
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -246,7 +254,7 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
-        Thread.sleep(forTimeInterval: 0.5)
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count > 0)
         let dataEntity = hitProcessor.processedEntities[0]
         guard let data = dataEntity.data else {
@@ -272,7 +280,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -290,7 +299,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -309,7 +319,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
@@ -328,7 +339,8 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
         // the hit should be queued
         XCTAssert(hitQueue.count() == 1)
@@ -342,30 +354,31 @@ class CampaignTests: XCTestCase {
         extensionRuntime.simulateComingEvents(lifecycleResponseEvent)
 
         // verify
-        Thread.sleep(forTimeInterval: 0.5)
+        hitProcessor.testExpectation.isInverted = true
+        wait(for: [hitProcessor.testExpectation], timeout: ASYNC_TIMEOUT)
         XCTAssert(hitProcessor.processedEntities.count == 0)
     }
 
     // MARK: Unit tests for CampaignRequestIdentity and CampaignRequestReset Events handling.
 
     func testCampaignRequestIdentityEventSuccess() {
-
-        let linkageFields = ["key1": "value1", "key2": "value2"]
-        guard let linkageFieldsData = try? JSONEncoder().encode(linkageFields) else {
-            XCTFail("Error in Encoding Linkage fields")
-            return
+        let expectedJson = #"""
+        {
+            "key1": "value1",
+            "key2": "value2"
         }
-        let jsonEncodedLinkageFields = String(data: linkageFieldsData, encoding: .utf8)
+        """#
+        let linkageFields = ["key1": "value1", "key2": "value2"]
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
 
         // Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
-        Thread.sleep(forTimeInterval: 1)
+        wait(for: [mockDiskCache.testExpectationGet, networking.testExpectation], timeout: ASYNC_TIMEOUT)
 
         // Assert
-        XCTAssertTrue(mockDiskCache.isRemoveCacheItemCalled)
+        XCTAssertTrue(mockDiskCache.isGetCacheCalled)
         XCTAssertEqual(networking.cachedNetworkRequests.count, 1)
         let networkRequest = networking.cachedNetworkRequests[0]
         XCTAssertNotNil(networkRequest.httpHeaders[CampaignConstants.Campaign.LINKAGE_FIELD_NETWORK_HEADER])
@@ -378,14 +391,18 @@ class CampaignTests: XCTestCase {
             return
         }
         let linkageFieldHeader = String.init(data: data, encoding: .utf8)
-        XCTAssertEqual(linkageFieldHeader, jsonEncodedLinkageFields)
+        assertExactMatch(expected: expectedJson.toAnyCodable()!, actual: linkageFieldHeader?.toAnyCodable(), pathOptions: [])
     }
 
     func testCampaignRequestIdentityEventFailure() {
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: nil)
 
+        networking.testExpectation.isInverted = true
+        mockDiskCache.testExpectationRemove.isInverted = true
+        
         // Action
         extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
+        wait(for: [mockDiskCache.testExpectationRemove, networking.testExpectation], timeout: ASYNC_TIMEOUT)
 
         // Asserts
         XCTAssertFalse(mockDiskCache.isRemoveCacheItemCalled)
@@ -404,12 +421,12 @@ class CampaignTests: XCTestCase {
         let eventData = [CampaignConstants.EventDataKeys.LINKAGE_FIELDS: linkageFields]
 
         let campaignRequestIdentityEvent = Event(name: "Campaign Request Identity", type: EventType.campaign, source: EventSource.requestIdentity, data: eventData)
+        
         // Action
-        extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent)
-        Thread.sleep(forTimeInterval: 1)
         let campaignRequestResetEvent = Event(name: "Campaign Request Reset", type: EventType.campaign, source: EventSource.requestReset, data: nil)
-        extensionRuntime.simulateComingEvents(campaignRequestResetEvent)
-        Thread.sleep(forTimeInterval: 1)
+        extensionRuntime.simulateComingEvents(campaignRequestIdentityEvent, campaignRequestResetEvent)
+        networking.testExpectation.expectedFulfillmentCount = 2
+        wait(for: [mockDiskCache.testExpectationRemove, networking.testExpectation], timeout: ASYNC_TIMEOUT)
 
         // Assert
         XCTAssertEqual(networking.cachedNetworkRequests.count, 2)

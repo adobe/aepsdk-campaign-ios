@@ -12,10 +12,12 @@
 
 @testable import AEPServices
 import Foundation
+import XCTest
 
 public class MockHitProcessor: HitProcessing {
 
     var processedEntities: [DataEntity] = []
+    public let testExpectation = XCTestExpectation(description: "MockHitProcessor test expectation")
 
     public var processResult: Bool = false
 
@@ -28,5 +30,6 @@ public class MockHitProcessor: HitProcessing {
             processedEntities.append(entity)
         }
         completion(processResult)
+        testExpectation.fulfill()
     }
 }

@@ -12,8 +12,12 @@
 
 import Foundation
 import AEPServices
+import XCTest
 
 class MockDiskCache: Caching {
+    public let testExpectationSet = XCTestExpectation(description: "MockDiskCache testExpectationSet")
+    public let testExpectationGet = XCTestExpectation(description: "MockDiskCache testExpectationGet")
+    public let testExpectationRemove = XCTestExpectation(description: "MockDiskCache testExpectationRemove")
     var cache = [String: CacheEntry]()
     var isSetCacheCalled = false
     var isGetCacheCalled = false
@@ -22,16 +26,19 @@ class MockDiskCache: Caching {
     func set(cacheName: String, key: String, entry: CacheEntry) throws {
         isSetCacheCalled = true
         cache[key] = entry
+        testExpectationSet.fulfill()
     }
 
     func get(cacheName: String, key: String) -> CacheEntry? {
         isGetCacheCalled = true
+        testExpectationGet.fulfill()
         return cache[key]
     }
 
     func remove(cacheName: String, key: String) throws {
         isRemoveCacheItemCalled = true
         cache.removeValue(forKey: key)
+        testExpectationRemove.fulfill()
     }
 
     func reset() {
