@@ -12,8 +12,10 @@
 
 import AEPServices
 import Foundation
+import XCTest
 
 class MockNetworking: Networking {
+    public var testExpectation = XCTestExpectation(description: "mockNetworking test expectation")
     public var connectAsyncCalled: Bool = false
     public var connectAsyncCalledWithNetworkRequest: NetworkRequest?
     public var connectAsyncCalledWithCompletionHandler: ((HttpConnection) -> Void)?
@@ -29,6 +31,7 @@ class MockNetworking: Networking {
             completionHandler(expectedResponse)
         }
         cachedNetworkRequests.append(networkRequest)
+        testExpectation.fulfill()
     }
 
     func reset() {
