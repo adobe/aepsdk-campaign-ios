@@ -1,4 +1,4 @@
-platform :ios, '11.0'
+platform :ios, '12.0'
 use_frameworks!
 
 project 'AEPCampaign.xcodeproj'
@@ -8,21 +8,21 @@ pod 'SwiftLint', '0.52.0'
 # POD groups
 
 def campaign_core_dependencies
-   pod 'AEPCore', '~> 4.0'
-   pod 'AEPServices', '~> 4.0'
-   pod 'AEPIdentity', '~> 4.0'
+  pod 'AEPCore'
+  pod 'AEPServices'  
+  pod 'AEPIdentity'
 end
 
 def rulesengine
-   pod 'AEPRulesEngine', '~> 4.0'
+   pod 'AEPRulesEngine'
 end
 
-def assurance   
-   pod 'AEPAssurance', '~> 4.0'
+def assurance
+   pod 'AEPAssurance', :git => 'https://github.com/adobe/aepsdk-assurance-ios.git', :branch => 'staging'
 end
 
 def user_profile
-   pod 'AEPUserProfile'
+   pod 'AEPUserProfile', :git => 'https://github.com/adobe/aepsdk-userprofile-ios.git', :branch => 'staging'
 end
 
 def places
@@ -30,8 +30,8 @@ def places
 end
 
 def core_additional_dependecies
-   pod 'AEPLifecycle', '~> 4.0'
-   pod 'AEPSignal', '~> 4.0'
+   pod 'AEPLifecycle'
+   pod 'AEPSignal'
 end
 
 target 'AEPCampaign' do
@@ -42,13 +42,15 @@ end
 target 'AEPCampaignUnitTests' do
    campaign_core_dependencies
    rulesengine
+   pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-testutils-ios.git', :tag => '5.0.0'
 end
 
 target 'AEPCampaignFunctionalTests' do
   campaign_core_dependencies
   rulesengine
   user_profile
-  core_additional_dependecies 
+  core_additional_dependecies
+  pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-testutils-ios.git', :tag => '5.0.0'
 end
 
 target 'CampaignTester' do
@@ -56,6 +58,6 @@ target 'CampaignTester' do
    rulesengine
    user_profile
    core_additional_dependecies   
-   assurance
+#   assurance
    places
 end

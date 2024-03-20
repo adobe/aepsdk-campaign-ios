@@ -39,6 +39,10 @@ identifier_name:
     allowed_symbols: "_"
     excluded:
         - id
+        - ID
+type_name:
+    excluded:
+        - T
 line_length:
     warning: 250
     error: 300

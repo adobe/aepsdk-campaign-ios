@@ -12,14 +12,17 @@
 
 import Foundation
 @testable import AEPCore
+import XCTest
 
 class MockRulesEngine: LaunchRulesEngine {
 
+    var testExpectationReplaceRules = XCTestExpectation(description: "replace rules was called")
     var isReplaceRulesCalled = false
     var rules: [LaunchRule]?
 
     override func replaceRules(with rules: [LaunchRule]) {
         isReplaceRulesCalled = true
         self.rules = rules
+        testExpectationReplaceRules.fulfill()
     }
 }
