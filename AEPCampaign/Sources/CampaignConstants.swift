@@ -15,7 +15,7 @@ import Foundation
 enum CampaignConstants {
     static let EXTENSION_NAME                           = "com.adobe.module.campaign"
     static let FRIENDLY_NAME                            = "Campaign"
-    static let EXTENSION_VERSION                        = "4.0.1"
+    static let EXTENSION_VERSION                        = "5.0.0"
     static let DATASTORE_NAME                           = EXTENSION_NAME
     static let LOG_TAG                                  = FRIENDLY_NAME
 

@@ -47,7 +47,7 @@ struct CampaignRulesDownloader {
             return
         }
 
-        if let _ = parseRulesDataAndLoadRules(data: cachedRules.cacheable) {
+        if parseRulesDataAndLoadRules(data: cachedRules.cacheable) != nil {
             Log.trace(label: LOG_TAG, "\(#function) - Successfully updated Campaign rules in Rules engine after reading from cache")
         } else {
             Log.warning(label: self.LOG_TAG, "\(#function) - Failed to parse cached rules.json file.")
@@ -140,12 +140,10 @@ struct CampaignRulesDownloader {
         }
         var messageIdsWithAssets = [String]()
         for rule in rules {
-            for consequence in rule.consequences {
-                if consequence.hasAssetsToDownload() {
-                    messageIdsWithAssets.append(consequence.id)
-                    if let assetsUrl = consequence.createAssetUrlArray(), !assetsUrl.isEmpty {
-                        campaignMessageAssetsCache.downloadAssetsForMessage(from: assetsUrl, messageId: consequence.id)
-                    }
+            for consequence in rule.consequences where consequence.hasAssetsToDownload() == true {
+                messageIdsWithAssets.append(consequence.id)
+                if let assetsUrl = consequence.createAssetUrlArray(), !assetsUrl.isEmpty {
+                    campaignMessageAssetsCache.downloadAssetsForMessage(from: assetsUrl, messageId: consequence.id)
                 }
             }
         }
@@ -165,7 +163,8 @@ struct CampaignRulesDownloader {
             return .failure(.unableToCreateTempDirectory)
         }
         let temporaryDirectoryWithZip = temporaryDirectory.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_ZIP_FILE_NAME)
-        guard let _ = try? data.write(to: temporaryDirectoryWithZip) else {
+        let writeToUrl = try? data.write(to: temporaryDirectoryWithZip)
+        guard writeToUrl != nil  else {
             return .failure(.unableToStoreDataInTempDirectory)
         }
 
@@ -183,7 +182,7 @@ struct CampaignRulesDownloader {
         let destination = cachedDir.appendingPathComponent(CampaignConstants.RulesDownloaderConstants.RULES_CACHE_FOLDER, isDirectory: true)
         let unzippedItems = fileUnzipper.unzipItem(at: source, to: destination)
         // Find the unzipped item rules.json
-        guard let _ = unzippedItems.firstIndex(of: CampaignConstants.Campaign.Rules.JSON_FILE_NAME) else {
+        guard unzippedItems.firstIndex(of: CampaignConstants.Campaign.Rules.JSON_FILE_NAME) != nil else {
             return nil
         }
         do {

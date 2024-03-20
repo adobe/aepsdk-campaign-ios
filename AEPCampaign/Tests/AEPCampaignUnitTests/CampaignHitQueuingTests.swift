@@ -22,7 +22,19 @@ class CampaignHitQueuingTests: XCTestCase {
     var dataQueue: MockDataQueue!
     var state: CampaignState!
     var hitQueue: HitQueuing!
-
+    let ASYNC_TIMEOUT = 5.0
+    var queuedExpectation: XCTestExpectation!
+    
+    override func setUp() {
+        queuedExpectation = XCTestExpectation(description: "queuing hits has completed")
+        dataQueue = MockDataQueue()
+        hitProcessor = MockHitProcessor()
+        hitQueue = PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
+        state = CampaignState()
+        state.hitQueue = hitQueue
+        addStateData()
+    }
+    
     @discardableResult
     private func queueHits(numberOfHits: Int) -> [CampaignHit] {
         guard let testUrl = URL(string: "https://acs-test.com") else {
@@ -42,6 +54,11 @@ class CampaignHitQueuingTests: XCTestCase {
                 queuedHits.append(hit)
             }
         }
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.01) {
+            self.queuedExpectation.fulfill()
+        }
+        
         return queuedHits
     }
 
@@ -95,15 +112,6 @@ class CampaignHitQueuingTests: XCTestCase {
         hitQueue = state.hitQueue
     }
 
-    override func setUp() {
-        dataQueue = MockDataQueue()
-        hitProcessor = MockHitProcessor()
-        hitQueue = PersistentHitQueue(dataQueue: dataQueue, processor: hitProcessor)
-        state = CampaignState()
-        state.hitQueue = hitQueue
-        addStateData()
-    }
-
     func testQueueHit() {
         // setup
         hitProcessor.processResult = true
@@ -111,8 +119,8 @@ class CampaignHitQueuingTests: XCTestCase {
         updatePrivacyStatus(status: .optedIn)
         // test
         let queuedHit = queueHits(numberOfHits: 1)
-        Thread.sleep(forTimeInterval: 0.5)
         // verify
+        wait(for: [queuedExpectation], timeout:ASYNC_TIMEOUT)
         assertHits(queuedHit, getProcessedHits())
     }
 
@@ -125,7 +133,7 @@ class CampaignHitQueuingTests: XCTestCase {
         XCTAssertEqual(5, hitQueue.count())
         // update privacy status to opted in to begin processing of queued hits
         updatePrivacyStatus(status: .optedIn)
-        Thread.sleep(forTimeInterval: 0.5)
+        wait(for: [queuedExpectation], timeout:ASYNC_TIMEOUT)
         assertHits(queuedHits, getProcessedHits())
     }
 
@@ -135,6 +143,7 @@ class CampaignHitQueuingTests: XCTestCase {
         // test
         queueHits(numberOfHits: 2)
         // verify
+        wait(for: [queuedExpectation], timeout:ASYNC_TIMEOUT)
         XCTAssertEqual(0, hitQueue.count())
     }
 
@@ -144,8 +153,8 @@ class CampaignHitQueuingTests: XCTestCase {
         // test
         queueHits(numberOfHits: 2)
         // verify
+        wait(for: [queuedExpectation], timeout:ASYNC_TIMEOUT)
         XCTAssertEqual(2, hitQueue.count())
-        Thread.sleep(forTimeInterval: 0.5)
         assertHits([], getProcessedHits())
     }
 
@@ -158,7 +167,7 @@ class CampaignHitQueuingTests: XCTestCase {
         XCTAssertEqual(5, hitQueue.count())
         // update privacy status to opted out and verify the database is cleared
         updatePrivacyStatus(status: .optedOut)
-        Thread.sleep(forTimeInterval: 0.5)
+        wait(for: [queuedExpectation], timeout:ASYNC_TIMEOUT)
         XCTAssertEqual(0, hitQueue.count())
     }
 }
