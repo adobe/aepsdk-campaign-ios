@@ -3,7 +3,7 @@
 [![Cocoapods](https://img.shields.io/github/v/release/adobe/aepsdk-campaign-ios?color=orange&label=CocoaPods&logo=apple&logoColor=white&sort=semver)](https://cocoapods.org/pods/AEPCampaign)
 [![SPM](https://img.shields.io/github/v/release/adobe/aepsdk-campaign-ios?color=orange&label=SPM&logo=apple&logoColor=white&sort=semver)](https://github.com/adobe/aepsdk-campaign-ios/releases)
 [![CircleCI](https://img.shields.io/circleci/project/github/adobe/aepsdk-campaign-ios/main.svg?logo=circleci&label=Build)](https://circleci.com/gh/adobe/workflows/aepsdk-campaign-ios)
-[![Code Coverage](https://img.shields.io/codecov/c/github/adobe/aepsdk-campaign-ios/main.svg?logo=codecov&label=Coverage)](https://codecov.io/gh/adobe/aepsdk-campaign-ios/branch/main)
+<!--[![Code Coverage](https://img.shields.io/codecov/c/github/adobe/aepsdk-campaign-ios/main.svg?logo=codecov&label=Coverage)](https://codecov.io/gh/adobe/aepsdk-campaign-ios/branch/main)-->
 
 ## About this project
 

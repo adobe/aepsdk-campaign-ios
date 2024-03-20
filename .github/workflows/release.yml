@@ -5,12 +5,12 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'tag/version'     
+        description: 'tag/version'
         required: true
         default: '5.0.0'
       
       action_tag:
-        description: 'create tag? ("no" to skip)'     
+        description: 'create tag? ("no" to skip)'
         required: true
         default: 'yes'
 
@@ -28,7 +28,7 @@ jobs:
         ref: main
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.0'
+        xcode-version: '15.0.1'
     
     - name: Install jq
       run: brew install jq
