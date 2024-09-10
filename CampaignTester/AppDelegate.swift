@@ -24,7 +24,10 @@ import AEPPlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-    private let LAUNCH_ENVIRONMENT_FILE_ID = "YOUR-APP-ID"
+    // for push testing
+    // private let LAUNCH_ENVIRONMENT_FILE_ID = "31d8b0ad1f9f/f989272158d3/launch-8069416f7426-development"
+    // for in-app testing
+    private let LAUNCH_ENVIRONMENT_FILE_ID = "31d8b0ad1f9f/98da4ef07438/launch-b7548c1d44a2-development"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UNUserNotificationCenter.current().delegate = self
@@ -95,8 +98,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         // send local notification clickthrough tracking
         guard var userInfo = response.notification.request.content.userInfo as? [String: Any] else { return }
-        userInfo["action"] = "2"
-        MobileCore.collectMessageInfo(userInfo)
+        // Check if the app is not in the foreground right now
+            if (UIApplication.shared.applicationState != .active) {
+                let deliveryId = userInfo["_dId"] as? String
+                let broadlogId = userInfo["_mId"] as? String
+                var acsDeliveryTracking = userInfo["_acsDeliveryTracking"] as? String
+                /*
+                This is to handle deliveries created before 21.1 release or deliveries with custom template where acsDeliveryTracking is not available.
+                */
+                if (acsDeliveryTracking == nil) {
+                    acsDeliveryTracking = "on"
+                }
+                if (deliveryId != nil && broadlogId != nil && acsDeliveryTracking?.caseInsensitiveCompare("on") == ComparisonResult.orderedSame) {
+                    MobileCore.collectMessageInfo(["deliveryId": deliveryId!, "broadlogId": broadlogId!, "action":"7"])
+                    MobileCore.collectMessageInfo(["deliveryId": deliveryId!, "broadlogId": broadlogId!, "action":"2"])
+                }
+            }
+
         // open any included adb deeplink
         guard let deeplink = userInfo["adb_deeplink"] as? String, let url = URL(string: deeplink) else { return }
         ServiceProvider.shared.urlService.openUrl(url)

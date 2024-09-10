@@ -34,11 +34,12 @@ class LinkageFieldsError: ObservableObject {
 struct CampaignView: View {
     let LOG_TAG = "CampaignTester::CampaignView"
 
+    @State private var customAction = ""
+
     @StateObject var errorObserver: LinkageFieldsError = LinkageFieldsError()
 
     // state vars
     @State private var extensionVersion: String = ""
-    @State private var trackActionVar: String = ""
     @State private var firstname: String = UserDefaults.standard.string(forKey: "FirstName") ?? ""
     @State private var lastname: String = UserDefaults.standard.string(forKey: "LastName") ?? ""
     @State private var email: String = UserDefaults.standard.string(forKey: "Email") ?? ""
@@ -99,8 +100,25 @@ struct CampaignView: View {
                             .foregroundColor(.white)
                             .font(.caption)
                     }.cornerRadius(5)
-                    TextField("Retrieved Extension Version", text: $extensionVersion)
-                        .autocapitalization(.none)
+                    TextField("Retrieved Extension Version", text: $extensionVersion).autocapitalization(.none)
+
+                    Grid(alignment: .leading, horizontalSpacing: 70, verticalSpacing: 30) {
+                                    GridRow {
+                                        TextField("Enter custom action...", text: $customAction).padding(.leading, 25)
+                                            .autocorrectionDisabled()
+                                            .textInputAutocapitalization(.never)
+                                    }
+                                    GridRow {
+                                        Button("track") {
+                                            guard !customAction.isEmpty else {
+                                                return
+                                            }
+                                            MobileCore.track(action: customAction, data: nil)
+                                        }.padding(.leading, 25)
+                                    }
+                                }
+                                Spacer()
+
 
                     Button(action: {
                         MobileCore.track(action: "alert", data: nil)
@@ -267,7 +285,7 @@ struct CampaignView: View {
 
     func setLinkageFieldsAndUpdateAcsSubscriber() {
         // build user login data dictionary
-        var loginData = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email]
+        var loginData = ["cusFirstName": firstname, "cusLastName": lastname, "cusEmail": email, "pushPlatform": "apns"]
         Campaign.setLinkageFields(loginData)
         loginData["triggerKey"] = "collectPIIIOS"
         // update ACS subscriber table with login data

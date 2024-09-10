@@ -1,4 +1,4 @@
-platform :ios, '12.0'
+platform :ios, '18.0'
 use_frameworks!
 
 project 'AEPCampaign.xcodeproj'
@@ -58,6 +58,6 @@ target 'CampaignTester' do
    rulesengine
    user_profile
    core_additional_dependecies   
-#   assurance
+   assurance
    places
 end

@@ -1,4 +1,7 @@
 PODS:
+  - AEPAssurance (5.0.1):
+    - AEPCore (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.0.0)
   - AEPCore (5.0.0):
     - AEPRulesEngine (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
@@ -21,6 +24,7 @@ PODS:
   - SwiftLint (0.52.0)
 
 DEPENDENCIES:
+  - AEPAssurance (from `https://github.com/adobe/aepsdk-assurance-ios.git`, branch `staging`)
   - AEPCore
   - AEPIdentity
   - AEPLifecycle
@@ -44,6 +48,9 @@ SPEC REPOS:
     - SwiftLint
 
 EXTERNAL SOURCES:
+  AEPAssurance:
+    :branch: staging
+    :git: https://github.com/adobe/aepsdk-assurance-ios.git
   AEPTestUtils:
     :git: https://github.com/adobe/aepsdk-testutils-ios.git
     :tag: 5.0.0
@@ -52,6 +59,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/adobe/aepsdk-userprofile-ios.git
 
 CHECKOUT OPTIONS:
+  AEPAssurance:
+    :commit: 686105a4d61287277418a1843225db2c819ed406
+    :git: https://github.com/adobe/aepsdk-assurance-ios.git
   AEPTestUtils:
     :git: https://github.com/adobe/aepsdk-testutils-ios.git
     :tag: 5.0.0
@@ -60,6 +70,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/adobe/aepsdk-userprofile-ios.git
 
 SPEC CHECKSUMS:
+  AEPAssurance: df04baeace42befb0cc213fd6cdfe51651d11ba6
   AEPCore: f1c3e9238bb12e7e1103f4407c341ebc65aeab5b
   AEPIdentity: a65c1eba43a06f01b0dab191b27a53a81adada57
   AEPLifecycle: d4e0e1e86d6225d87203875d67f56c48f7ab7f67
@@ -71,6 +82,6 @@ SPEC CHECKSUMS:
   AEPUserProfile: cf36305d683d993d528337a46b7a269029b63e5d
   SwiftLint: 13280e21cdda6786ad908dc6e416afe5acd1fcb7
 
-PODFILE CHECKSUM: f9c7fdbc6cd8c3f361522cbe077b6a1c706ac5d9
+PODFILE CHECKSUM: 63b6c245fca1f94d4935fdcec99b156cddd190b8
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
