@@ -11,7 +11,7 @@ The AEPCampaign extension represents the Campaign Standard Adobe Experience Plat
 
 ## Requirements
 - Xcode 15 (or newer)
-- Swift 5.1
+- Swift 5+
 
 ## Installation
 These are currently the supported installation options:
