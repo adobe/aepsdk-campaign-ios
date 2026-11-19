@@ -10,8 +10,8 @@
 The AEPCampaign extension represents the Campaign Standard Adobe Experience Platform SDK that is required for registering mobile devices with your Campaign instance as well as creating in-app messages for your mobile app. The extension also enables the setting of linkage fields for use in creating personalized in-app messages.
 
 ## Requirements
-- Xcode 15 (or newer)
-- Swift 5+
+- Xcode 15.3 (or newer)
+- Swift 5.10 (or newer)
 - iOS 15 to 27
 
 ## Installation
