@@ -22,7 +22,7 @@ import AEPServices
 import AEPAssurance
 import AEPPlaces
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     private let LAUNCH_ENVIRONMENT_FILE_ID = "YOUR-APP-ID"
 

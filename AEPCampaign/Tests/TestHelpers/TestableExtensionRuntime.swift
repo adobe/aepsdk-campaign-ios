@@ -172,4 +172,9 @@ extension TestableExtensionRuntime {
     }
     
     func getHistoricalEvents(_ requests: [EventHistoryRequest], enforceOrder: Bool, handler: @escaping ([EventHistoryResult]) -> Void) {}
+
+    // Newer AEPCore releases added this requirement to ExtensionRuntime. Campaign does not record history so the stub reports failure.
+    func recordHistoricalEvent(_ event: Event, handler: ((Bool) -> Void)?) {
+        handler?(false)
+    }
 }
