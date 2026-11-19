@@ -29,7 +29,8 @@ struct AlertMessage: CampaignMessaging {
     private var url: String?
     #if DEBUG
         // added for unit tests
-        static var uiAlertController: UIAlertController?
+        // Swift 6 flags shared statics as unsafe. This test hook is only written and read on the main thread so we opt out of the check.
+        nonisolated(unsafe) static var uiAlertController: UIAlertController?
     #endif
 
     /// AlertMessage struct initializer. It is accessed via the `createMessageObject` method.
@@ -86,10 +87,12 @@ struct AlertMessage: CampaignMessaging {
             return nil
         }
         let alertController = UIAlertController(title: title, message: content, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: handleTracking(action:)))
+        // UIKit now requires a Sendable action handler. The handler only runs on main after the alert is shown, so a nonisolated(unsafe) copy of this message is captured instead of a method reference.
+        nonisolated(unsafe) let message = self
+        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel) { @Sendable action in message.handleTracking(action: action) })
 
         if let confirmText = self.confirm, !confirmText.isEmpty {
-            alertController.addAction(UIAlertAction(title: confirmText, style: .default, handler: handleTracking(action:)))
+            alertController.addAction(UIAlertAction(title: confirmText, style: .default) { @Sendable action in message.handleTracking(action: action) })
         }
 
         return alertController
