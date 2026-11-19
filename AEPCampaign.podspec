@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.author           = "Adobe Experience Platform SDK Team"
   s.source           = { :git => "https://github.com/adobe/aepsdk-campaign-ios.git", :tag => s.version.to_s }
 
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '15.0'
 
   s.swift_version = '5.1'
 

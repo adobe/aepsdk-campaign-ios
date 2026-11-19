@@ -15,7 +15,7 @@ import PackageDescription
 
 let package = Package(
     name: "AEPCampaign",
-    platforms: [.iOS(.v12)],
+    platforms: [.iOS("15.0")],
     products: [
         .library(name: "AEPCampaign", targets: ["AEPCampaign"])
     ],
