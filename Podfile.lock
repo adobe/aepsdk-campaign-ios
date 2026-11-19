@@ -1,26 +1,30 @@
 PODS:
-  - AEPCore (5.0.0):
-    - AEPRulesEngine (< 6.0.0, >= 5.0.0)
+  - AEPAssurance (5.0.3):
+    - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
-  - AEPIdentity (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPLifecycle (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
+  - AEPCore (5.13.0):
+    - AEPRulesEngine (< 6.0.0, >= 5.0.0)
+    - AEPServices (< 6.0.0, >= 5.13.0)
+  - AEPIdentity (5.13.0):
+    - AEPCore (< 6.0.0, >= 5.13.0)
+  - AEPLifecycle (5.13.0):
+    - AEPCore (< 6.0.0, >= 5.13.0)
   - AEPPlaces (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
     - AEPServices (< 6.0.0, >= 5.0.0)
   - AEPRulesEngine (5.0.0)
-  - AEPServices (5.0.0)
-  - AEPSignal (5.0.0):
-    - AEPCore (< 6.0.0, >= 5.0.0)
-  - AEPTestUtils (5.0.0):
-    - AEPCore
-    - AEPServices
+  - AEPServices (5.13.0)
+  - AEPSignal (5.13.0):
+    - AEPCore (< 6.0.0, >= 5.13.0)
+  - AEPTestUtils (5.6.0):
+    - AEPCore (< 6.0.0, >= 5.6.0)
+    - AEPServices (< 6.0.0, >= 5.6.0)
   - AEPUserProfile (5.0.0):
     - AEPCore (< 6.0.0, >= 5.0.0)
   - SwiftLint (0.52.0)
 
 DEPENDENCIES:
+  - AEPAssurance
   - AEPCore
   - AEPIdentity
   - AEPLifecycle
@@ -28,12 +32,13 @@ DEPENDENCIES:
   - AEPRulesEngine
   - AEPServices
   - AEPSignal
-  - AEPTestUtils (from `https://github.com/adobe/aepsdk-testutils-ios.git`, tag `5.0.0`)
+  - AEPTestUtils (from `https://github.com/adobe/aepsdk-core-ios.git`, tag `testutils-5.6.0`)
   - AEPUserProfile (from `https://github.com/adobe/aepsdk-userprofile-ios.git`, branch `staging`)
   - SwiftLint (= 0.52.0)
 
 SPEC REPOS:
   trunk:
+    - AEPAssurance
     - AEPCore
     - AEPIdentity
     - AEPLifecycle
@@ -45,32 +50,33 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   AEPTestUtils:
-    :git: https://github.com/adobe/aepsdk-testutils-ios.git
-    :tag: 5.0.0
+    :git: https://github.com/adobe/aepsdk-core-ios.git
+    :tag: testutils-5.6.0
   AEPUserProfile:
     :branch: staging
     :git: https://github.com/adobe/aepsdk-userprofile-ios.git
 
 CHECKOUT OPTIONS:
   AEPTestUtils:
-    :git: https://github.com/adobe/aepsdk-testutils-ios.git
-    :tag: 5.0.0
+    :git: https://github.com/adobe/aepsdk-core-ios.git
+    :tag: testutils-5.6.0
   AEPUserProfile:
-    :commit: cc628ea0ed9caa80fa0956cd579989f4b9d825a5
+    :commit: 22e0a357af50c9fc1a9a307572ddd66e97d61124
     :git: https://github.com/adobe/aepsdk-userprofile-ios.git
 
 SPEC CHECKSUMS:
-  AEPCore: f1c3e9238bb12e7e1103f4407c341ebc65aeab5b
-  AEPIdentity: a65c1eba43a06f01b0dab191b27a53a81adada57
-  AEPLifecycle: d4e0e1e86d6225d87203875d67f56c48f7ab7f67
+  AEPAssurance: 3ab00d47a40bc6c6cb2000689e0dcfa595cda250
+  AEPCore: 13541c6cd72488506a3fda85a5e1288759f09336
+  AEPIdentity: 3f085ab6e1ce01cf47846708e76a02114c4c059b
+  AEPLifecycle: 0fb08ce93bbd6d5fd2676727ef9bd2b6b1c391c7
   AEPPlaces: 9eec5f88306033ce8190ec30727cbdd4008cc018
   AEPRulesEngine: fe5800653a4bee07b1e41e61b4d5551f0dba557b
-  AEPServices: e42e5118128e81c0f797fdfb1dc9c4a714d644b8
-  AEPSignal: b146a3d4e5af51ff588f4f1ffbd40f1541325143
-  AEPTestUtils: 20495b368da57904ca2e9f241d1d8b114f9887b5
+  AEPServices: 5533aaa108ffb0e75adcbfdfdd08bd4cbe9b02fd
+  AEPSignal: b52d29a0dd2e7094cde5d7748acf73f7d7890833
+  AEPTestUtils: 2bbed995c8974f6f6d92058db88d6cd2e4a7f869
   AEPUserProfile: cf36305d683d993d528337a46b7a269029b63e5d
   SwiftLint: 13280e21cdda6786ad908dc6e416afe5acd1fcb7
 
-PODFILE CHECKSUM: f9c7fdbc6cd8c3f361522cbe077b6a1c706ac5d9
+PODFILE CHECKSUM: 9b4d36dbcc1245bfb7a6afde55011d35142f3cc2
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.17.0

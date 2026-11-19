@@ -19,7 +19,8 @@ public class Campaign: NSObject, Extension {
     private let LOG_TAG = "Campaign"
     public var name = CampaignConstants.EXTENSION_NAME
     public var friendlyName = CampaignConstants.FRIENDLY_NAME
-    public static var extensionVersion = CampaignConstants.EXTENSION_VERSION
+    // Swift 6 flags shared statics as unsafe. The value is only set once at load time and kept as a var so the public ABI does not change.
+    public nonisolated(unsafe) static var extensionVersion = CampaignConstants.EXTENSION_VERSION
     public var metadata: [String: String]?
     public let runtime: ExtensionRuntime
     var state: CampaignState

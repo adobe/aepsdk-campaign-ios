@@ -1,4 +1,4 @@
-platform :ios, '12.0'
+platform :ios, '15.0'
 use_frameworks!
 
 project 'AEPCampaign.xcodeproj'
@@ -18,7 +18,7 @@ def rulesengine
 end
 
 def assurance
-   pod 'AEPAssurance', :git => 'https://github.com/adobe/aepsdk-assurance-ios.git', :branch => 'staging'
+   pod 'AEPAssurance'
 end
 
 def user_profile
@@ -42,7 +42,7 @@ end
 target 'AEPCampaignUnitTests' do
    campaign_core_dependencies
    rulesengine
-   pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-testutils-ios.git', :tag => '5.0.0'
+   pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :tag => 'testutils-5.6.0'
 end
 
 target 'AEPCampaignFunctionalTests' do
@@ -50,7 +50,7 @@ target 'AEPCampaignFunctionalTests' do
   rulesengine
   user_profile
   core_additional_dependecies
-  pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-testutils-ios.git', :tag => '5.0.0'
+  pod 'AEPTestUtils', :git => 'https://github.com/adobe/aepsdk-core-ios.git', :tag => 'testutils-5.6.0'
 end
 
 target 'CampaignTester' do
@@ -58,6 +58,14 @@ target 'CampaignTester' do
    rulesengine
    user_profile
    core_additional_dependecies   
-#   assurance
+   assurance
    places
+end
+
+post_install do |pi|
+  pi.pods_project.targets.each do |t|
+    t.build_configurations.each do |bc|
+      bc.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+    end
+  end
 end
