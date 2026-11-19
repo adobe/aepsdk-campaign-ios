@@ -82,7 +82,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     /// Handle local notifications if they arrive while app is in foreground
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
+    // Swift 6 treats the app delegate as main actor, so these delegate methods are nonisolated to satisfy the nonisolated protocol. They touch no main actor state.
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler:
                                 @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -90,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     /// Handle local notification clickthrough to send local notification tracking and/or open any included deeplink
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         // send local notification clickthrough tracking
