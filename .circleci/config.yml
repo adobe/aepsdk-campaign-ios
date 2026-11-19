@@ -54,13 +54,14 @@ commands:
     steps:
       - macos/preboot-simulator:
           platform: "iOS"
-          version: "17.2"
-          device: "iPhone 15"
+          version: "27.0"
+          device: "iPhone 18 Pro"
 
 jobs:
   validate-code:
+    resource_class: m4pro.medium
     macos:
-      xcode: 15.1.0 # Specify the Xcode version to use
+      xcode: 27.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -77,8 +78,9 @@ jobs:
 
 
   test-ios:
+    resource_class: m4pro.medium
     macos:
-      xcode: 15.1.0 # Specify the Xcode version to use
+      xcode: 27.0.0 # Specify the Xcode version to use
 
     steps:
       - checkout
@@ -99,8 +101,9 @@ jobs:
       #     xtra_args: -c -v --xc --xp build/AEPCampaign.xcresult
 
   test-spm-podspec-archive:  
+    resource_class: m4pro.medium
     macos:
-      xcode: 15.0 # Specify the Xcode version to use
+      xcode: 27.0.0 # Specify the Xcode version to use
     
     steps:
       - checkout
