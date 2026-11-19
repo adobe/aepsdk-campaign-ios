@@ -18,6 +18,12 @@ workflows:
       - test-spm-podspec-archive:
           requires:
             - validate-code
+      - build-swift6:
+          requires:
+            - validate-code
+      - build-min-toolchain:
+          requires:
+            - validate-code
 
 commands:
   install_dependencies:
@@ -130,3 +136,35 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_BRANCH}" == "staging" ]; then
               make test-SPM-integration
             fi
+
+  # Swift 6 language mode coverage. Xcode 27 does not select Swift 6 because the checked in
+  # targets stay on Swift 5, so this lane builds only the AEPCampaign target in Swift 6 through
+  # AEPCAMPAIGN_SWIFT_VERSION and then compiles a Swift 6 consumer. Dependencies keep their modes.
+  build-swift6:
+    resource_class: m4pro.medium
+    macos:
+      xcode: 27.0.0
+
+    steps:
+      - checkout
+      - install_dependencies
+      - run:
+          name: Build AEPCampaign in Swift 6 language mode (dependencies keep their modes)
+          command: make build-swift6
+      - run:
+          name: Build Swift 6 consumer (plain calls from @MainActor and SwiftUI)
+          command: make test-swift6-consumer
+
+  # Minimum supported toolchain coverage. README advertises Xcode 15.3 and Swift 5.10; 15.4 is
+  # the oldest 15.x image CircleCI still hosts and ships the same Swift 5.10 compiler.
+  build-min-toolchain:
+    resource_class: m4pro.medium
+    macos:
+      xcode: 15.4.0
+
+    steps:
+      - checkout
+      - install_dependencies
+      - run:
+          name: Build SDK on minimum supported toolchain (Xcode 15.4 / Swift 5.10)
+          command: make build-min-toolchain
